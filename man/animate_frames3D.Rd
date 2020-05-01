@@ -15,7 +15,7 @@ animate_frames3D(
   render.camera,
   overwrite = TRUE,
   out_ext = "gif",
-  ..
+  display = TRUE..
 )
 }
 \arguments{

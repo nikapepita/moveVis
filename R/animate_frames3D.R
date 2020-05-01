@@ -26,7 +26,7 @@
 #' 
 #' @export
 
-animate_frames3D <- function(frames, out_file, scale = 180, multicore = TRUE, width = 8, height = 6,windowsize = c(1500, 1125), render.camera, overwrite=TRUE, out_ext = "gif",..){
+animate_frames3D <- function(frames, out_file, scale = 180, multicore = TRUE, width = 8, height = 6,windowsize = c(1500, 1125), render.camera, overwrite=TRUE, out_ext = "gif", display = TRUE..){
                              
 #check input arguments  
 if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
@@ -74,33 +74,34 @@ invisible(if(!is.null(render.camera))(if((length(frames)!=nrow(render.camera))) 
   gg$layers <- gg$layers[-length(gg$layers)]
   plot_gg(gg, scale = scale, multicore = multicore, width = width, height = height, windowsize = windowsize)
   
-  if(is.null(render)) {render_camera(theta = 46-(i*0.1), phi = 60)
-  } else {render_camera(theta = render[i,1], phi = render[i,2])}
+  if(is.null(render.camera)) {render_camera(theta = 46-(i*0.1), phi = 60)
+  } else {render_camera(theta = render.camera[i,1], phi = render.camera[i,2])}
   
   render_snapshot(paste0(frames_dir, "frame_", i, ".png"), clear = T)
   rgl::rgl.close()
   }
   
   rgl::clear3d()
-  out("Creating frames...")
-  lapply(seq(frames), plot_3D)
+  print("Creating frames...")
+  lapply(seq(2), plot_3D)
+  #lapply(seq(frames), plot_3D)
 
   frames_files <- list.files(frames_dir, full.names = TRUE)
   
-  tryCatch({
+
+
+tryCatch({
  # animate PNGs
   if(out_ext == "gif"){
     if(length(frames) > 800) out("The number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)
-    gifski(frames_files, gif_file=paste0(out_file, "Animate_3D", ".gif"), width = width, height = height, delay = (1/fps), progress = verbose)
-    #save_gif(.lapply(frames, function(x) quiet(print(x)), moveVis.n_cores = 1), gif_file = out_file, width = width, height = height, delay = (1/fps), progress = verbose, res = res, ...)
+    gifski(frames_files, gif_file=paste0(out_file, "Animate_3D", ".gif"), width = 800, height = 600,
+           delay = 1,progress=TRUE)
   }else{
     av::av_encode_video(frames_files, output = paste0(out_file, "Animate_3D", ".mp4"), framerate = 24, vfilter = "pad=ceil(iw/2)*2:ceil(ih/2)*2")
-    #av_encode_video(frames_files, output = out_file, framerate = fps, verbose = verbose)
-    #av_capture_graphics(.lapply(frames, function(x) quiet(print(x)), moveVis.n_cores = 1), output = out_file, width = width, height = height, res = res, framerate = fps, verbose = verbose, ...) #, vfilter =' framerate=fps=10') 
   }
   }, error = function(e){
-    unlink(frames_dir, recursive = TRUE)
-    out(paste0("Error creating animation: ", as.character(e)), type = 3)
+  unlink(frames_dir, recursive = TRUE)
+  out(paste0("Error creating animation: ", as.character(e)), type = 3)
   }, finally = unlink(frames_dir, recursive = TRUE))
   
   if(isTRUE(display)) utils::browseURL(out_file)

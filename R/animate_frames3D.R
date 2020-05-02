@@ -83,15 +83,15 @@ invisible(if(!is.null(render.camera))(if((length(frames)!=nrow(render.camera))) 
   
   rgl::clear3d()
   print("Creating frames...")
-  lapply(seq(2), plot_3D)
-  #lapply(seq(frames), plot_3D)
+  lapply(seq(frames), plot_3D)
 
+
+  
+  #create gif oder mp4 Animation
   frames_files <- list.files(frames_dir, full.names = TRUE)
   
-
-
-tryCatch({
- # animate PNGs
+  tryCatch({
+    # animate PNGs
   if(out_ext == "gif"){
     if(length(frames) > 800) out("The number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)
     gifski(frames_files, gif_file=paste0(out_file, "Animate_3D", ".gif"), width = 800, height = 600,

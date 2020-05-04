@@ -29,10 +29,12 @@ animate_frames3D(
 None or the default image/video viewer displaying the animation
 }
 \description{
-#' View movements on 3D Map
+View movements on 3D Map
 }
 \details{
+\code{animate_frames3D} is a simple wrapper that displays movement tracks on an 3D map.
 
+An appropriate render function is selected depending on the file extension in \code{out_file}: For \code{.gif} files, \code{gifski::save_gif} is used, for any other (video) format, \code{av::av_capture_graphics} is used.
 }
 \examples{
 

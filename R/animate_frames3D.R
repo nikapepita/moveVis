@@ -1,8 +1,8 @@
 #' \code{animate_frames3D} creates an animation from a list of frames computed with \code{\link{frames_spatial}}.
 #'
-#'#' View movements on 3D Map 
+#' View movements on 3D Map 
 #'
-#' \code{animate_frames3D}} is a simple wrapper that displays movement tracks on an 3D map.
+#' \code{animate_frames3D} is a simple wrapper that displays movement tracks on an 3D map.
 #'
 #' @inheritParams add_gg
 #' @param out_file  

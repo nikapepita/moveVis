@@ -12,7 +12,7 @@
 #'
 #' @return None or the default image/video viewer displaying the animation
 #' 
-#' @importFrom rayshader plot_gg
+#' @import rayshader 
 #' @importFrom av av_encode_video
 #' @importFrom gifski gifski
 #' @importFrom ggplot2 quo
@@ -82,7 +82,7 @@ invisible(if(!is.null(render.camera))(if((length(frames)!=nrow(render.camera))) 
   }
   
   rgl::clear3d()
-  print("Creating frames...")
+  out("Creating frames...")
   lapply(seq(frames), plot_3D)
 
 

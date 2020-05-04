@@ -27,7 +27,10 @@
 #' @export
 
 animate_frames3D <- function(frames, out_file, scale = 180, multicore = TRUE, width = 8, height = 6,windowsize = c(1500, 1125), render.camera, overwrite=TRUE, out_ext = "gif", display = TRUE..){
-                             
+
+#check installed packages
+if(length(grep("rayshader", rownames(utils::installed.packages()))) == 0) out("'rayshader' has to be installed to use this function. Use install.packages('rayshader).", type = 3)
+
 #check input arguments  
 if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
 if((frames[[1]]$scales$scales[[1]]$aesthetics)=="fill") out("Argument 'frames' needs as basemap a DEM or any kind of raster. See frames_spatial()).", type = 3)
@@ -82,7 +85,7 @@ invisible(if(!is.null(render.camera))(if((length(frames)!=nrow(render.camera))) 
   }
   
   rgl::clear3d()
-  out("Creating frames...")
+  out("Creating frames...", type=1)
   lapply(seq(frames), plot_3D)
 
 

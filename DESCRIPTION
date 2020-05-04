@@ -27,8 +27,7 @@ Imports:
   pbapply,
   magrittr,
   methods,
-  stats,
-  rayshader
+  stats
 BugReports: http://www.github.com/16eagle/moveVis/issues
 SystemRequirements: ImageMagick, FFmpeg, libav
 URL: http://movevis.org
@@ -36,4 +35,5 @@ Suggests:
   parallel,
   mapview,
   leaflet,
-  testthat
+  testthat,
+  rayshader

@@ -79,7 +79,7 @@ invisible(if(!is.null(render.camera))(if((length(frames)!=nrow(render.camera))) 
   if(is.null(render.camera)) {rayshader::render_camera(theta = 46-(i*0.1), phi = 60)
   } else {rayshader::render_camera(theta = render.camera[i,1], phi = render.camera[i,2])}
   
-  render_snapshot(paste0(frames_dir, "frame_", i, ".png"), clear = T)
+  rayshader::render_snapshot(paste0(frames_dir, "frame_", i, ".png"), clear = T)
   rgl::rgl.close()
   }
   

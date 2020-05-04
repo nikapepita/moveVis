@@ -12,7 +12,7 @@
 #'
 #' @return None or the default image/video viewer displaying the animation
 #' 
-#' @import rayshader 
+#' @importFrom rayshader plot_gg
 #' @importFrom av av_encode_video
 #' @importFrom gifski gifski
 #' @importFrom ggplot2 quo

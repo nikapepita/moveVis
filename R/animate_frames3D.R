@@ -12,7 +12,6 @@
 #'
 #' @return None or the default image/video viewer displaying the animation
 #' 
-#' @importFrom rayshader plot_gg
 #' @importFrom av av_encode_video
 #' @importFrom gifski gifski
 #' @importFrom ggplot2 quo
@@ -29,7 +28,7 @@
 animate_frames3D <- function(frames, out_file, scale = 180, multicore = TRUE, width = 8, height = 6,windowsize = c(1500, 1125), render.camera, overwrite=TRUE, out_ext = "gif", display = TRUE..){
 
 #check installed packages
-if(length(grep("rayshader", rownames(utils::installed.packages()))) == 0) out("'rayshader' has to be installed to use this function. Use install.packages('rayshader).", type = 3)
+if(length(grep("rayshader", rownames(utils::installed.packages()))) == 0) out("'rayshader' has to be installed to use this function. Use install.packages('rayshader').", type = 3)
 
 #check input arguments  
 if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
@@ -75,10 +74,10 @@ invisible(if(!is.null(render.camera))(if((length(frames)!=nrow(render.camera))) 
   gg$theme <- gg$theme[-c(dif)]
   
   gg$layers <- gg$layers[-length(gg$layers)]
-  plot_gg(gg, scale = scale, multicore = multicore, width = width, height = height, windowsize = windowsize)
+  rayshader::plot_gg(gg, scale = scale, multicore = multicore, width = width, height = height, windowsize = windowsize)
   
-  if(is.null(render.camera)) {render_camera(theta = 46-(i*0.1), phi = 60)
-  } else {render_camera(theta = render.camera[i,1], phi = render.camera[i,2])}
+  if(is.null(render.camera)) {rayshader::render_camera(theta = 46-(i*0.1), phi = 60)
+  } else {rayshader::render_camera(theta = render.camera[i,1], phi = render.camera[i,2])}
   
   render_snapshot(paste0(frames_dir, "frame_", i, ".png"), clear = T)
   rgl::rgl.close()

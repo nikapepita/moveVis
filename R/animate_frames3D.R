@@ -37,7 +37,6 @@ if(!is.null(render.camera)) if(length(frames)!=nrow(render.camera)) out("Argumen
 invisible(if(!is.null(render.camera))(if((length(frames)!=nrow(render.camera))) render.camera <- NULL))
 
  
- 
 #adjust data for plot_gg function
                              
  colortheme = c("line","rect","text","axis.title", "axis.title.x",
@@ -84,7 +83,7 @@ invisible(if(!is.null(render.camera))(if((length(frames)!=nrow(render.camera))) 
   }
   
   rgl::clear3d()
-  out("Creating frames...", type=1)
+  out("Creating 3D Plots...", type=1)
   lapply(seq(frames), plot_3D)
 
 
@@ -106,5 +105,4 @@ invisible(if(!is.null(render.camera))(if((length(frames)!=nrow(render.camera))) 
   out(paste0("Error creating animation: ", as.character(e)), type = 3)
   }, finally = unlink(frames_dir, recursive = TRUE))
   
-  if(isTRUE(display)) utils::browseURL(out_file)
 }

@@ -5,7 +5,16 @@
 #' \code{animate_frames3D} is a simple wrapper that displays movement tracks on an 3D map.
 #'
 #' @inheritParams add_gg
-#' @param out_file  
+#' @param out_file character, the output file path, e.g. "/dir/to/". 
+#' @param scale = 180
+#' @param multicore = TRUE
+#' @param width numeric, width of the output animation in pixels.
+#' @param height numeric, height of the output animation in pixels.
+#' @param windowsize numeric, windowssize of the image in pixel, e.g. c(1500, 1125)
+#' @param render.camera dataframe, with theta and phi for values. Theta:  Theta values, in degrees. Phi: Azimuth values, in degrees. 
+#' @param overwrite logical, wether to overwrite an existing file, if \code{out_file} is already present.
+#' @param display logical, whether the animation should be displayed after rendering or not.
+#' @param out_ext output format, gif or mp4
 #' @param ... additional arguments to be passed to the render function.
 #'
 #' @details An appropriate render function is selected depending on the file extension in \code{out_file}: For \code{.gif} files, \code{gifski::save_gif} is used, for any other (video) format, \code{av::av_capture_graphics} is used.
@@ -25,7 +34,7 @@
 #' 
 #' @export
 
-animate_frames3D <- function(frames, out_file, scale = 180, multicore = TRUE, width = 8, height = 6,windowsize = c(1500, 1125), render.camera, overwrite=TRUE, out_ext = "gif", display = TRUE..){
+animate_frames3D <- function(frames, out_file, scale = 180, multicore = TRUE, width = 8, height = 6,windowsize = c(1500, 1125), render.camera, overwrite=TRUE, out_ext = "gif", display = TRUE,...){
 
 #check installed packages
 if(length(grep("rayshader", rownames(utils::installed.packages()))) == 0) out("'rayshader' has to be installed to use this function. Use install.packages('rayshader').", type = 3)
@@ -104,5 +113,7 @@ invisible(if(!is.null(render.camera))(if((length(frames)!=nrow(render.camera))) 
   unlink(frames_dir, recursive = TRUE)
   out(paste0("Error creating animation: ", as.character(e)), type = 3)
   }, finally = unlink(frames_dir, recursive = TRUE))
+  
+  if(isTRUE(display)) utils::browseURL(out_file)
   
 }

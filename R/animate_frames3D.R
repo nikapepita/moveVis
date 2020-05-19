@@ -6,8 +6,8 @@
 #'
 #' @inheritParams add_gg
 #' @param out_file character, the output file path, e.g. "/dir/to/". 
-#' @param scale = 180
-#' @param multicore = TRUE
+#' @param scale blindtext
+#' @param multicore blindtext
 #' @param width numeric, width of the output animation in pixels.
 #' @param height numeric, height of the output animation in pixels.
 #' @param windowsize numeric, windowssize of the image in pixel, e.g. c(1500, 1125)
@@ -73,7 +73,7 @@ invisible(if(!is.null(render.camera))(if((length(frames)!=nrow(render.camera))) 
  
   #transfer frames in 3D based on the basemap and plot frames in 3D
   
-  plot_3D <- function(i){
+  plot.3D <- function(i){
   gg <- frames[[i]]
   
   tempname = names(gg$theme)
@@ -93,7 +93,7 @@ invisible(if(!is.null(render.camera))(if((length(frames)!=nrow(render.camera))) 
   
   rgl::clear3d()
   out("Creating 3D Plots...", type=1)
-  lapply(seq(frames), plot_3D)
+  lapply(seq(frames), plot.3D)
 
 
   

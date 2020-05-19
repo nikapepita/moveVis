@@ -15,13 +15,32 @@ animate_frames3D(
   render.camera,
   overwrite = TRUE,
   out_ext = "gif",
-  display = TRUE..
+  display = TRUE,
+  ...
 )
 }
 \arguments{
 \item{frames}{list of \code{ggplot2} objects, crated with \code{\link{frames_spatial}}.}
 
-\item{out_file}{}
+\item{out_file}{character, the output file path, e.g. "/dir/to/".}
+
+\item{scale}{blindtext}
+
+\item{multicore}{blindtext}
+
+\item{width}{numeric, width of the output animation in pixels.}
+
+\item{height}{numeric, height of the output animation in pixels.}
+
+\item{windowsize}{numeric, windowssize of the image in pixel, e.g. c(1500, 1125)}
+
+\item{render.camera}{dataframe, with theta and phi for values. Theta:  Theta values, in degrees. Phi: Azimuth values, in degrees.}
+
+\item{overwrite}{logical, wether to overwrite an existing file, if \code{out_file} is already present.}
+
+\item{out_ext}{output format, gif or mp4}
+
+\item{display}{logical, whether the animation should be displayed after rendering or not.}
 
 \item{...}{additional arguments to be passed to the render function.}
 }

@@ -21,10 +21,11 @@
 #'
 #' @return None or the default image/video viewer displaying the animation
 #' 
+#' @importFrom rayshader plot_gg render_snapshot
+#' @importFrom rgl rgl.close
 #' @importFrom av av_encode_video
 #' @importFrom gifski gifski
-#' @importFrom ggplot2 quo
-#' @importFrom lubridate dseconds
+#' @importFrom utils browseURL
 #' 
 #' @author Jakob Schwalb-Willmann
 #' 
@@ -82,13 +83,13 @@ invisible(if(!is.null(render.camera))(if((length(frames)!=nrow(render.camera))) 
   gg$theme <- gg$theme[-c(dif)]
   
   gg$layers <- gg$layers[-length(gg$layers)]
-  rayshader::plot_gg(gg, scale = scale, multicore = multicore, width = width, height = height, windowsize = windowsize)
+  plot_gg(gg, scale = scale, multicore = multicore, width = width, height = height, windowsize = windowsize)
   
-  if(is.null(render.camera)) {rayshader::render_camera(theta = 46-(i*0.1), phi = 60)
-  } else {rayshader::render_camera(theta = render.camera[i,1], phi = render.camera[i,2])}
+  if(is.null(render.camera)) {render_camera(theta = 46-(i*0.1), phi = 60)
+  } else {render_camera(theta = render.camera[i,1], phi = render.camera[i,2])}
   
-  rayshader::render_snapshot(paste0(frames_dir, "frame_", i, ".png"), clear = T)
-  rgl::rgl.close()
+  render_snapshot(paste0(frames_dir, "frame_", i, ".png"), clear = T)
+  rgl.close()
   }
   
   rgl::clear3d()

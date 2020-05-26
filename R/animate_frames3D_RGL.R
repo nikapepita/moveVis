@@ -15,18 +15,18 @@
 #' @param zscale_movement blindtext
 #' @param zoom blindtext 
 #' @param out_ext blindtext
+#' @param display blindtext
 #' @param ... additional arguments to be passed to the render function.
 #' 
 #' @return A character vector of supported map types
 #' 
 #' @importFrom RStoolbox rescaleImage
-#' @importFrom rayshader ambient_shade
-#' @importFrom rayshader ambient_shade
-#' @importFrom av av_encode_video
+#' @importFrom sp spTransform
+#' @importFrom rayshader ray_shade sphere_shade add_overlay add_shadow render_snapshot plot_3d
+#' @importFrom rgl axes3d points3d  rgl.close
 #' @importFrom av av_encode_video
 #' @importFrom gifski gifski
-#' @importFrom ggplot2 quo
-#' @importFrom lubridate dseconds
+#' @importFrom utils browseURL
 #' 
 #' @examples 
 #' 
@@ -36,7 +36,7 @@
 
 animate_3D_RGL <- function(m, out_file, map_service = "mapbox", map_type = "satellite",
                            map_token=map_token, m.crs="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs", 
-                           theta=theta, phi=phi, sunangle = 45, zscale_terrain = 3, zscale_movement=3, zoom = 0.80, out_ext = "gif",...){ 
+                           theta=theta, phi=phi, sunangle = 45, zscale_terrain = 3, zscale_movement=3, zoom = 0.80, out_ext = "gif", display = TRUE,...){ 
   
   #create dir
   frames_dir <- paste0(out_file, "framesRGL/")
@@ -47,8 +47,7 @@ animate_3D_RGL <- function(m, out_file, map_service = "mapbox", map_type = "sate
   
   ## transform data in cRS ETRS89
   
-  m <- sp::spTransform(m,
-                       CRSobj = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+  m <- sp::spTransform(m, CRSobj = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
   
   ## transform move data in dataframe and extract extent
   
@@ -132,23 +131,23 @@ m.shadow <-
     paste0("film_", formatC(seq_len(n_frames), width = 3, flag = "0"), ".png")
   )
   
-  
+  frames_rgl = list()
   rgl::clear3d()
+  
+  plot_3d(
+    scene.texture,
+    m.elev,
+    zscale = zscale_terrain,
+    theta = theta, phi = phi,
+    zoom = zoom,
+  )
+  
+  axes3d(color="grey",edges = "bbox", labels = TRUE, tick = TRUE, nticks = 3,box = FALSE, expand = 1.03,main="Movement")
   
   
   # create all frames
-  for (i in 155:n_frames) {
-    print(i)
-    plot_3d(
-      scene.texture,
-      m.elev,
-      zscale = zscale_terrain,
-      theta = theta, phi = phi,
-      zoom = zoom,
-    )
-    
-    rgl::axes3d(color="grey",edges = "bbox", labels = TRUE, tick = TRUE, nticks = 3,box = FALSE, expand = 1.03,main="Movement")
-    
+  for (i in 1:10) {
+
     m.df.temp <- m.df[which(m.df$frame==i),]
     categories <- as.character(unique(m.df.temp$colour))
     nr.Categories <- length(categories)
@@ -162,27 +161,32 @@ m.shadow <-
         size = 5, col = categories[j])
     }
     
-    render_snapshot(img_frames[i])
     s <- scene3d()
-    
+    i=1
+    frames_rgl[[i]] = s
+    return(frames_rgl)
   }
   
-  rgl::rgl.close()
+  #rgl.close()
+  return(frames_rgl)
   
-  files <- list.files(frames_dir, pattern="film_", full.names = T)
+  #if(animation=true)...
+  #files <- list.files(frames_dir, pattern="film_", full.names = T)
   
-  tryCatch({
+ # tryCatch({
     # animate PNGs
-    if(out_ext == "gif"){
-      if(n_frames > 800) out("The number of number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)
-      gifski(files, gif_file=paste0(frames_dir, "Animate_3D", ".gif"), width = 800, height = 600,
-             delay = 1,progress=TRUE)
-    }else{
-      av::av_encode_video(files, output = paste0(frames_dir, "Animate_3D", ".mp4"), framerate = 24, vfilter = "pad=ceil(iw/2)*2:ceil(ih/2)*2")
-    }
-  }, error = function(e){
-    unlink(frames_dir, recursive = TRUE)
-    out(paste0("Error creating animation: ", as.character(e)), type = 3)
-  }, finally = unlink(frames_dir, recursive = TRUE))
+  #  if(out_ext == "gif"){
+   #   if(n_frames > 800) out("The number of number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)
+  #    gifski(files, gif_file=paste0(frames_dir, "Animate_3D", ".gif"), width = 800, height = 600,
+  #           delay = 1,progress=TRUE)
+  #  }else{
+   #   av::av_encode_video(files, output = paste0(frames_dir, "Animate_3D", ".mp4"), framerate = 24, vfilter = "pad=ceil(iw/2)*2:ceil(ih/2)*2")
+  #  }
+ # }, error = function(e){
+  #  unlink(frames_dir, recursive = TRUE)
+  #  out(paste0("Error creating animation: ", as.character(e)), type = 3)
+  #}, finally = unlink(frames_dir, recursive = TRUE))
+  
+ # if(isTRUE(display)) browseURL(frames_dir)
   
 }

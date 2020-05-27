@@ -2,7 +2,7 @@
 % Please edit documentation in R/frames3D_RGL.R
 \name{frames_3D_RGL}
 \alias{frames_3D_RGL}
-\title{Animate movement on 3D Map}
+\title{Create 3D Frames}
 \usage{
 frames_3D_RGL(
   m,
@@ -52,7 +52,7 @@ frames_3D_RGL(
 A character vector of supported map types
 }
 \description{
-This function returns every supported map type that can be used as input to the \code{map_type} argument of \code{\link{frames_spatial}}.
+This function returns a data frame that can be used as input to the \code{map_type} argument of \code{\link{animate_frames3D_RGL}}.
 }
 \examples{
 

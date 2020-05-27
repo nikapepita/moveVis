@@ -1,6 +1,6 @@
-#' Animate movement on 3D Map
+#' Create 3D Frames
 #'
-#' This function returns every supported map type that can be used as input to the \code{map_type} argument of \code{\link{frames_spatial}}.
+#' This function returns a data frame that can be used as input to the \code{map_type} argument of \code{\link{animate_frames3D_RGL}}.
 #'
 #' @inheritParams m
 #' @param out_file character, the output file path, e.g. "/dir/to/". 
@@ -35,8 +35,8 @@
 #' @export
 
 frames_3D_RGL <- function(m, out_file, map_service = "mapbox", map_type = "satellite",
-                           map_token=map_token, m.crs="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs", 
-                           pointsize=5, sunangle = 45, zscale_terrain = 3, zscale_movement=3,...){ 
+                          map_token=map_token, m.crs="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs", 
+                          pointsize=5, sunangle = 45, zscale_terrain = 3, zscale_movement=3,...){ 
   
   #create dir
   map_dir <- paste0(out_file, "basemap")
@@ -57,7 +57,7 @@ frames_3D_RGL <- function(m, out_file, map_service = "mapbox", map_type = "satel
   r.rgb.terrain <- .getMap(map_service = "mapbox", map_type = "terrain", map_dir = map_dir , gg.ext = st_bbox(m), map_res=1,
                            map_token = map_token, m.crs=m.crs)
   out("Download Basemap", type = 1)
-   r.overlay <- .getMap(map_service = map_service, map_type = map_type, map_dir = map_dir , gg.ext = st_bbox(m), map_res=1,
+  r.overlay <- .getMap(map_service = map_service, map_type = map_type, map_dir = map_dir , gg.ext = st_bbox(m), map_res=1,
                        map_token = map_token, m.crs=m.crs)
   
   r.overlay <- rescaleImage(r.overlay[[1]],  xmin = 0, xmax = 255, ymin = 0, ymax = 1)
@@ -79,11 +79,11 @@ frames_3D_RGL <- function(m, out_file, map_service = "mapbox", map_type = "satel
   e <- extent(r.elev)
   
   m.df$lon <- pointDistance(c(e@xmin, e@ymin),
-                                    cbind(m.df$x, rep(e@ymin, length(m.df$x))), lonlat = FALSE) /
+                            cbind(m.df$x, rep(e@ymin, length(m.df$x))), lonlat = FALSE) /
     res(r.elev)[1] - (e@xmax - e@xmin) / 2 / res(r.elev)[1]
   
   m.df$lat <- pointDistance(c(e@xmin, e@ymin),
-                                    cbind(rep(e@xmin, length(m.df$y)), m.df$y), lonlat = FALSE) /
+                            cbind(rep(e@xmin, length(m.df$y)), m.df$y), lonlat = FALSE) /
     res(r.elev)[2] - (e@ymax - e@ymin) / 2 / res(r.elev)[2]
   
   m.df$altitude <- extract(r.elev, m.df[, 1:2])
@@ -123,20 +123,20 @@ frames_3D_RGL <- function(m, out_file, map_service = "mapbox", map_type = "satel
   out("Create Frames", type = 1)
   frames_rgl <- lapply(1:140, function(i){
     
-      setTxtProgressBar(pb, i)
-
-            #print(paste("Processing index:", i)) # helpful to see how slow/fast
-             m.df.temp <- m.df[which(m.df$frame==i),]
-             categories <- as.character(unique(m.df.temp$colour))
-             nr.Categories <- length(categories)
-             
-                      points3d(
-                        m.df.temp[,9],
-                        m.df.temp[,11] / zscale_movement,  
-                        -m.df.temp[,10],
-                        size = pointsize, col = m.df.temp[,8])
-      
-             frames_rgl[[i]] <- scene3d()
+    setTxtProgressBar(pb, i)
+    
+    #print(paste("Processing index:", i)) # helpful to see how slow/fast
+    m.df.temp <- m.df[which(m.df$frame==i),]
+    categories <- as.character(unique(m.df.temp$colour))
+    nr.Categories <- length(categories)
+    
+    points3d(
+      m.df.temp[,9],
+      m.df.temp[,11] / zscale_movement,  
+      -m.df.temp[,10],
+      size = pointsize, col = m.df.temp[,8])
+    
+    frames_rgl[[i]] <- scene3d()
   })
   
   rgl.close()

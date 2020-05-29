@@ -37,13 +37,15 @@
 frames_3D_RGL <- function(m, out_file, map_service = "mapbox", map_type = "satellite",
                           map_token=map_token, m.crs="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs", 
                           pointsize=5, sunangle = 45, zscale_terrain = 3, zscale_movement=3,...){ 
+  ##check input
+  if(all(!c(inherits(m, "MoveStack"), inherits(m, "Move")))) out("Argument 'm' must be of class 'Move' or 'MoveStack'.", type = 3)
+  if(inherits(m, "Move")) m <- moveStack(m)
   
-  #create dir
+  ##create dir
   map_dir <- paste0(out_file, "basemap")
   dir.create(map_dir, showWarnings = FALSE,recursive = TRUE)
   
   ## transform data in CRS ETRS89
-  
   m <- sp::spTransform(m, CRSobj = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
   
   ## transform move data in dataframe including time and colour and extract extent
@@ -86,7 +88,7 @@ frames_3D_RGL <- function(m, out_file, map_service = "mapbox", map_type = "satel
                             cbind(rep(e@xmin, length(m.df$y)), m.df$y), lonlat = FALSE) /
     res(r.elev)[2] - (e@ymax - e@ymin) / 2 / res(r.elev)[2]
   
-  m.df$altitude <- extract(r.elev, m.df[, 1:2])
+  m.df$altitude <- raster::extract(r.elev, m.df[, 1:2])
   
   ##calculte number of individuals
   categories <- as.character(unique(m.df$colour))
@@ -121,22 +123,42 @@ frames_3D_RGL <- function(m, out_file, map_service = "mapbox", map_type = "satel
   
   ##create frames
   out("Create Frames", type = 1)
-  frames_rgl <- lapply(1:140, function(i){
-    
-    setTxtProgressBar(pb, i)
+  frames_rgl <- lapply(1:n_frames, function(i){
+    print(i)
+    #setTxtProgressBar(pb, i)
     
     #print(paste("Processing index:", i)) # helpful to see how slow/fast
-    m.df.temp <- m.df[which(m.df$frame==i),]
+    i2=i+1
+    m.df.temp <- m.df[which(m.df$frame==i | m.df$frame==i2),]
+    m.df.temp <- m.df.temp[order(m.df.temp$colour),]
+    
     categories <- as.character(unique(m.df.temp$colour))
     nr.Categories <- length(categories)
     
-    points3d(
-      m.df.temp[,9],
-      m.df.temp[,11] / zscale_movement,  
-      -m.df.temp[,10],
-      size = pointsize, col = m.df.temp[,8])
+    nr <- count(m.df.temp, vars = colour)
+    nr_seg <- nr %>% filter(n==2)
+    nr_point <- nr %>% filter(n==1)
+    
+    m.df.seg <- m.df.temp[which(m.df.temp$colour %in% nr_seg$vars),]
+    m.df.point <- m.df.temp[which(m.df.temp$colour==nr_point$vars),]
+    
+    if(!(nrow(m.df.point)==0)) 
+    {points3d(
+      m.df.point[,9],
+      m.df.point[,11] / zscale_movement,  
+      -m.df.point[,10],
+      size = pointsize, col = m.df.point[,8])}
+    
+    if(!(nrow(m.df.seg)==0)) 
+    {segments3d(
+      m.df.seg[,9],
+      m.df.seg[,11] / zscale_movement,  
+      -m.df.seg[,10],
+      size = pointsize, col = m.df.seg[,8])}
+  
     
     frames_rgl[[i]] <- scene3d()
+    
   })
   
   rgl.close()

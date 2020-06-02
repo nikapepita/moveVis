@@ -26,7 +26,6 @@
 #' @importFrom rayshader raster_to_matrix ray_shade sphere_shade add_overlay add_shadow render_snapshot plot_3d
 #' @importFrom rgl points3d  rgl.close
 #' @importFrom utils browseURL
-#' 
 #' @examples 
 #' 
 #' 
@@ -91,7 +90,7 @@ frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, pa
   
   scene.texture<- m.elev  %>%
     sphere_shade(texture = "imhof4") %>%
-    add_overlay(as.array(r.overlay), alphalayer = 0.99) %>%
+    add_overlay(raster::as.array(r.overlay), alphalayer = 0.99) %>%
     add_shadow(ray_shade( m.elev,sunangle = sunangle, maxsearch = 100), max_darken = 0.5) 
   
 

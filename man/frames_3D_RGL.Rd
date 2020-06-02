@@ -7,6 +7,9 @@
 frames_3D_RGL(
   m,
   out_file,
+  color = rainbow(15),
+  own_terrain = FALSE,
+  path_terrain,
   map_service = "mapbox",
   map_type = "satellite",
   map_token = map_token,
@@ -16,6 +19,8 @@ frames_3D_RGL(
   sunangle = 45,
   zscale_terrain = 3,
   zscale_movement = 3,
+  point = TRUE,
+  timestamp = TRUE,
   ...
 )
 }

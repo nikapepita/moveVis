@@ -23,12 +23,9 @@
 #' @importFrom RStoolbox rescaleImage
 #' @importFrom sf st_as_sfc st_bbox
 #' @importFrom sp spTransform
-#' @importFrom rayshader ray_shade sphere_shade add_overlay add_shadow render_snapshot plot_3d
-#' @importFrom rgl axes3d points3d  rgl.close
-#' @importFrom av av_encode_video
-#' @importFrom gifski gifski
+#' @importFrom rayshader raster_to_matrix ray_shade sphere_shade add_overlay add_shadow render_snapshot plot_3d
+#' @importFrom rgl points3d  rgl.close
 #' @importFrom utils browseURL
-#' @importFrom raster getValues
 #' 
 #' @examples 
 #' 
@@ -88,7 +85,7 @@ frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, pa
   
   
   ## calculate elevation as matrix
-  m.elev <- base::t(raster::getValues(r.rgb.terrain[[1]], format = "matrix"))
+  m.elev <- raster_to_matrix(r.rgb.terrain[[1]])
 
   ## create basemap
   

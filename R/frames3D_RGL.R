@@ -26,6 +26,7 @@
 #' @importFrom rayshader raster_to_matrix ray_shade sphere_shade add_overlay add_shadow render_snapshot plot_3d
 #' @importFrom rgl points3d  rgl.close
 #' @importFrom utils browseURL
+#' @importFrom raster pointDistance
 #' @examples 
 #' 
 #' 

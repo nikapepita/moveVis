@@ -28,6 +28,7 @@
 #' @importFrom av av_encode_video
 #' @importFrom gifski gifski
 #' @importFrom utils browseURL
+#' @importFrom raster getValues
 #' 
 #' @examples 
 #' 
@@ -90,7 +91,7 @@ frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, pa
   
   
   ## calculate elevation as matrix
-  m.elev <- t(getValues(r.rgb.terrain[[1]], format = "matrix"))
+  m.elev <- t(raster::getValues(r.rgb.terrain[[1]], format = "matrix"))
 
   ## create basemap
   

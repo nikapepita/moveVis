@@ -29,6 +29,7 @@
 #' @importFrom gifski gifski
 #' @importFrom utils browseURL
 #' @importFrom raster getValues
+#' @importFrom base t
 #' 
 #' @examples 
 #' 
@@ -56,7 +57,7 @@ frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, pa
     .m2df(m, path_colours = color)
   .stats(n.frames = max(m.df$frame))
   
-  out("Download Basemap", type = 1)
+  out("Download Overlay Map", type = 1)
   r.overlay <- .getMap(map_service = map_service, map_type = map_type, map_dir = map.dir , gg.ext = st_bbox(m), map_res=1,
                        map_token = map_token,m.crs=m.crs)
   
@@ -64,9 +65,6 @@ frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, pa
   #                               map_token = map_token,m.crs=m.crs)
   
   r.overlay <- RStoolbox::rescaleImage(r.overlay[[1]],  xmin = 0, xmax = 255, ymin = 0, ymax = 1)
-  
-  
-  
 
   if(own_terrain==FALSE){
   ## get terrain and basemap

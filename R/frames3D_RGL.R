@@ -62,7 +62,7 @@ frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, pa
   #r.overlay <- basemaps::basemap(map_service = map_service, map_type = map_type, map_dir = map.dir , ext = st_bbox(m), map_res=1,
   #                               map_token = map_token,m.crs=m.crs)
   
-  r.overlay <- rescaleImage(r.overlay[[1]],  xmin = 0, xmax = 255, ymin = 0, ymax = 1)
+  r.overlay <- RStoolbox::rescaleImage(r.overlay[[1]],  xmin = 0, xmax = 255, ymin = 0, ymax = 1)
   
   
   

@@ -38,4 +38,5 @@ Suggests:
   testthat,
   rayshader,
   rgl,
-  sp
+  sp,
+  RStoolbox

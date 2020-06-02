@@ -23,8 +23,8 @@
 #' @importFrom RStoolbox rescaleImage
 #' @importFrom sf st_as_sfc st_bbox
 #' @importFrom sp spTransform
-#' @importFrom rayshader raster_to_matrix ray_shade sphere_shade add_overlay add_shadow render_snapshot plot_3d
-#' @importFrom rgl points3d  rgl.close segments3d legend3d
+#' @importFrom rayshader raster_to_matrix ray_shade sphere_shade add_overlay add_shadow plot_3d
+#' @importFrom rgl points3d  rgl.close segments3d legend3d scene3d clear3d
 #' @importFrom utils setTxtProgressBar
 #' @importFrom raster pointDistance res
 #' @"importFrom dplyr count filter
@@ -75,7 +75,6 @@ frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, pa
   
   }else{
     r.rgb.terrain <- raster(path_terrain)
-    #ext_m <- sp::spTransform(m, crs(r.rgb.terrain1))
     ext_crop <- projectRaster(r.overlay, crs = crs(r.rgb.terrain))
     r.rgb.terrain <- crop(r.rgb.terrain, ext_crop)
     r.rgb.terrain <- projectRaster(r.rgb.terrain, crs = m.crs)
@@ -134,7 +133,7 @@ frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, pa
 
   ##create empty list
   frames_rgl = list()
-  rgl::clear3d()
+  clear3d()
   
   ##plot background basemap
   plot_3d(

@@ -11,7 +11,7 @@
 #' @param map_type choose a maptype e.g. satellite  - more informations basemaps::get_maptypes
 #' @param map_token add a map token if it is necassary for the mapservice e.g. mapbox
 #' @param m.crs choose crs, default 
-#' @param pointsize size of each point, default 10
+#' @param pointsize size of each point, default 1
 #' @param sunangle sunangle for 3D Background Image, default 45
 #' @param zscale_terrain The ratio between the x and y spacing (which are assumed to be equal) and the z axis. For example, if the elevation levels are in units of 1 meter and the grid values are separated by 10 meters, 'zscale' would be 10. Adjust the zscale down to exaggerate elevation features.Default '10'. 
 #' @param zscale_movement define the height of the points, zscale_terrain=zscale_movement - points have same height as basemap
@@ -36,7 +36,7 @@
 
 frames_rgl <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, path_terrain, map_service = "mapbox", map_type = "satellite",
                           map_token=map_token, m.crs="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs", 
-                          pointsize=5, sunangle = 45, zscale_terrain = 3, zscale_movement=3, point=TRUE,...){ 
+                          pointsize=1, sunangle = 45, zscale_terrain = 3, zscale_movement=3, point=TRUE,...){ 
   ##check input
   if(all(!c(inherits(m, "MoveStack"), inherits(m, "Move")))) out("Argument 'm' must be of class 'Move' or 'MoveStack'.", type = 3)
   if(inherits(m, "Move")) m <- moveStack(m)

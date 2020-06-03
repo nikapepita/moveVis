@@ -15,7 +15,7 @@ frames_rgl(
   map_token = map_token,
  
     m.crs = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs",
-  pointsize = 5,
+  pointsize = 1,
   sunangle = 45,
   zscale_terrain = 3,
   zscale_movement = 3,
@@ -40,7 +40,7 @@ frames_rgl(
 
 \item{m.crs}{choose crs, default}
 
-\item{pointsize}{size of each point, default 10}
+\item{pointsize}{size of each point, default 1}
 
 \item{sunangle}{sunangle for 3D Background Image, default 45}
 

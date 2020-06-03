@@ -39,7 +39,7 @@ animate_frames_rgl <- function(frames, out_file, fps = 25, width = 700, height =
   if(length(grep("rgl", rownames(utils::installed.packages()))) == 0) out("'rgl' has to be installed to use this function. Use install.packages('rgl').", type = 3)
   
   #if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of rgl scenes. See frames_spatial()).", type = 3)
-  if(!all(sapply(frames, function(x) inherits(x, "rglscene")))) out("At least one element of argument 'frames' is not a rgl scene.", type = 3)
+  #if(!all(sapply(frames, function(x) inherits(x, "rglscene")))) out("At least one element of argument 'frames' is not a rgl scene.", type = 3)
   
   if(!is.character(out_file)) out("Argument 'out_file' must be of type 'character'.", type = 3)
   of_split <- strsplit(out_file, "/")[[1]]

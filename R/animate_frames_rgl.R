@@ -23,7 +23,6 @@
 #' @importFrom lubridate dseconds
 #' @importFrom rgl plot3d rgl.close
 #' @importFrom rayshader render_snapshot
-#' @importFrom utils txtProgressBar
 #'  
 #' @author Jakob Schwalb-Willmann
 #' 
@@ -56,9 +55,6 @@ animate_frames_rgl <- function(frames, out_file, fps = 25, width = 700, height =
     out(paste0("Number of frames: ", toString(length(frames)-n.add), " + ", toString(n.add), " to add \u2248 ", toString(dseconds(end_pause)), " of pause at the end"))
   }
   .stats(n.frames = length(frames), fps)
-  
-  ## progress bar
-  pb <- txtProgressBar(min = 1, max = length(frames), style=3)
   
   ## create PNGs
   frames_dir <- out_file

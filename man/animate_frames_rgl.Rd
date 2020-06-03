@@ -46,7 +46,7 @@ animate_frames_rgl(
 None or the default image/video viewer displaying the animation
 }
 \description{
-\code{animate_frames} creates an animation from a list of frames computed with \code{\link{frames_spatial}}.
+\code{animate_frames_rgl} creates an animation from a list of frames computed with \code{\link{frames_rgl}}.
 }
 \details{
 An appropriate render function is selected depending on the file extension in \code{out_file}: For \code{.gif} files, \code{gifski::save_gif} is used, for any other (video) format, \code{av::av_capture_graphics} is used.
@@ -55,7 +55,7 @@ An appropriate render function is selected depending on the file extension in \c
 
 }
 \seealso{
-\code{\link{frames_3d_rgl}}
+\code{\link{frames_rgl}}
 }
 \author{
 Jakob Schwalb-Willmann

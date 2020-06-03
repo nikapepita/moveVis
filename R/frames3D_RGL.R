@@ -1,6 +1,6 @@
-#' Create 3D Frames
+#' Create frames of spatial movement maps for animation
 #'
-#' This function returns a data frame that can be used as input to the \code{map_type} argument of \code{\link{animate_frames3D_RGL}}.
+#' \code{frames_rgl} creates a list of rgl scenes displaying movement. Each object represents a single frame. Each frame can be viewed or modified individually. The returned list of frames can be animated using \code{\link{animate_frames_rgl}}.
 #'
 #' @inheritParams m
 #' @param out_file character, the output file path, e.g. "/dir/to/".
@@ -33,7 +33,7 @@
 #' @seealso \code{\link{frames_spatial}}
 #' @export
 
-frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, path_terrain, map_service = "mapbox", map_type = "satellite",
+frames_rgl <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, path_terrain, map_service = "mapbox", map_type = "satellite",
                           map_token=map_token, m.crs="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs", 
                           pointsize=5, sunangle = 45, zscale_terrain = 3, zscale_movement=3, point=TRUE,...){ 
   ##check input

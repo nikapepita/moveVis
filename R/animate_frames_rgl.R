@@ -1,6 +1,6 @@
 #' Animate frames 3D RGL
 #'
-#' \code{animate_frames} creates an animation from a list of frames computed with \code{\link{frames_spatial}}.
+#' \code{animate_frames_rgl} creates an animation from a list of frames computed with \code{\link{frames_rgl}}.
 #'
 #' @inheritParams add_gg
 #' @param out_file character, the output file path, e.g. "/dir/to/file.mov". The file extension must correspond to a file format known by the available renderers of the running system. Use \code{\link{suggest_formats}} to get a vector of suggested known file formats.
@@ -26,7 +26,7 @@
 #' 
 #' @examples
 #' 
-#' @seealso \code{\link{frames_3d_rgl}} 
+#' @seealso \code{\link{frames_rgl}} 
 #' 
 #' @export
 
@@ -55,7 +55,7 @@ animate_frames_rgl <- function(frames, out_file, fps = 25, width = 700, height =
   .stats(n.frames = length(frames), fps)
   
   ## progress bar
-  pb <- txtProgressBar(min = 1, max = n_frames, style=3)
+  pb <- txtProgressBar(min = 1, max = length(frames_rgl), style=3)
   
   ## create PNGs
   frames_dir <- out_file
@@ -79,7 +79,7 @@ animate_frames_rgl <- function(frames, out_file, fps = 25, width = 700, height =
   tryCatch({
     # animate PNGs
       if(out_ext == "gif"){
-       if(n_frames > 800) out("The number of number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)
+       if(lenght(frames) > 800) out("The number of number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)
         gifski(files, gif_file=paste0(frames_dir, "Animate_3D", ".gif"), width = 800, height = 600,
                delay = 1,progress=TRUE)
       }else{

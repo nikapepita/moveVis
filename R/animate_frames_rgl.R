@@ -66,7 +66,6 @@ animate_frames_rgl <- function(frames, out_file, fps = 25, width = 700, height =
   
   ## plot frames
   frames3d <- lapply(1:length(frames_rgl), function(i){
-    setTxtProgressBar(pb, i)
     plot3d(frames[[i]],zoom = zoomvalues[1],)
     render_snapshot(img_frames[i])
     

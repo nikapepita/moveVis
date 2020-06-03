@@ -164,16 +164,21 @@ frames_rgl <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, path_
     if(!(nrow(m.df.point)==0)) 
     {points3d(
       m.df.point[,9],
-      m.df.point[,11] / zscale_movement,  
+      (m.df.point[,11] / zscale_movement)+20,  
       -m.df.point[,10],
       size = pointsize, col = m.df.point[,8])}
     
     if(!(nrow(m.df.seg)==0)) 
-    {segments3d(
-      m.df.seg[,9],
-      m.df.seg[,11],  
-      -m.df.seg[,10],
-      size = pointsize, col = m.df.seg[,8])}
+    {
+      m.df.seg <- split(m.df.seg,m.df.seg$colour)
+      
+      for (i in 1:length(m.df.seg)){
+      lines3d(m.df.seg[[i]][,9],
+      (m.df.seg[[i]][,11]/zscale_movement)+20,  
+      -m.df.seg[[i]][,10],
+      lwd=pointsize, col = m.df.seg[[i]][,8])
+        }
+      }
     
     frames_rgl[[i]] <- scene3d()  
     frames_rgl[[i]]$dataframe <- m.df.temp

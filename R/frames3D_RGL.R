@@ -24,7 +24,7 @@
 #' @importFrom sf st_as_sfc st_bbox
 #' @importFrom sp spTransform
 #' @importFrom rayshader raster_to_matrix ray_shade sphere_shade add_overlay add_shadow plot_3d
-#' @importFrom rgl points3d rgl.close segments3d legend3d scene3d clear3d text3d
+#' @importFrom rgl points3d rgl.close lines3d legend3d scene3d clear3d text3d
 #' @importFrom utils setTxtProgressBar
 #' @importFrom raster pointDistance res
 #' @importFrom dplyr count filter

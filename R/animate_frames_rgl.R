@@ -25,40 +25,8 @@
 #' @author Jakob Schwalb-Willmann
 #' 
 #' @examples
-#' library(moveVis)
-#' library(move)
 #' 
-#' data("move_data", "basemap_data")
-#' # align movement
-#' m <- align_move(move_data, res = 4, unit = "mins")
-#' 
-#' # create spatial frames with frames_spatial:
-#' r_list <- basemap_data[[1]]
-#' r_times <- basemap_data[[2]]
-#' 
-#' \dontrun{
-#' frames <- frames_spatial(m, r_list = r_list, r_times = r_times, r_type = "gradient",
-#'                          fade_raster = TRUE)
-#' 
-#' # customize
-#' frames <- add_colourscale(frames, type = "gradient",
-#'                           colours = c("orange", "white", "darkgreen"), legend_title = "NDVI")
-#' frames <- add_northarrow(frames, position = "bottomleft")
-#' frames <- add_scalebar(frames, colour = "white", position = "bottomright")
-#' 
-#' frames <- add_progress(frames)
-#' frames <- add_timestamps(frames, m, type = "label")
-#' 
-#' # check available formats
-#' suggest_formats()
-#' 
-#' # animate frames as GIF
-#' animate_frames(frames, out_file = tempfile(fileext = ".gif"))
-#' 
-#' # animate frames as mov
-#' animate_frames(frames, out_file = tempfile(fileext = ".gif"))
-#' 
-#' @seealso \code{\link{frames_spatial}} \code{\link{frames_graph}} \code{\link{join_frames}}
+#' @seealso \code{\link{frames_3d_rgl}} 
 #' 
 #' @export
 

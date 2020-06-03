@@ -51,8 +51,11 @@ None or the default image/video viewer displaying the animation
 \details{
 An appropriate render function is selected depending on the file extension in \code{out_file}: For \code{.gif} files, \code{gifski::save_gif} is used, for any other (video) format, \code{av::av_capture_graphics} is used.
 }
+\examples{
+
+}
 \seealso{
-\code{\link{frames_spatial}} \code{\link{frames_graph}} \code{\link{join_frames}}
+\code{\link{frames_3d_rgl}}
 }
 \author{
 Jakob Schwalb-Willmann

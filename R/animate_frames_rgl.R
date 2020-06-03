@@ -21,7 +21,10 @@
 #' @importFrom gifski gifski
 #' @importFrom ggplot2 quo
 #' @importFrom lubridate dseconds
-#' 
+#' @importFrom rgl plot3d rgl.close
+#' @importFrom rayshader render_snapshot
+#' @importFrom utils txtProgressBar
+#'  
 #' @author Jakob Schwalb-Willmann
 #' 
 #' @examples
@@ -90,5 +93,4 @@ animate_frames_rgl <- function(frames, out_file, fps = 25, width = 700, height =
       out(paste0("Error creating animation: ", as.character(e)), type = 3)
     }, finally = unlink(frames_dir, recursive = TRUE))
     
-     #if(isTRUE(display)) browseURL(frames_dir)
     }

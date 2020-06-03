@@ -144,7 +144,7 @@ frames_rgl <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, path_
   if(point==FALSE){
   ##create frames
   out("Create Frames", type = 1)
-  frames_rgl <- lapply(10:20, function(i){
+  frames_rgl <- lapply(1:n_frames, function(i){
     setTxtProgressBar(pb, i)
     
     m.df.temp <- m.df[which(m.df$frame==i | m.df$frame==i+1),]
@@ -183,7 +183,7 @@ frames_rgl <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, path_
   }else{
     ##create frames
     out("Create Frames", type = 1)
-    frames_rgl <- lapply(1:20, function(i){
+    frames_rgl <- lapply(1:n_frames, function(i){
       
       setTxtProgressBar(pb, i)
       

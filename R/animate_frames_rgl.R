@@ -82,7 +82,7 @@ animate_frames_rgl <- function(frames, out_file, fps = 25, width = 700, height =
   tryCatch({
     # animate PNGs
       if(out_ext == "gif"){
-       if(lenght(frames) > 800) out("The number of number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)
+       if(length(frames) > 800) out("The number of number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)
         gifski(files, gif_file=paste0(frames_dir, "Animate_3D", ".gif"), width = 800, height = 600,
                delay = 1,progress=TRUE)
       }else{

@@ -171,7 +171,7 @@ frames_rgl <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, path_
     if(!(nrow(m.df.seg)==0)) 
     {segments3d(
       m.df.seg[,9],
-      m.df.seg[,11] / zscale_movement,  
+      m.df.seg[,11],  
       -m.df.seg[,10],
       size = pointsize, col = m.df.seg[,8])}
     

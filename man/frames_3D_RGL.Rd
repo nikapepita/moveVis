@@ -20,8 +20,6 @@ frames_3D_RGL(
   zscale_terrain = 3,
   zscale_movement = 3,
   point = TRUE,
-  rgl.timestamp = TRUE,
-  rgl.legend = TRUE,
   ...
 )
 }
@@ -53,10 +51,6 @@ frames_3D_RGL(
 \item{point}{TRUE: only points are plotted, FALSE: segments are plotted, Default TRUE}
 
 \item{...}{additional arguments to be passed to the render function.}
-
-\item{timestamp}{TRUE: Timestamp is added, Default TRUE}
-
-\item{Legend}{TRUE: Legend with the names of each individium is added}
 }
 \value{
 A rgl scene object, which can be plotted with animate_frames_rgl

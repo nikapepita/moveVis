@@ -16,8 +16,6 @@
 #' @param zscale_terrain The ratio between the x and y spacing (which are assumed to be equal) and the z axis. For example, if the elevation levels are in units of 1 meter and the grid values are separated by 10 meters, 'zscale' would be 10. Adjust the zscale down to exaggerate elevation features.Default '10'. 
 #' @param zscale_movement define the height of the points, zscale_terrain=zscale_movement - points have same height as basemap
 #' @param point TRUE: only points are plotted, FALSE: segments are plotted, Default TRUE 
-#' @param timestamp TRUE: Timestamp is added, Default TRUE
-#' @param Legend TRUE: Legend with the names of each individium is added
 #' @param ... additional arguments to be passed to the render function.
 #' 
 #' @return A rgl scene object, which can be plotted with animate_frames_rgl
@@ -37,7 +35,7 @@
 
 frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, path_terrain, map_service = "mapbox", map_type = "satellite",
                           map_token=map_token, m.crs="+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs", 
-                          pointsize=5, sunangle = 45, zscale_terrain = 3, zscale_movement=3, point=TRUE,rgl.timestamp=TRUE,rgl.legend=TRUE,...){ 
+                          pointsize=5, sunangle = 45, zscale_terrain = 3, zscale_movement=3, point=TRUE,...){ 
   ##check input
   if(all(!c(inherits(m, "MoveStack"), inherits(m, "Move")))) out("Argument 'm' must be of class 'Move' or 'MoveStack'.", type = 3)
   if(inherits(m, "Move")) m <- moveStack(m)
@@ -78,17 +76,18 @@ frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, pa
   }else{
     r.rgb.terrain <- raster(path_terrain)
     ext_crop <- projectRaster(r.overlay, crs = crs(r.rgb.terrain))
-    r.rgb.terrain <- crop(r.rgb.terrain, ext_crop)
-    r.rgb.terrain <- projectRaster(r.rgb.terrain, crs = m.crs)
-    r.rgb.terrain <- crop(r.rgb.terrain,r.overlay)
-    r.rgb.terrain<-resample(r.rgb.terrain, r.overlay, method="bilinear")
 
+    r.rgb.terrain <- r.rgb.terrain %>% 
+      crop(ext_crop) %>% 
+      projectRaster(crs = m.crs) %>% 
+      crop(r.overlay)%>%
+      resample(r.overlay, method="bilinear")
   }
   
   
   ## calculate elevation as matrix
   m.elev <- raster_to_matrix(r.rgb.terrain[[1]])
-
+ 
   ## create 3d basemap
   
   scene.texture<- m.elev  %>%
@@ -138,15 +137,13 @@ frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, pa
   clear3d()
   
   ##plot background basemap
-  plot_3d(
-    scene.texture,
-    m.elev,
-    zscale = zscale_terrain, theta=50, phi=30)
-  
+ plot_3d(scene.texture, m.elev,zscale = zscale_terrain)
+         
+ 
   if(point==FALSE){
   ##create frames
   out("Create Frames", type = 1)
-  frames_rgl <- lapply(1:10, function(i){
+  frames_rgl <- lapply(10:20, function(i){
     setTxtProgressBar(pb, i)
     
     m.df.temp <- m.df[which(m.df$frame==i | m.df$frame==i+1),]
@@ -177,21 +174,15 @@ frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, pa
       -m.df.seg[,10],
       size = pointsize, col = m.df.seg[,8])}
     
-    if(rgl.timestamp==TRUE){
-    legend3d("bottom",  m.df.temp$time_chr[1], cex=1.2, inset=c(1,0.2), bty="n")
-    }
-    
-    if(rgl.legend==TRUE){
-      legend3d("bottomright", as.character(unique(m.df$name)), pch = 16, col = color, cex=1, inset=c(0.02,0.2),title= "Name of Individuals")
-    }
-    
-    frames_rgl[[i]] <- scene3d()
-
+    frames_rgl[[i]] <- scene3d()  
+    frames_rgl[[i]]$dataframe <- m.df.temp
+    frames_rgl[[i]]
+  
     })
   }else{
     ##create frames
     out("Create Frames", type = 1)
-    frames_rgl <- lapply(1:10, function(i){
+    frames_rgl <- lapply(1:20, function(i){
       
       setTxtProgressBar(pb, i)
       
@@ -206,21 +197,13 @@ frames_3D_RGL <- function(m, out_file, color=rainbow(15), own_terrain= FALSE, pa
         m.df.temp[,11] / zscale_movement,  
         -m.df.temp[,10],
         size = pointsize, col = m.df.temp[,8])
+  
+      frames_rgl[[i]] <- scene3d()  
+      frames_rgl[[i]]$dataframe <- m.df.temp
+      frames_rgl[[i]]
       
-      if(rgl.timestamp==TRUE){
-        text3d(sm.df.temp$time_chr[1],add=T,cex=0.4,justify="left")
-        
-        
-        texts3d(x=-50,y=-10,z=100, texts= m.df.temp$time_chr[1], col="blue",cex=1.2, inset=c(1,0.2), bty="n")
-      }
-      
-      if(rgl.legend==TRUE){
-        legend3d("bottomright", as.character(unique(m.df$name)), pch = 16, col = color, cex=1, inset=c(0.02,0.2),title= "Name of Individuals")
-      }
-      
-      frames_rgl[[i]] <- scene3d()
-      }
-      )}
+    })
+    }
   
   rgl.close()
   return(frames_rgl)

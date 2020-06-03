@@ -20,47 +20,51 @@ frames_3D_RGL(
   zscale_terrain = 3,
   zscale_movement = 3,
   point = TRUE,
-  timestamp = TRUE,
+  rgl.timestamp = TRUE,
+  rgl.legend = TRUE,
   ...
 )
 }
 \arguments{
 \item{out_file}{character, the output file path, e.g. "/dir/to/".}
 
-\item{map_service}{blindtext}
+\item{color}{color palette for individuals, default: rainbow (15)}
 
-\item{map_type}{blindtext}
+\item{own_terrain}{TRUE if you want to use your own Terrain Model, default: FALSE}
 
-\item{map_token}{blindtext}
+\item{path_terrain}{character, file path for the own terrain model.}
 
-\item{m.crs}{blindtext}
+\item{map_service}{choose a mapservice e.g. Mapbox - more informations basemaps::get_maptypes}
 
-\item{sunangle}{blindtext}
+\item{map_type}{choose a maptype e.g. satellite  - more informations basemaps::get_maptypes}
 
-\item{zscale_terrain}{blindtext}
+\item{map_token}{add a map token if it is necassary for the mapservice e.g. mapbox}
 
-\item{zscale_movement}{blindtext}
+\item{m.crs}{choose crs, default}
+
+\item{pointsize}{size of each point, default 10}
+
+\item{sunangle}{sunangle for 3D Background Image, default 45}
+
+\item{zscale_terrain}{The ratio between the x and y spacing (which are assumed to be equal) and the z axis. For example, if the elevation levels are in units of 1 meter and the grid values are separated by 10 meters, 'zscale' would be 10. Adjust the zscale down to exaggerate elevation features.Default '10'.}
+
+\item{zscale_movement}{define the height of the points, zscale_terrain=zscale_movement - points have same height as basemap}
+
+\item{point}{TRUE: only points are plotted, FALSE: segments are plotted, Default TRUE}
 
 \item{...}{additional arguments to be passed to the render function.}
 
-\item{theta}{blindtext}
+\item{timestamp}{TRUE: Timestamp is added, Default TRUE}
 
-\item{phi}{blindtext}
-
-\item{zoom}{blindtext}
-
-\item{out_ext}{blindtext}
-
-\item{display}{blindtext}
+\item{Legend}{TRUE: Legend with the names of each individium is added}
 }
 \value{
-A character vector of supported map types
+A rgl scene object, which can be plotted with animate_frames_rgl
 }
 \description{
 This function returns a data frame that can be used as input to the \code{map_type} argument of \code{\link{animate_frames3D_RGL}}.
 }
 \examples{
-
 
 }
 \seealso{

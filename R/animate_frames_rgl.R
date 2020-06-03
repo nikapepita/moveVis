@@ -57,7 +57,7 @@
 #' 
 #' # animate frames as mov
 #' animate_frames(frames, out_file = tempfile(fileext = ".gif"))
-#' }
+#' 
 #' @seealso \code{\link{frames_spatial}} \code{\link{frames_graph}} \code{\link{join_frames}}
 #' 
 #' @export
@@ -96,12 +96,57 @@ animate_frames_rgl <- function(frames, out_file, fps = 25, width = 700, height =
     frames_dir,
     paste0("mov_", formatC(seq_len(length(frames)), width = 3, flag = "0"), ".png")
   )
+  #transition_values <- function(from, to, steps = 10, 
+  #                              one_way = FALSE, type = "cos") {
+  
+  # if (!(type %in% c("cos", "lin")))
+  #    stop("type must be one of: 'cos', 'lin'")
+    
+  #  range <- c(from, to)
+  #  middle <- mean(range)
+  #  half_width <- diff(range)/2
+    
+    # define scaling vector starting at 1 (between 1 to -1)
+   # if (type == "cos") {
+   #   scaling <- cos(seq(0, 2*pi / ifelse(one_way, 2, 1), length.out = steps))
+   # } else if (type == "lin") {
+    #  if (one_way) {
+    #    xout <- seq(1, -1, length.out = steps)
+    #  } else {
+    #    xout <- c(seq(1, -1, length.out = floor(steps/2)), 
+    #              seq(-1, 1, length.out = ceiling(steps/2)))
+    #  }
+    #  scaling <- approx(x = c(-1, 1), y = c(-1, 1), xout = xout)$y 
+   # }
+    
+   # middle - half_width * scaling
+    
+  thetavalues <- transition_values(from = 280, 
+                                   to = 130,
+                                   steps = n_frames,        
+                                   one_way = TRUE, 
+                                   type = "lin")
+  phivalues <- transition_values(from = 70, 
+                                 to = 20, 
+                                 steps = n_frames,
+                                 one_way = FALSE, 
+                                 type = "cos")
+  zoomvalues <- transition_values(from = 0.8, 
+                                  to = 0.3, 
+                                  steps = n_frames,
+                                  one_way = FALSE, 
+                                  type = "cos")
   
   ## plot frames
   frames3d <- lapply(1:3, function(i){
     setTxtProgressBar(pb, i)
-    plot3d(frames[[i]])
+    plot3d(frames[[i]],zoom = zoomvalues[1],)
     render_snapshot(img_frames[i])
+    
+    #render_snapshot(filename = file.path(path_to_frames, paste0("bigsur", i, ".png")), 
+   #                title_text = glue::glue("Big Sur Marathon | April 28, 2019 | time: {elapsed_time} | distance: {elapsed_dist} miles"),
+    #                title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
+    
     rgl.close()
   })
   
@@ -122,5 +167,4 @@ animate_frames_rgl <- function(frames, out_file, fps = 25, width = 700, height =
     }, finally = unlink(frames_dir, recursive = TRUE))
     
      #if(isTRUE(display)) browseURL(frames_dir)
-    
-}
+    }

@@ -28,6 +28,7 @@
 #' @importFrom utils setTxtProgressBar
 #' @importFrom raster pointDistance res
 #' @importFrom dplyr count filter
+#' @import magrittr
 #' @examples 
 #' 
 #' @seealso \code{\link{frames_spatial}}

@@ -55,7 +55,7 @@ animate_frames_rgl <- function(frames, out_file, fps = 25, width = 700, height =
   .stats(n.frames = length(frames), fps)
   
   ## progress bar
-  pb <- txtProgressBar(min = 1, max = length(frames_rgl), style=3)
+  pb <- txtProgressBar(min = 1, max = length(frames), style=3)
   
   ## create PNGs
   frames_dir <- out_file

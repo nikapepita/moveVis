@@ -90,6 +90,104 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
   frames_dir <- paste0(tempdir(), "/moveVis/frames/")
   dir.create(frames_dir, recursive = T)
   
+  #if(engine == "ggplot")...
+  
+  
+  if(engine == "rgl"){
+    
+    ##calculte number of individuals
+    categories <- as.character(unique(frames$move_data$colour))
+    nr.Categories <- length(categories)
+    
+    cat.length <- c()
+    
+    cat.length <- lapply(1:nr.Categories, function(i){
+      length <- c(length(which(frames$move_datacolour == categories[i])))
+      cat.length <- c(cat.length,length)
+    })
+    
+    categories.df <- as.data.frame(cbind(as.character(categories),as.numeric(cat.length)))
+    categories.df <- categories.df[order(categories.df$V2, decreasing = TRUE),]
+    categories.df$V2 <- as.numeric(as.character(categories.df$V2))
+    
+    clear3d()
+    
+    ##plot background basemap
+    frames$rgl_background()
+    
+    
+    if(point==FALSE){
+      
+      m.df.temp <- frames$move_data[which(frames$move_data$frame<=i+1),]
+      m.df.temp <- m.df.temp[order(m.df.temp$colour),]
+      
+      categories <- as.character(unique(m.df.temp$colour))
+      nr.Categories <- length(categories)
+      
+      nr <- dplyr::count(m.df.temp, vars = colour)
+      
+      nr_seg <- nr %>% dplyr::filter(nr$n>=2)
+      nr_point <- nr %>% dplyr::filter(n==1)
+      
+      m.df.seg <- m.df.temp[which(m.df.temp$colour %in% nr_seg$vars),]
+      m.df.point <- m.df.temp[which(m.df.temp$colour==nr_point$vars),]
+      
+      if(!(nrow(m.df.point)==0)) 
+      {points3d(
+        m.df.point[,10],
+        (m.df.point[,12] / frames$rgl_zscale)+height,  
+        -m.df.point[,11],
+        size = pointsize, col = m.df.point[,8])}
+      
+      if(!(nrow(m.df.seg)==0)) 
+      {
+        
+        if(length(unique(m.df.seg$colour))>1){
+          
+          m.df.seg <- split(m.df.seg,m.df.seg$colour)
+          
+          for (i in 1:length(m.df.seg)){
+            lines3d(m.df.seg[[i]][,10],
+                    (m.df.seg[[i]][,12]/frames$rgl_zscale)+height,  
+                    -m.df.seg[[i]][,11],
+                    lwd=pointsize, col = m.df.seg[[i]][,8])
+          }
+        }else{
+          lines3d(m.df.seg[,10],
+                  (m.df.seg[,12]/frames$rgl_zscale)+height,  
+                  -m.df.seg[,11],
+                  lwd=pointsize, col = m.df.seg[,8])
+        }
+      }
+      
+      rgl_id <- rgl.ids()
+      rgl_id <- rgl_id[rgl_id$type=="linestrip" | rgl_id$type=="point",]
+      
+      subsceneList
+      rgl::rgl.pop(type = "shapes",id = rgl_id$id)
+      gc()
+      
+    }else{
+      ##create frames
+      
+      m.df.temp <- frames$move_data[which(frames$move_data$frame<=i),]
+      m.df.temp <- m.df.temp[order(m.df.temp$colour),]
+      
+      categories <- as.character(unique(m.df.temp$colour))
+      nr.Categories <- length(categories)
+      
+      points3d(
+        m.df.temp[,10],
+        m.df.temp[,12] / frames$rgl_zscale,
+        -m.df.temp[,11],
+        size = pointsize, col = m.df.temp[,8])
+      
+      rgl::rgl.pop(type = "shapes")
+      gc()
+      
+    }
+  }
+  
   tryCatch({
     file <- file.path(frames_dir, "frame_%05d.png")
     grDevices::png(file, width = width, height = height, res = res)
@@ -113,4 +211,5 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
   }, finally = unlink(frames_dir, recursive = TRUE))
   
   if(isTRUE(display)) utils::browseURL(out_file)
+  
 }

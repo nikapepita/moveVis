@@ -1,9 +1,9 @@
 #' Create frames of spatial movement maps for animation
 #'
-#' \code{frames_spatial} creates a list of \code{ggplot2} maps displaying movement. Each object represents a single frame. Each frame can be viewed or modified individually. The returned list of frames can be animated using \code{\link{animate_frames}}.
+#' \code{frames_spatial} creates frames from movement and map/raster data. Frames are returned as an object of class \code{moveVis} and can be subsetted, viewed (see \code{\link{render_frame}}), modified (see \code{\link{add_gg}} and associated functions ) and animated (see \code{\link{animate_frames}}).
 #'
 #' @param m \code{move} or \code{moveStack} of uniform time scale and time lag, e.g. prepared with \code{\link{align_move}} (recommended). May contain a column named \code{colour} to control path colours (see \code{details}).
-#' @param r_list list of \code{raster} or \code{rasterStack}. Each list element referrs to the times given in \code{r_times}. Use single-layer \code{raster} objects for gradient or discrete data (see \code{r_type}). Use a  \code{rasterStack} containing three bands for RGB imagery (in the order red, green, blue).
+#' @param r_list list of \code{raster} or \code{rasterStack}. Each list element refers to the times given in \code{r_times}. Use single-layer \code{raster} objects for gradient or discrete data (see \code{r_type}). Use a  \code{rasterStack} containing three bands for RGB imagery (in the order red, green, blue).
 #' @param r_times list of \code{POSIXct} times. Each list element represents the time of the corresponding element in \code{r_list}. Must be of same length as \code{r_list}.
 #' @param r_type character, either \code{"gradient"} or \code{"discrete"}. Ignored, if \code{r_list} contains \code{rasterStacks} of three bands, which are treated as RGB.
 #' @param fade_raster logical, if \code{TRUE}, \code{r_list} is interpolated over time based on \code{r_times}. If \code{FALSE}, \code{r_list} elements are assigned to those frames closest to the equivalent times in \code{r_times}.
@@ -49,7 +49,7 @@
 #' 
 #' The projection of \code{m} is treated as target projection. Default base maps accessed through a map service will be reprojected into the projection of \code{m}. Thus, depending on the projection of \code{m}, it may happen that map labels are distorted. To get undistorted map labels, reproject \code{m} to the web mercator projection (the default projection of the base maps): \code{spTransform(m, crs("+init=epsg:3857"))}. The \code{ggplot2} coordinate system will be computed based on the projection of \code{m} using \code{coord_sf}. If argument \code{equidistant} is set, the map extent is calculated (thus enlarged into one axis direction) to represent equal surface distances on the x and y axis.
 #'
-#' @return List of ggplot2 objects, each representing a single frame.
+#' @return A frames object of class \code{moveVis}.
 #' 
 #' @author Jakob Schwalb-Willmann
 #' 
@@ -145,14 +145,14 @@
 #' # see ?add_colourscale to learn how to change colours of custom base maps
 #' # see all add_ functions on how to customize your frames created with frames_spatial
 #' # or frames_graph
-#' # see ?animate_frames on how to animate your list of frames
+#' # see ?animate_frames on how to animate a frames
 #' }
 #' @seealso \code{\link{frames_graph}} \code{\link{join_frames}} \code{\link{animate_frames}}
 #' @export
 
 frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient", fade_raster = FALSE, crop_raster = TRUE, map_service = "osm", map_type = "streets", map_res = 1, map_token = NULL, map_dir = NULL,
                            margin_factor = 1.1, equidistant = NULL, ext = NULL, path_size = 3, path_end = "round", path_join = "round", path_mitre = 10, path_arrow = NULL, path_colours = NA, path_alpha = 1, path_fade = FALSE,
-                           path_legend = TRUE, path_legend_title = "Names", tail_length = 19, tail_size = 1, tail_colour = "white", trace_show = FALSE, trace_colour = "white", cross_dateline = FALSE, ..., verbose = TRUE){
+                           path_legend = TRUE, path_legend_title = "Names", tail_length = 19, tail_size = 1, tail_colour = "white", trace_show = FALSE, trace_colour = "white", cross_dateline = FALSE, sunangle = 45, zscale = 3, ..., verbose = TRUE){
   
   ## check input arguments
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
@@ -184,6 +184,7 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   catch <- sapply(1:length(num.args), function(i) if(!is.numeric(num.args[[i]])) out(paste0("Argument '", names(num.args)[[i]], "' must be of type 'numeric'."), type = 3))
   char.args <- c(path_end = path_end, path_join = path_join, path_legend_title = path_legend_title)
   catch <- sapply(1:length(char.args), function(i) if(!is.character(char.args[[i]])) out(paste0("Argument '", names(char.args)[[i]], "' must be of type 'numeric'."), type = 3))
+  extras <- list(...)
   
   if(!is.null(ext)){
     if(!inherits(ext, "Extent")) out("Argument 'ext' must be of type 'Extent' (see raster::extent), if defined.", type = 3)
@@ -195,7 +196,8 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   if(is.null(equidistant)) if(is.null(ext)) equidistant <- TRUE else equidistant <- FALSE
   if(!is.logical(equidistant)) out("Argument 'equidistant' must be of type 'logical'.", type = 3)
   
-  if(all(as.integer(st_crs(m)$epsg) != as.integer(4326), isTRUE(cross_dateline), na.rm = T)){
+  m.crs <- quiet(st_crs(m))
+  if(all(m.crs != st_crs(4326), isTRUE(cross_dateline), na.rm = T)){ # quiet due to +init warnings
     out("Argument 'cross_dateline' is ignored, since the coordinate reference system of 'm' is not geographical (long/lat).", type = 2)
     cross_dateline <- FALSE
   }
@@ -211,7 +213,7 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   m.df <- .m2df(m, path_colours = path_colours) # create data.frame from m with frame time and colour
   .stats(n.frames = max(m.df$frame))
   
-  gg.ext <- .ext(m.df, m.crs = st_crs(m), ext, margin_factor, equidistant, cross_dateline) # calcualte extent
+  gg.ext <- .ext(m.df, m.crs, ext, margin_factor, equidistant, cross_dateline) # calcualte extent
   
   ## shift coordinates crossing dateline
   if(isTRUE(cross_dateline)){
@@ -228,6 +230,9 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
     out("Retrieving and compositing basemap imagery...")
     r_list <- .getMap(gg.ext, map_service, map_type, map_token, map_dir, map_res, m.crs = crs(m))
     if(all(map_service == "mapbox", map_type == "terrain")) r_type = "gradient" else r_type <- "RGB"
+  } else{
+    map_service <- "custom"
+    map_type <- "custom"
   }
   
   # calculate frames extents and coord labes
@@ -235,7 +240,7 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
     # calculate extent shifted across dateline
     gg.ext <- .combine_ext(.expand_ext(list(extent(gg.ext$east[[1]], gg.ext$east[[3]], gg.ext$east[[2]], gg.ext$east[[4]]),
                                             extent(gg.ext$west[[1]], gg.ext$west[[3]], gg.ext$west[[2]], gg.ext$west[[4]])), rg))
-    gg.ext <- st_bbox(c(xmin = gg.ext@xmin, xmax = gg.ext@xmax, ymin = gg.ext@ymin, ymax = gg.ext@ymax), crs = st_crs(m))
+    gg.ext <- st_bbox(c(xmin = gg.ext@xmin, xmax = gg.ext@xmax, ymin = gg.ext@ymin, ymax = gg.ext@ymax), crs = m.crs)
     
     # use coord_equal for dateline crossingngs in EPSG:4326 only
     m.df$coord <- list(ggplot2::coord_sf(xlim = c(gg.ext$xmin, gg.ext$xmax), ylim = c(gg.ext$ymin, gg.ext$ymax),
@@ -246,26 +251,131 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
     
     # use coord_sf for all other cases
     m.df$coord <- list(ggplot2::coord_sf(xlim = c(gg.ext$xmin, gg.ext$xmax), ylim = c(gg.ext$ymin, gg.ext$ymax),
-                                         expand = F, crs = st_crs(m)$proj4string, datum = st_crs(m)$proj4string, clip = "on"))
+                                         expand = F, crs = st_crs(m), datum = st_crs(m), clip = "on"))
     m.df$scaley <- m.df$scalex <- NULL
   }
   
   out("Assigning raster maps to frames...")
   r_list <- .rFrames(r_list, r_times, m.df, gg.ext, fade_raster, crop_raster = crop_raster)
   
-  ## create frames
-  out("Creating frames...")
-  frames <- .gg_spatial(r_list = r_list, r_type = r_type, m.df = m.df, equidistant = equidistant,
-                        path_size = path_size, path_end = path_end, path_join = path_join, path_alpha = path_alpha, path_mitre = path_mitre,
-                        path_arrow = path_arrow, print_plot = F, path_legend = path_legend, path_legend_title = path_legend_title,
-                        tail_length = tail_length, tail_size = tail_size, tail_colour = tail_colour, trace_show = trace_show,
-                        trace_colour = trace_colour, path_fade = path_fade, ...)
+  ##create dir
+  map.dir <- paste0(out_file, "basemap/")
+  dir.create(map.dir, showWarnings = FALSE,recursive = TRUE)
   
-  ## add time attribute per frame
-  frames <- mapply(x = frames, y = unique(m.df$time), function(x, y){
-    attr(x, "time") <- y
-    return(x)
-  }, SIMPLIFY = F)
+  ## transform data in CRS ETRS89
+  m <- sp::spTransform(m, CRSobj = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+  
+  ## transform move data in dataframe including time and colour and extract extent
+  out("Create Dataframe", type = 1)
+  # m.df <-
+  #  .m2df(m, path_colours = color)
+  #.stats(n.frames = max(m.df$frame))
+  
+  ## download overlay map
+  out("Download Overlay Map for 3D Visualization", type = 1)
+  r.overlay <- .getMap(map_service = map_service, map_type = map_type, map_dir = map_dir , gg.ext = st_bbox(m), map_res=1,
+                       map_token = map_token,m.crs=crs(m))
+  
+  #r.overlay <- basemaps::basemap(map_service = map_service, map_type = map_type, map_dir = map.dir , ext = st_bbox(m), map_res=1,
+  #                               map_token = map_token,m.crs=m.crs)
+  
+  ## download terrain map
+  r.overlay <- RStoolbox::rescaleImage(r.overlay[[1]],  xmin = 0, xmax = 255, ymin = 0, ymax = 1)
+  
+  if(own_terrain==FALSE){
+    out("Download Terrain Map for 3D Visualization", type = 1)
+    
+    
+    r.rgb.terrain <- .getMap(map_service = "mapbox", map_type = "terrain", map_dir = map.dir , gg.ext = st_bbox(m), map_res=1,
+                             map_token = map_token, m.crs=crs(m))
+    #r.rgb.terrain <- basemaps::basemap(map_service = "mapbox", map_type = "terrain", map_dir = map.dir , ext = st_bbox(m), map_res=1,
+    #                         map_token = map_token, m.crs=m.crs)
+    
+  }else{
+    r.rgb.terrain <- raster(path_terrain)
+    ext_crop <- projectRaster(r.overlay, crs = crs(r.rgb.terrain))
+    
+    r.rgb.terrain <- r.rgb.terrain %>% 
+      crop(ext_crop) %>% 
+      projectRaster(crs = m.crs) %>% 
+      crop(r.overlay)%>%
+      resample(r.overlay, method="bilinear")
+  }
+  
+  
+  ## calculate elevation as matrix
+  m.elev <- raster_to_matrix(r.rgb.terrain[[1]])
+  
+  ## create 3d basemap
+  
+  scene.texture<- m.elev  %>%
+    sphere_shade(texture = "imhof4") %>%
+    add_overlay(raster::as.array(r.overlay), alphalayer = 0.99) %>%
+    add_shadow(ray_shade( m.elev,sunangle = sunangle, maxsearch = 100), max_darken = 0.5) 
+  
+  
+  clear3d()
+  rgl.close()
+  rgl_scene = scene.texture
+  rgl_elev = m.elev 
+  rgl_zscale=zscale
+  
+  ##plot background basemap
+  rgl_bg = function(){plot_3d(frames$rgl_scene, frames$rgl_elevation,frames$rgl_zscale)}  
+  
+  #frames_rgl()
+  #execute
+  
+  ## transform coordinates
+  
+  r.elev <-  r.rgb.terrain[[1]]
+  e <- extent(r.elev)
+  
+  m.df$lon <- pointDistance(c(e@xmin, e@ymin),
+                            cbind(m.df$x, rep(e@ymin, length(m.df$x))), lonlat = FALSE) /
+    res(r.elev)[1] - (e@xmax - e@xmin) / 2 / res(r.elev)[1]
+  
+  m.df$lat <- pointDistance(c(e@xmin, e@ymin),
+                            cbind(rep(e@xmin, length(m.df$y)), m.df$y), lonlat = FALSE) /
+    res(r.elev)[2] - (e@ymax - e@ymin) / 2 / res(r.elev)[2]
+  
+  m.df$altitude <- raster::extract(r.elev, m.df[, 1:2])
+  
+  
+  # create frames object
+  frames <- list(
+    move_data = m.df,
+    raster_data = r_list,
+    rgl_background=rgl_bg,
+    rgl_scene=rgl_scene,
+    rgl_elevation=rgl_elev,
+    rgl_zscale =rgl_zscale,
+    aesthetics = c(list(
+      equidistant = equidistant,
+      path_size = path_size,
+      path_end = path_end,
+      path_join = path_join,
+      path_alpha = path_alpha,
+      path_mitre = path_mitre,
+      path_arrow = path_arrow, 
+      path_legend = path_legend,
+      path_legend_title = path_legend_title,
+      tail_length = tail_length,
+      tail_size = tail_size,
+      tail_colour = tail_colour,
+      trace_show = trace_show,
+      trace_colour = trace_colour,
+      path_fade = path_fade,
+      gg.ext = gg.ext,
+      map_service = map_service,
+      map_type = map_type,
+      r_type = r_type),
+      maxpixels = if(!is.null(extras$maxpixels)) extras$maxpixels else 500000,
+      alpha = if(!is.null(extras$alpha)) extras$alpha else 1,
+      maxColorValue = if(!is.null(extras$maxColorValue)) extras$maxColorValue else NA),
+    additions = NULL
+  )
+  attr(frames, "class") <- c("moveVis", "frames_spatial")
   
   return(frames)
 }

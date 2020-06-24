@@ -152,7 +152,7 @@
 
 frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient", fade_raster = FALSE, crop_raster = TRUE, map_service = "osm", map_type = "streets", map_res = 1, map_token = NULL, map_dir = NULL,
                            margin_factor = 1.1, equidistant = NULL, ext = NULL, path_size = 3, path_end = "round", path_join = "round", path_mitre = 10, path_arrow = NULL, path_colours = NA, path_alpha = 1, path_fade = FALSE,
-                           path_legend = TRUE, path_legend_title = "Names", tail_length = 19, tail_size = 1, tail_colour = "white", trace_show = FALSE, trace_colour = "white", cross_dateline = FALSE, ..., verbose = TRUE){
+                           path_legend = TRUE, path_legend_title = "Names", tail_length = 19, tail_size = 1, tail_colour = "white", trace_show = FALSE, trace_colour = "white", cross_dateline = FALSE, sunangle = 45, zscale = 3, ..., verbose = TRUE){
   
   ## check input arguments
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
@@ -272,8 +272,8 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   #.stats(n.frames = max(m.df$frame))
   
   ## download overlay map
-  out("Download Overlay Map", type = 1)
-  r.overlay <- .getMap(map_service = map_service, map_type = map_type, map_dir = map.dir , gg.ext = st_bbox(m), map_res=1,
+  out("Download Overlay Map for 3D Visualization", type = 1)
+  r.overlay <- .getMap(map_service = map_service, map_type = map_type, map_dir = map_dir , gg.ext = st_bbox(m), map_res=1,
                        map_token = map_token,m.crs=crs(m))
   
   #r.overlay <- basemaps::basemap(map_service = map_service, map_type = map_type, map_dir = map.dir , ext = st_bbox(m), map_res=1,
@@ -283,7 +283,7 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   r.overlay <- RStoolbox::rescaleImage(r.overlay[[1]],  xmin = 0, xmax = 255, ymin = 0, ymax = 1)
   
   if(own_terrain==FALSE){
-    out("Download Terrain Map", type = 1)
+    out("Download Terrain Map for 3D Visualization", type = 1)
     
     
     r.rgb.terrain <- .getMap(map_service = "mapbox", map_type = "terrain", map_dir = map.dir , gg.ext = st_bbox(m), map_res=1,
@@ -318,9 +318,10 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   rgl.close()
   rgl_scene = scene.texture
   rgl_elev = m.elev 
+  rgl_zscale=zscale
   
   ##plot background basemap
-  rgl_bg = function(){plot_3d(rgl_scene, rgl_elev,zscale)}  
+  rgl_bg = function(){plot_3d(frames$rgl_scene, frames$rgl_elevation,frames$rgl_zscale)}  
   
   #frames_rgl()
   #execute
@@ -348,6 +349,7 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
     rgl_background=rgl_bg,
     rgl_scene=rgl_scene,
     rgl_elevation=rgl_elev,
+    rgl_zscale =rgl_zscale,
     aesthetics = c(list(
       equidistant = equidistant,
       path_size = path_size,

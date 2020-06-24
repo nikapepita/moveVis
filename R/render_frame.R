@@ -152,7 +152,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
         if(!(nrow(m.df.point)==0)) 
         {points3d(
           m.df.point[,10],
-          (m.df.point[,12] / zscale)+height,  
+          (m.df.point[,12] / frames$rgl_zscale)+height,  
           -m.df.point[,11],
           size = pointsize, col = m.df.point[,8])}
         
@@ -165,13 +165,13 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
             
             for (i in 1:length(m.df.seg)){
               lines3d(m.df.seg[[i]][,10],
-                      (m.df.seg[[i]][,12]/zscale)+height,  
+                      (m.df.seg[[i]][,12]/frames$rgl_zscale)+height,  
                       -m.df.seg[[i]][,11],
                       lwd=pointsize, col = m.df.seg[[i]][,8])
             }
           }else{
             lines3d(m.df.seg[,10],
-                    (m.df.seg[,12]/zscale)+height,  
+                    (m.df.seg[,12]/frames$rgl_zscale)+height,  
                     -m.df.seg[,11],
                     lwd=pointsize, col = m.df.seg[,8])
           }
@@ -188,7 +188,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
         
         points3d(
           m.df.temp[,10],
-          m.df.temp[,12] / zscale,  
+          m.df.temp[,12] / frames$rgl_zscale,
           -m.df.temp[,11],
           size = pointsize, col = m.df.temp[,8])
 

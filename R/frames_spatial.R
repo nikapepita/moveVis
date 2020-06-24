@@ -258,9 +258,6 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   out("Assigning raster maps to frames...")
   r_list <- .rFrames(r_list, r_times, m.df, gg.ext, fade_raster, crop_raster = crop_raster)
   
-  ##create dir
-  map.dir <- paste0(out_file, "basemap/")
-  dir.create(map.dir, showWarnings = FALSE,recursive = TRUE)
   
   ## transform data in CRS ETRS89
   m <- sp::spTransform(m, CRSobj = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")

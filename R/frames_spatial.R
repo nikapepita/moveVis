@@ -309,9 +309,9 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   ## create 3d basemap
   
   scene.texture<- m.elev  %>%
-    sphere_shade(texture = "imhof4") %>%
-    add_overlay(raster::as.array(r.overlay), alphalayer = 0.99) %>%
-    add_shadow(ray_shade( m.elev,sunangle = sunangle, maxsearch = 100), max_darken = 0.5) 
+    rayshader::sphere_shade(texture = "imhof4") %>%
+    rayshader::add_overlay(raster::as.array(r.overlay), alphalayer = 0.99) %>%
+    rayshader::add_shadow(ray_shade( m.elev,sunangle = sunangle, maxsearch = 100), max_darken = 0.5) 
   
   
   clear3d()
@@ -331,11 +331,11 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   r.elev <-  r.rgb.terrain[[1]]
   e <- extent(r.elev)
   
-  m.df$lon <- pointDistance(c(e@xmin, e@ymin),
+  m.df$lon <- raster::pointDistance(c(e@xmin, e@ymin),
                             cbind(m.df$x, rep(e@ymin, length(m.df$x))), lonlat = FALSE) /
     res(r.elev)[1] - (e@xmax - e@xmin) / 2 / res(r.elev)[1]
   
-  m.df$lat <- pointDistance(c(e@xmin, e@ymin),
+  m.df$lat <- raster::pointDistance(c(e@xmin, e@ymin),
                             cbind(rep(e@xmin, length(m.df$y)), m.df$y), lonlat = FALSE) /
     res(r.elev)[2] - (e@ymax - e@ymin) / 2 / res(r.elev)[2]
   

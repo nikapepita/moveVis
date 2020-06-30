@@ -129,7 +129,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     categories.df <- categories.df[order(categories.df$V2, decreasing = TRUE),]
     categories.df$V2 <- as.numeric(as.character(categories.df$V2))
     
-    clear3d()
+    rgl::clear3d()
     
     ##plot background basemap
     frames$rgl_background()
@@ -166,13 +166,13 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
             m.df.seg <- split(m.df.seg,m.df.seg$colour)
             
             for (i in 1:length(m.df.seg)){
-              lines3d(m.df.seg[[i]][,10],
+              rgl::lines3d(m.df.seg[[i]][,10],
                       (m.df.seg[[i]][,12]/frames$rgl_zscale)+height,  
                       -m.df.seg[[i]][,11],
                       lwd=pointsize, col = m.df.seg[[i]][,8])
             }
           }else{
-            lines3d(m.df.seg[,10],
+            rgl::lines3d(m.df.seg[,10],
                     (m.df.seg[,12]/frames$rgl_zscale)+height,  
                     -m.df.seg[,11],
                     lwd=pointsize, col = m.df.seg[,8])
@@ -188,7 +188,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
         categories <- as.character(unique(m.df.temp$colour))
         nr.Categories <- length(categories)
         
-        points3d(
+        rgl::points3d(
           m.df.temp[,10],
           m.df.temp[,12] / frames$rgl_zscale,
           -m.df.temp[,11],

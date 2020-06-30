@@ -333,11 +333,11 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   
   m.df$lon <- raster::pointDistance(c(e@xmin, e@ymin),
                             cbind(m.df$x, rep(e@ymin, length(m.df$x))), lonlat = FALSE) /
-    res(r.elev)[1] - (e@xmax - e@xmin) / 2 / res(r.elev)[1]
+    res(r.elev)[1] - (e@xmax - e@xmin) / 2 / raster::res(r.elev)[1]
   
   m.df$lat <- raster::pointDistance(c(e@xmin, e@ymin),
                             cbind(rep(e@xmin, length(m.df$y)), m.df$y), lonlat = FALSE) /
-    res(r.elev)[2] - (e@ymax - e@ymin) / 2 / res(r.elev)[2]
+    res(r.elev)[2] - (e@ymax - e@ymin) / 2 / raster::res(r.elev)[2]
   
   m.df$altitude <- raster::extract(r.elev, m.df[, 1:2])
   

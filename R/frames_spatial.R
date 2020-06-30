@@ -321,7 +321,7 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   rgl_zscale=zscale
   
   ##plot background basemap
-  rgl_bg = function(){rgl::plot_3d(frames$rgl_scene, frames$rgl_elevation,frames$rgl_zscale)}  
+  rgl_bg = function(){rayshader::plot_3d(frames$rgl_scene, frames$rgl_elevation,frames$rgl_zscale)}  
   
   #frames_rgl()
   #execute

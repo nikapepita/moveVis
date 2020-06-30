@@ -53,10 +53,12 @@
 #' 
 #' @author Jakob Schwalb-Willmann
 #' 
-#' @importFrom raster compareCRS nlayers
+#' @importFrom raster compareCRS nlayers pointDistance
 #' @importFrom sf st_crs
 #' @importFrom raster crs
 #' @importFrom move n.indiv moveStack
+#' @importFrom rayshader raster_to_matrix ray_shade sphere_shade add_overlay add_shadow plot_3d
+#' @importFrom rgl points3d rgl.close lines3d legend3d scene3d clear3d text3d
 #' 
 #' @examples 
 #' library(moveVis)

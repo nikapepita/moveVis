@@ -8,6 +8,8 @@
 #' 
 #' @export
 #' 
+#' @importFrom rgl points3d rgl.close lines3d legend3d scene3d clear3d text3d
+#' 
 #' @examples
 #' 
 #' library(moveVis)

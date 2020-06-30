@@ -304,7 +304,7 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   
   
   ## calculate elevation as matrix
-  m.elev <- raster_to_matrix(r.rgb.terrain[[1]])
+  m.elev <- rayshader::raster_to_matrix(r.rgb.terrain[[1]])
   
   ## create 3d basemap
   

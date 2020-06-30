@@ -57,8 +57,8 @@
 #' @importFrom sf st_crs
 #' @importFrom raster crs
 #' @importFrom move n.indiv moveStack
-#' @importFrom rayshader raster_to_matrix ray_shade sphere_shade add_overlay add_shadow plot_3d
-#' @importFrom rgl points3d rgl.close lines3d legend3d scene3d clear3d text3d
+#' @import rayshader
+#' @import rgl 
 #' 
 #' @examples 
 #' library(moveVis)
@@ -311,7 +311,7 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   scene.texture<- m.elev  %>%
     rayshader::sphere_shade(texture = "imhof4") %>%
     rayshader::add_overlay(raster::as.array(r.overlay), alphalayer = 0.99) %>%
-    rayshader::add_shadow(ray_shade( m.elev,sunangle = sunangle, maxsearch = 100), max_darken = 0.5) 
+    rayshader::add_shadow(rayshader::ray_shade( m.elev,sunangle = sunangle, maxsearch = 100), max_darken = 0.5) 
   
   
   clear3d()

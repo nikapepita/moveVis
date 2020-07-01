@@ -265,11 +265,10 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   ## transform data in CRS ETRS89
   m <- sp::spTransform(m, CRSobj = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
   
-  ## transform move data in dataframe including time and colour and extract extent
-  out("Create Dataframe", type = 1)
+  ## create temp dataframe for 3D coordinates calculation
   m.df.temp <-
-    .m2df(m, path_colours = color)
-  .stats(n.frames = max(m.df$frame))
+    .m2df(m, path_colours = path_colours)
+  .stats(n.frames = max(m.df.temp$frame))
   
   ## download overlay map
   out("Download Overlay Map for 3D Visualization", type = 1)

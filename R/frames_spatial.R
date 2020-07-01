@@ -53,7 +53,7 @@
 #' 
 #' @author Jakob Schwalb-Willmann
 #' 
-#' @importFrom raster compareCRS nlayers pointDistance
+#' @importFrom raster compareCRS nlayers pointDistance res
 #' @importFrom sf st_crs
 #' @importFrom raster crs
 #' @importFrom move n.indiv moveStack

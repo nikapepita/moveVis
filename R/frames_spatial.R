@@ -267,9 +267,9 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   
   ## transform move data in dataframe including time and colour and extract extent
   out("Create Dataframe", type = 1)
-  # m.df <-
-  #  .m2df(m, path_colours = color)
-  #.stats(n.frames = max(m.df$frame))
+  m.df.temp <-
+    .m2df(m, path_colours = color)
+  .stats(n.frames = max(m.df$frame))
   
   ## download overlay map
   out("Download Overlay Map for 3D Visualization", type = 1)
@@ -332,14 +332,14 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   e <- extent(r.elev)
   
   m.df$lon <- raster::pointDistance(c(e@xmin, e@ymin),
-                            cbind(m.df$x, rep(e@ymin, length(m.df$x))), lonlat = FALSE) /
-    raster::res(r.elev)[1] - (e@xmax - e@xmin) / 2 / raster::res(r.elev)[1]
+                            cbind(m.df.temp$x, rep(e@ymin, length(m.df.temp$x))), lonlat = FALSE) /
+    res(r.elev)[1] - (e@xmax - e@xmin) / 2 / res(r.elev)[1]
   
   m.df$lat <- raster::pointDistance(c(e@xmin, e@ymin),
-                            cbind(rep(e@xmin, length(m.df$y)), m.df$y), lonlat = FALSE) /
-    raster::res(r.elev)[2] - (e@ymax - e@ymin) / 2 / raster::res(r.elev)[2]
+                            cbind(rep(e@xmin, length(m.df.temp$y)), m.df.temp$y), lonlat = FALSE) /
+    res(r.elev)[2] - (e@ymax - e@ymin) / 2 / res(r.elev)[2]
   
-  m.df$altitude <- raster::extract(r.elev, m.df[, 1:2])
+  m.df$altitude <- raster::extract(r.elev, m.df.temp[, 1:2])
   
   
   # create frames object

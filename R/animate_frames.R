@@ -62,7 +62,7 @@
 #' 
 #' @export
 
-animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700, res = 100, end_pause = 0, display = TRUE, overwrite = FALSE, verbose = TRUE, ...){
+animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700, res = 100, end_pause = 0, display = TRUE, overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, verbose = TRUE, ...){
   
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
   if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
@@ -102,7 +102,7 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
     cat.length <- c()
     
     cat.length <- lapply(1:nr.Categories, function(i){
-      length <- c(length(which(frames$move_datacolour == categories[i])))
+      length <- c(length(which(frames$move_data$colour == categories[i])))
       cat.length <- c(cat.length,length)
     })
     
@@ -110,81 +110,102 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
     categories.df <- categories.df[order(categories.df$V2, decreasing = TRUE),]
     categories.df$V2 <- as.numeric(as.character(categories.df$V2))
     
+    ## number of frame = Number of points
+    n_frames <- as.numeric(categories.df[1,2])
+    
+    ## progress bar
+    pb <- txtProgressBar(min = 1, max = n_frames, style=3)
+    
     clear3d()
     
     ##plot background basemap
     frames$rgl_background()
+    frames$rgl_legend()
     
     
     if(point==FALSE){
-      
-      m.df.temp <- frames$move_data[which(frames$move_data$frame<=i+1),]
-      m.df.temp <- m.df.temp[order(m.df.temp$colour),]
-      
-      categories <- as.character(unique(m.df.temp$colour))
-      nr.Categories <- length(categories)
-      
-      nr <- dplyr::count(m.df.temp, vars = colour)
-      
-      nr_seg <- nr %>% dplyr::filter(nr$n>=2)
-      nr_point <- nr %>% dplyr::filter(n==1)
-      
-      m.df.seg <- m.df.temp[which(m.df.temp$colour %in% nr_seg$vars),]
-      m.df.point <- m.df.temp[which(m.df.temp$colour==nr_point$vars),]
-      
-      if(!(nrow(m.df.point)==0)) 
-      {points3d(
-        m.df.point[,10],
-        (m.df.point[,12] / frames$rgl_zscale)+height,  
-        -m.df.point[,11],
-        size = pointsize, col = m.df.point[,8])}
-      
-      if(!(nrow(m.df.seg)==0)) 
-      {
+      ##create frames
+      out("Create Frames", type = 1)
+      frames_rgl <- lapply(1:n_frames, function(i){
+        print(i)
+        setTxtProgressBar(pb, i)
         
-        if(length(unique(m.df.seg$colour))>1){
+        m.df.temp <- m.df[which(m.df$frame<=i+1),]
+        m.df.temp <- m.df.temp[order(m.df.temp$colour),]
+        
+        categories <- as.character(unique(m.df.temp$colour))
+        nr.Categories <- length(categories)
+        
+        nr <- dplyr::count(m.df.temp, vars = colour)
+        
+        nr_seg <- nr %>% dplyr::filter(nr$n>=2)
+        nr_point <- nr %>% dplyr::filter(n==1)
+        
+        m.df.seg <- m.df.temp[which(m.df.temp$colour %in% nr_seg$vars),]
+        m.df.point <- m.df.temp[which(m.df.temp$colour==nr_point$vars),]
+        
+        if(!(nrow(m.df.point)==0)) 
+        {points3d(
+          m.df.point[,9],
+          (m.df.point[,11] / zscale)+height,  
+          -m.df.point[,10],
+          size = pointsize, col = m.df.point[,8])}
+        
+        if(!(nrow(m.df.seg)==0)) 
+        {
           
-          m.df.seg <- split(m.df.seg,m.df.seg$colour)
-          
-          for (i in 1:length(m.df.seg)){
-            lines3d(m.df.seg[[i]][,10],
-                    (m.df.seg[[i]][,12]/frames$rgl_zscale)+height,  
-                    -m.df.seg[[i]][,11],
-                    lwd=pointsize, col = m.df.seg[[i]][,8])
+          if(length(unique(m.df.seg$colour))>1){
+            
+            m.df.seg <- split(m.df.seg,m.df.seg$colour)
+            
+            for (i in 1:length(m.df.seg)){
+              lines3d(m.df.seg[[i]][,9],
+                      (m.df.seg[[i]][,11]/zscale)+height,  
+                      -m.df.seg[[i]][,10],
+                      lwd=pointsize, col = m.df.seg[[i]][,8])
+            }
+          }else{
+            lines3d(m.df.seg[,9],
+                    (m.df.seg[,11]/zscale)+height,  
+                    -m.df.seg[,10],
+                    lwd=pointsize, col = m.df.seg[,8])
           }
-        }else{
-          lines3d(m.df.seg[,10],
-                  (m.df.seg[,12]/frames$rgl_zscale)+height,  
-                  -m.df.seg[,11],
-                  lwd=pointsize, col = m.df.seg[,8])
         }
-      }
-      
-      rgl_id <- rgl.ids()
-      rgl_id <- rgl_id[rgl_id$type=="linestrip" | rgl_id$type=="point",]
-      
-      subsceneList
-      rgl::rgl.pop(type = "shapes",id = rgl_id$id)
-      gc()
-      
+        
+        rrgl.snapshot(paste("frame_",i), fmt = "png", top = TRUE )
+        
+        rgl_id <- rgl.ids()
+        rgl_id <- rgl_id[rgl_id$type=="linestrip" | rgl_id$type=="point",]
+        subsceneList
+        rgl::rgl.pop(type = "shapes",id = rgl_id$id)
+        gc()
+        
+      })
     }else{
       ##create frames
-      
-      m.df.temp <- frames$move_data[which(frames$move_data$frame<=i),]
-      m.df.temp <- m.df.temp[order(m.df.temp$colour),]
-      
-      categories <- as.character(unique(m.df.temp$colour))
-      nr.Categories <- length(categories)
-      
-      points3d(
-        m.df.temp[,10],
-        m.df.temp[,12] / frames$rgl_zscale,
-        -m.df.temp[,11],
-        size = pointsize, col = m.df.temp[,8])
-      
-      rgl::rgl.pop(type = "shapes")
-      gc()
-      
+      out("Create Frames", type = 1)
+      frames_rgl <- lapply(1:n_frames, function(i){
+        
+        setTxtProgressBar(pb, i)
+        
+        m.df.temp <- m.df[which(m.df$frame<=i),]
+        m.df.temp <- m.df.temp[order(m.df.temp$colour),]
+        
+        categories <- as.character(unique(m.df.temp$colour))
+        nr.Categories <- length(categories)
+        
+        points3d(
+          m.df.temp[,9],
+          m.df.temp[,11] / zscale,  
+          -m.df.temp[,10],
+          size = pointsize, col = m.df.temp[,8])
+        
+        rgl.snapshot(paste("frame_",i), fmt = "png", top = TRUE )
+        
+        rgl::rgl.pop(type = "shapes")
+        gc()
+        
+      })
     }
   }
   

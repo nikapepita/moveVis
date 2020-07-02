@@ -34,6 +34,8 @@
 #' @param map_dir character, directory where downloaded basemap tiles can be stored. By default, a temporary directory is used. 
 #' If you use moveVis often for the same area it is recommended to set this argument to a directory persistent throughout sessions (e.g. in your user folder), 
 #' so that baesmap tiles that had been already downloaded by moveVis do not have to be requested again.
+#' @param sunangle sunangle for 3D Background Image, default 45
+#' @param zscale The ratio between the x and y spacing (which are assumed to be equal) and the z axis. For example, if the elevation levels are in units of 1 meter and the grid values are separated by 10 meters, 'zscale' would be 10. Adjust the zscale down to exaggerate elevation features.Default '10'.
 #' @param ... Additional arguments customizing the frame background:
 #'    \itemize{
 #'        \item \code{alpha}, numeric, background transparency (0-1).
@@ -155,7 +157,7 @@
 frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient", fade_raster = FALSE, crop_raster = TRUE, map_service = "osm", map_type = "streets", map_res = 1, map_token = NULL, map_dir = NULL,
                            margin_factor = 1.1, equidistant = NULL, ext = NULL, path_size = 3, path_end = "round", path_join = "round", path_mitre = 10, path_arrow = NULL, path_colours = NA, path_alpha = 1, path_fade = FALSE,
                            path_legend = TRUE, path_legend_title = "Names", tail_length = 19, tail_size = 1, tail_colour = "white", trace_show = FALSE, trace_colour = "white", cross_dateline = FALSE, sunangle = 45, 
-                           zscale = 3,own_terrain=FALSE, ..., verbose = TRUE){
+                           zscale = 10, ..., verbose = TRUE){
   
   ## check input arguments
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
@@ -281,7 +283,6 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   ## download terrain map
   r.overlay <- RStoolbox::rescaleImage(r.overlay[[1]],  xmin = 0, xmax = 255, ymin = 0, ymax = 1)
   
-  if(own_terrain==FALSE){
     out("Download Terrain Map for 3D Visualization", type = 1)
     
     
@@ -289,18 +290,6 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
                              map_token = map_token, m.crs=crs(m))
     #r.rgb.terrain <- basemaps::basemap(map_service = "mapbox", map_type = "terrain", map_dir = map.dir , ext = st_bbox(m), map_res=1,
     #                         map_token = map_token, m.crs=m.crs)
-    
-  }else{
-    r.rgb.terrain <- raster(path_terrain)
-    ext_crop <- projectRaster(r.overlay, crs = crs(r.rgb.terrain))
-    
-    r.rgb.terrain <- r.rgb.terrain %>% 
-      crop(ext_crop) %>% 
-      projectRaster(crs = m.crs) %>% 
-      crop(r.overlay)%>%
-      resample(r.overlay, method="bilinear")
-  }
-  
   
   ## calculate elevation as matrix
   m.elev <- rayshader::raster_to_matrix(r.rgb.terrain[[1]])
@@ -318,14 +307,12 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   rgl_scene = scene.texture
   rgl_elev = m.elev 
   rgl_zscale=zscale
-  
+  rgl_legend = rgl::legend3d("topright", legend = unique(frames$move_data$name), pch = 20, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))
+
   ##plot background basemap
   rgl_bg = function(){rayshader::plot_3d(frames$rgl_scene, frames$rgl_elevation,frames$rgl_zscale)}  
   
-  #frames_rgl()
-  #execute
-  
-  ## transform coordinates
+  ## transform coordinates and add coordinates and altitude to dataframe
   
   r.elev <-  r.rgb.terrain[[1]]
   e <- extent(r.elev)
@@ -349,6 +336,7 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
     rgl_scene=rgl_scene,
     rgl_elevation=rgl_elev,
     rgl_zscale =rgl_zscale,
+    rgl_legend=rgl_legend,
     aesthetics = c(list(
       equidistant = equidistant,
       path_size = path_size,

@@ -5,6 +5,10 @@
 #' @inheritParams settings
 #' @inheritParams add_gg
 #' @param i numeric, index number of the frame to be rendered. Per default, the last frame is rendered.
+#' @param engine character, wether ggplot or rgl as output format
+#' @param pointsize size of each point, default 1
+#' @param point TRUE: only points are plotted, FALSE: segments are plotted, Default TRUE
+#' @param rgl.height define the height of the points, e.g zero: points have same height as basemap
 #' 
 #' @export
 #' 
@@ -40,7 +44,7 @@
 #' set_engine(engine = "rgl")
 #' frames[[100]] # displays frame 100 in 3D using rgl
 #' }
-render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsize=2,point=TRUE,height=5){
+render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsize=2,point=TRUE,rgl.height=5){
   
   # checking subscript
   if(length(i) > 1) out("Subscript must be of length 1.", type = 3)
@@ -133,7 +137,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     
     ##plot background basemap
     frames$rgl_background()
-    
+    frames$rgl_legend()
     
     if(point==FALSE){
         
@@ -154,7 +158,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
         if(!(nrow(m.df.point)==0)) 
         {points3d(
           m.df.point[,10],
-          (m.df.point[,12] / frames$rgl_zscale)+height,  
+          (m.df.point[,12] / frames$rgl_zscale)+rgl.height,  
           -m.df.point[,11],
           size = pointsize, col = m.df.point[,8])}
         
@@ -167,13 +171,13 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
             
             for (i in 1:length(m.df.seg)){
               rgl::lines3d(m.df.seg[[i]][,10],
-                      (m.df.seg[[i]][,12]/frames$rgl_zscale)+height,  
+                      (m.df.seg[[i]][,12]/frames$rgl_zscale)+rgl.height,  
                       -m.df.seg[[i]][,11],
                       lwd=pointsize, col = m.df.seg[[i]][,8])
             }
           }else{
             rgl::lines3d(m.df.seg[,10],
-                    (m.df.seg[,12]/frames$rgl_zscale)+height,  
+                    (m.df.seg[,12]/frames$rgl_zscale)+rgl.height,  
                     -m.df.seg[,11],
                     lwd=pointsize, col = m.df.seg[,8])
           }
@@ -190,7 +194,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
         
         rgl::points3d(
           m.df.temp[,10],
-          m.df.temp[,12] / frames$rgl_zscale,
+          (m.df.temp[,12] / frames$rgl_zscale)+rgl.height,
           -m.df.temp[,11],
           size = pointsize, col = m.df.temp[,8])
 

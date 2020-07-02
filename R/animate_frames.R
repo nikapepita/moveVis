@@ -62,7 +62,7 @@
 #' 
 #' @export
 
-animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700, res = 100, end_pause = 0, display = TRUE, overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, verbose = TRUE, ...){
+animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700, res = 100, end_pause = 0, display = TRUE, overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, mainDir ="c:/Dokumente und Einstellungen/Annika/Desktop/", verbose = TRUE, ...){
   
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
   if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
@@ -86,32 +86,25 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
   
   #frames_expr <- expression(moveVis:::.lapply(frames, function(x) quiet(print(x))))
   
+  #change to a different folder?!?! to find the pgns easy?
   # create PNGs
-  frames_dir <- paste0(tempdir(), "/moveVis/frames/")
-  dir.create(frames_dir, recursive = T)
+  #frames_dir <- paste0(tempdir(), "/moveVis/frames/")
+  #dir.create(frames_dir, recursive = T)
+  
+  
+  subDir <- "Output_Frames/"
+  frames_dir <- file.path(mainDir, subDir)
+  
+  dir.create(frames_dir, showWarnings = FALSE)
+  setwd(frames_dir)
   
   #if(engine == "ggplot")...
   
   
   if(engine == "rgl"){
     
-    ##calculte number of individuals
-    categories <- as.character(unique(frames$move_data$colour))
-    nr.Categories <- length(categories)
-    
-    cat.length <- c()
-    
-    cat.length <- lapply(1:nr.Categories, function(i){
-      length <- c(length(which(frames$move_data$colour == categories[i])))
-      cat.length <- c(cat.length,length)
-    })
-    
-    categories.df <- as.data.frame(cbind(as.character(categories),as.numeric(cat.length)))
-    categories.df <- categories.df[order(categories.df$V2, decreasing = TRUE),]
-    categories.df$V2 <- as.numeric(as.character(categories.df$V2))
-    
     ## number of frame = Number of points
-    n_frames <- as.numeric(categories.df[1,2])
+    n_frames <- max(frames$move_data$frame)
     
     ## progress bar
     pb <- txtProgressBar(min = 1, max = n_frames, style=3)
@@ -127,7 +120,6 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
       ##create frames
       out("Create Frames", type = 1)
       frames_rgl <- lapply(1:n_frames, function(i){
-        print(i)
         setTxtProgressBar(pb, i)
         
         m.df.temp <- m.df[which(m.df$frame<=i+1),]
@@ -147,7 +139,7 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
         if(!(nrow(m.df.point)==0)) 
         {points3d(
           m.df.point[,9],
-          (m.df.point[,11] / zscale)+height,  
+          (m.df.point[,11] / frames$rgl_zscale)+rgl.height,  
           -m.df.point[,10],
           size = pointsize, col = m.df.point[,8])}
         
@@ -158,25 +150,29 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
             
             m.df.seg <- split(m.df.seg,m.df.seg$colour)
             
-            for (i in 1:length(m.df.seg)){
-              lines3d(m.df.seg[[i]][,9],
-                      (m.df.seg[[i]][,11]/zscale)+height,  
-                      -m.df.seg[[i]][,10],
-                      lwd=pointsize, col = m.df.seg[[i]][,8])
+            for (j in 1:length(m.df.seg)){
+              lines3d(m.df.seg[[j]][,9],
+                      (m.df.seg[[j]][,11]/ frames$rgl_zscale)+rgl.height,  
+                      -m.df.seg[[j]][,10],
+                      lwd=pointsize, col = m.df.seg[[j]][,8])
             }
           }else{
             lines3d(m.df.seg[,9],
-                    (m.df.seg[,11]/zscale)+height,  
+                    (m.df.seg[,11]/ frames$rgl_zscale)+rgl.height, 
                     -m.df.seg[,10],
                     lwd=pointsize, col = m.df.seg[,8])
           }
         }
         
-        rrgl.snapshot(paste("frame_",i), fmt = "png", top = TRUE )
+      name <- if(i<10){paste0("frame_00",i,".png")
+      }else if(i>=10 & i<100){paste0("frame_0",i,".png")
+          }else{paste0("frame_",i,".png")}
+        
+        rgl::rgl.snapshot(name, fmt = "png", top = TRUE )
+        
         
         rgl_id <- rgl.ids()
         rgl_id <- rgl_id[rgl_id$type=="linestrip" | rgl_id$type=="point",]
-        subsceneList
         rgl::rgl.pop(type = "shapes",id = rgl_id$id)
         gc()
         
@@ -196,41 +192,42 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
         
         points3d(
           m.df.temp[,9],
-          m.df.temp[,11] / zscale,  
+          (m.df.temp[,11] /frames$rgl_zscale)+rgl.height,
           -m.df.temp[,10],
           size = pointsize, col = m.df.temp[,8])
         
-        rgl.snapshot(paste("frame_",i), fmt = "png", top = TRUE )
+        name <- if(i<10){paste0("frame_00",i,".png")
+        }else if(i>=10 & i<100){paste0("frame_0",i,".png")
+        }else{paste0("frame_",i,".png")}
+        
+
+        rgl::rgl.snapshot(name, fmt = "png", top = TRUE )
         
         rgl::rgl.pop(type = "shapes")
         gc()
         
       })
     }
+    rgl::rgl.close()
   }
   
   tryCatch({
     file <- file.path(frames_dir, "frame_%05d.png")
-    grDevices::png(file, width = width, height = height, res = res)
-    graphics::par(ask = FALSE)
-    .lapply(frames, function(x) quiet(print(x)), moveVis.n_cores = 1)
-    grDevices::dev.off()
     frames_files <- list.files(frames_dir, full.names = TRUE)
     
-    # animate PNGs
-    if(out_ext == "gif"){
-      if(length(frames) > 800) out("The number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)
-      gifski(frames_files, gif_file = out_file, width = width, height = height, delay = (1/fps), progress = verbose)
-      #save_gif(.lapply(frames, function(x) quiet(print(x)), moveVis.n_cores = 1), gif_file = out_file, width = width, height = height, delay = (1/fps), progress = verbose, res = res, ...)
-    }else{
-      av_encode_video(frames_files, output = out_file, framerate = fps, verbose = verbose, ...)
-      #av_capture_graphics(.lapply(frames, function(x) quiet(print(x)), moveVis.n_cores = 1), output = out_file, width = width, height = height, res = res, framerate = fps, verbose = verbose, ...) #, vfilter =' framerate=fps=10') 
-    }
-  }, error = function(e){
-    unlink(frames_dir, recursive = TRUE)
-    out(paste0("Error creating animation: ", as.character(e)), type = 3)
-  }, finally = unlink(frames_dir, recursive = TRUE))
-  
+      # animate PNGs
+      if(out_ext == "gif"){
+        if(length(frames) > 800) out("The number of number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)
+        gifski(frames_files, gif_file=paste0("Animate_3D", ".gif"), width = 800, height = 600,
+               delay = 1,progress=TRUE)
+      }else{
+        av::av_encode_video(files, output = paste0(frames_dir, "Animate_3D", ".mp4"), framerate = 24, vfilter = "pad=ceil(iw/2)*2:ceil(ih/2)*2")
+      }
+    }, error = function(e){
+      unlink(frames_dir, recursive = TRUE)
+      out(paste0("Error creating animation: ", as.character(e)), type = 3)
+    }, finally = unlink(frames_dir, recursive = TRUE))
+    
   if(isTRUE(display)) utils::browseURL(out_file)
   
 }

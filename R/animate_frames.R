@@ -62,7 +62,7 @@
 #' 
 #' @export
 
-animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700, res = 100, end_pause = 0, display = TRUE, overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, mainDir ="c:/Dokumente und Einstellungen/Annika/Desktop/", verbose = TRUE, ...){
+animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700, res = 100, end_pause = 0, display = TRUE, overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, mainDir ="c:/Dokumente und Einstellungen/Annika/Desktop/", engine = "rgl", verbose = TRUE, ...){
   
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
   if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)

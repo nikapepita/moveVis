@@ -307,7 +307,7 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   rgl_scene = scene.texture
   rgl_elev = m.elev 
   rgl_zscale=zscale
-  rgl_legend = rgl::legend3d("topright", legend = unique(frames$move_data$name), pch = 20, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))
+  rgl_legend = function(){rgl::legend3d("topright", legend = unique(frames$move_data$name), pch = 20, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))}
 
   ##plot background basemap
   rgl_bg = function(){rayshader::plot_3d(frames$rgl_scene, frames$rgl_elevation,frames$rgl_zscale)}  

@@ -65,8 +65,8 @@
 animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700, res = 100, end_pause = 0, display = TRUE, overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, mainDir ="c:/Dokumente und Einstellungen/Annika/Desktop/", engine = "rgl", verbose = TRUE, ...){
   
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
-  if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
-  if(!all(sapply(frames, function(x) inherits(x, "ggplot")))) out("At least one element of argument 'frames' is not a ggplot object.", type = 3)
+  #if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
+  #if(!all(sapply(frames, function(x) inherits(x, "ggplot")))) out("At least one element of argument 'frames' is not a ggplot object.", type = 3)
   
   if(!is.character(out_file)) out("Argument 'out_file' must be of type 'character'.", type = 3)
   of_split <- strsplit(out_file, "/")[[1]]
@@ -185,6 +185,7 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
         setTxtProgressBar(pb, i)
         
         m.df.temp <- m.df[which(m.df$frame<=i),]
+        
         m.df.temp <- m.df.temp[order(m.df.temp$colour),]
         
         categories <- as.character(unique(m.df.temp$colour))

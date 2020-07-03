@@ -21,6 +21,7 @@
 #' @importFrom gifski gifski
 #' @importFrom ggplot2 quo
 #' @importFrom lubridate dseconds
+#' @import rgl
 #' 
 #' @author Jakob Schwalb-Willmann
 #' 
@@ -109,7 +110,7 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
     ## progress bar
     pb <- txtProgressBar(min = 1, max = n_frames, style=3)
     
-    clear3d()
+    rgl::clear3d()
     
     ##plot background basemap
     frames$rgl_background()

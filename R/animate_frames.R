@@ -65,7 +65,7 @@
 
 animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700, res = 100, end_pause = 0, display = TRUE, 
                            overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, mainDir ="c:/Dokumente und Einstellungen/Annika/Desktop/", 
-                            engine = "rgl", out_ext == "gif", verbose = TRUE, ...){
+                            engine = "rgl", out_ext = "gif", verbose = TRUE, ...){
   
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
   
@@ -222,7 +222,7 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
         gifski(frames_files, gif_file=paste0("Animate_3D", ".gif"), width = 800, height = 600,
                delay = 1,progress=TRUE)
       }else{
-        av::av_encode_video(files, output = paste0(frames_dir, "Animate_3D", ".mp4"), framerate = 24, vfilter = "pad=ceil(iw/2)*2:ceil(ih/2)*2")
+        av::av_encode_video(frames_files, output = paste0(frames_dir, "Animate_3D", ".mp4"), framerate = 24, vfilter = "pad=ceil(iw/2)*2:ceil(ih/2)*2")
       }
     }, error = function(e){
       unlink(frames_dir, recursive = TRUE)

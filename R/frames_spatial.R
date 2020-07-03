@@ -336,7 +336,6 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
     rgl_scene=rgl_scene,
     rgl_elevation=rgl_elev,
     rgl_zscale =rgl_zscale,
-    rgl_legend=rgl_legend,
     aesthetics = c(list(
       equidistant = equidistant,
       path_size = path_size,

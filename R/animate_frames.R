@@ -114,7 +114,6 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
     
     ##plot background basemap
     frames$rgl_background()
-    frames$rgl_legend()
     
     
     if(point==FALSE){
@@ -138,7 +137,7 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
         m.df.point <- m.df.temp[which(m.df.temp$colour==nr_point$vars),]
         
         if(!(nrow(m.df.point)==0)) 
-        {points3d(
+        {rgl::points3d(
           m.df.point[,9],
           (m.df.point[,11] / frames$rgl_zscale)+rgl.height,  
           -m.df.point[,10],
@@ -152,13 +151,13 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
             m.df.seg <- split(m.df.seg,m.df.seg$colour)
             
             for (j in 1:length(m.df.seg)){
-              lines3d(m.df.seg[[j]][,9],
+              rgl::lines3d(m.df.seg[[j]][,9],
                       (m.df.seg[[j]][,11]/ frames$rgl_zscale)+rgl.height,  
                       -m.df.seg[[j]][,10],
                       lwd=pointsize, col = m.df.seg[[j]][,8])
             }
           }else{
-            lines3d(m.df.seg[,9],
+            rgl::lines3d(m.df.seg[,9],
                     (m.df.seg[,11]/ frames$rgl_zscale)+rgl.height, 
                     -m.df.seg[,10],
                     lwd=pointsize, col = m.df.seg[,8])
@@ -192,7 +191,7 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
         categories <- as.character(unique(m.df.temp$colour))
         nr.Categories <- length(categories)
         
-        points3d(
+        rgl::points3d(
           m.df.temp[,9],
           (m.df.temp[,11] /frames$rgl_zscale)+rgl.height,
           -m.df.temp[,10],

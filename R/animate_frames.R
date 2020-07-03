@@ -122,7 +122,7 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
       frames_rgl <- lapply(1:n_frames, function(i){
         setTxtProgressBar(pb, i)
         
-        m.df.temp <- m.df[which(m.df$frame<=i+1),]
+        m.df.temp <- frames$move_data[which(frames$move_data$frame<=i+1),]
         m.df.temp <- m.df.temp[order(m.df.temp$colour),]
         
         categories <- as.character(unique(m.df.temp$colour))
@@ -184,7 +184,7 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
         
         setTxtProgressBar(pb, i)
         
-        m.df.temp <- m.df[which(m.df$frame<=i),]
+        m.df.temp <- frames$move_data[which(frames$move_data$frame<=i),]
         
         m.df.temp <- m.df.temp[order(m.df.temp$colour),]
         

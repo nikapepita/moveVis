@@ -137,7 +137,6 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     
     ##plot background basemap
     frames$rgl_background()
-    frames$rgl_legend()
     
     if(point==FALSE){
         

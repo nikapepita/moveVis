@@ -192,9 +192,9 @@ animate_frames <- function(frames, out_file, fps = 25, width = 700, height = 700
         nr.Categories <- length(categories)
         
         rgl::points3d(
-          m.df.temp[,9],
-          (m.df.temp[,11] /frames$rgl_zscale)+rgl.height,
-          -m.df.temp[,10],
+          m.df.temp$lon,
+          (m.df.temp$altitude/frames$rgl_zscale)+rgl.height,
+          -m.df.temp$lat,
           size = pointsize, col = m.df.temp[,8])
         
         name <- if(i<10){paste0("frame_00",i,".png")

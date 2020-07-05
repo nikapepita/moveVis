@@ -231,7 +231,7 @@ animate_frames <- function(frames, fps = 25, width = 700, height = 700, res = 10
       # animate PNGs
       if(out_ext == "gif"){
         if(length(frames) > 800) out("The number of number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)
-        gifski(frames_files, gif_file=paste0(frames_dir, "Animate_3D", ".gif"), width = 800, height = 600,
+        gifski::gifski(frames_files, gif_file=paste0(frames_dir, "Animate_3D", ".gif"), width = 800, height = 600,
                delay = 1,progress=TRUE)
         out_file=paste0(frames_dir, "Animate_3D", ".gif")
       }else{

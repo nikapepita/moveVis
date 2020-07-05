@@ -10,7 +10,14 @@
 #' @param end_pause numeric, defining how many seconds the last frame of the animation should be hold to add a pause at the the end of the animation. Default is 0 seconds to not add a pause.
 #' @param display logical, whether the animation should be displayed after rendering or not.
 #' @param overwrite logical, wether to overwrite an existing file, if \code{out_file} is already present.
+#' @param pointsize size of each point, default 1
+#' @param point  TRUE: only points are plotted, FALSE: segments are plotted, Default TRUE
+#' @param rgl.height define the height of the points, e.g zero: points have same height as basemap
+#' @param mainDir character, directory where rendered frames are stored in the folder called: Output_Frames
+#' @param engine character, wether ggplot or rgl as output format
+#' @param out_ext character, wether mov or gif as output format. Default is gif.
 #' @param ... additional arguments to be passed to the render function.
+#' @param verbose logical, if \code{TRUE}, messages and progress information are displayed on the console (default).
 #'
 #' @details An appropriate render function is selected depending on the file extension in \code{out_file}: For \code{.gif} files, \code{gifski::save_gif} is used, for any other (video) format, \code{av::av_capture_graphics} is used.
 #'
@@ -53,10 +60,10 @@
 #' suggest_formats()
 #' 
 #' # animate frames as GIF
-#' animate_frames(frames, out_file = tempfile(fileext = ".gif"))
+#' animate_frames(frames, mainDir = directory, out_ext = "gif")
 #' 
 #' # animate frames as mov
-#' animate_frames(frames, out_file = tempfile(fileext = ".gif"))
+#' animate_frames(frames, mainDir = directory, out_ext = "mov")
 #' }
 #' @seealso \code{\link{frames_spatial}} \code{\link{frames_graph}} \code{\link{join_frames}}
 #' 
@@ -66,16 +73,17 @@ animate_frames <- function(frames, fps = 25, width = 700, height = 700, res = 10
                            overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, mainDir ="c:/Dokumente und Einstellungen/Annika/Desktop/", 
                             engine = "rgl", out_ext = "gif", verbose = TRUE, ...){
   
-  if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
+ 
+ if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
   
-  #if(!is.character(out_file)) out("Argument 'out_file' must be of type 'character'.", type = 3)
-  #of_split <- strsplit(out_file, "/")[[1]]
-  #if(length(of_split) > 1) if(isFALSE(dir.exists(paste0(utils::head(of_split, n = -1), collapse = "/")))) out("Target directory of 'out_file' does not exist.", type = 3)
-  if(all(file.exists(out_file), !isTRUE(overwrite))) out("Defined output file already exists and overwriting is disabled.", type = 3)
+  if(!is.character(mainDir)) out("Argument 'mainDir' must be of type 'character'.", type = 3)
+  of_split <- strsplit(mainDIr, "/")[[1]]
+  if(length(of_split) > 1) if(isFALSE(dir.exists(paste0(utils::head(of_split, n = -1), collapse = "/")))) out("Target directory of 'mainDIr' does not exist.", type = 3)
+  #if(all(file.exists(out_file), !isTRUE(overwrite))) out("Defined output file already exists and overwriting is disabled.", type = 3)
   num.args <- c(fps = fps, width = width, height = height, res = res)
   catch <- sapply(1:length(num.args), function(i) if(!is.numeric(num.args[[i]])) out(paste0("Argument '", names(num.args)[[i]], "' must be of type 'numeric'."), type = 3))
   
-  out_ext <- tolower(utils::tail(unlist(strsplit(out_file, "[.]")), n=1))
+  out_ext <- tolower(utils::tail(unlist(strsplit(mainDir, "[.]")), n=1))
   out("Rendering animation...")
   if(end_pause > 0){
     n.add <- round(end_pause*fps)
@@ -103,18 +111,19 @@ animate_frames <- function(frames, fps = 25, width = 700, height = 700, res = 10
   
   if(engine == "rgl"){
     
-    ## number of frame = Number of points
+    # number of frame = Number of points
     n_frames <- max(frames$move_data$frame)
     
-    ## progress bar
+    # progress bar
     pb <- txtProgressBar(min = 1, max = n_frames, style=3)
     
+    #clean rgl window
     rgl::clear3d()
     
-    ##plot background basemap
+    # plot 3d map
     frames$rgl_background()
     
-    
+    # add movement data, as points or lines
     if(point==FALSE){
       ##create frames
       out("Create Frames", type = 1)
@@ -211,6 +220,7 @@ animate_frames <- function(frames, fps = 25, width = 700, height = 700, res = 10
     rgl::rgl.close()
   }
   
+  #create animation
   tryCatch({
     file <- file.path(frames_dir, "frame_%05d.png")
     frames_files <- list.files(frames_dir, full.names = TRUE)

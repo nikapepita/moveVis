@@ -118,7 +118,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
   }
   if(engine == "rgl"){
     
-    ##calculte number of individuals
+    # calculte number of individuals
     categories <- as.character(unique(frames$move_data$colour))
     nr.Categories <- length(categories)
     
@@ -133,11 +133,13 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     categories.df <- categories.df[order(categories.df$V2, decreasing = TRUE),]
     categories.df$V2 <- as.numeric(as.character(categories.df$V2))
     
+    # clean rgl window
     rgl::clear3d()
     
-    ##plot background basemap
+    # plot 3d map
     frames$rgl_background()
     
+    # add movement data, as points or lines
     if(point==FALSE){
         
         m.df.temp <- frames$move_data[which(frames$move_data$frame<=i+1),]

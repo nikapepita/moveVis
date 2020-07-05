@@ -264,15 +264,17 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   r_list <- .rFrames(r_list, r_times, m.df, gg.ext, fade_raster, crop_raster = crop_raster)
   
   
-  ## transform data in CRS ETRS89
+  ##add 3D elements
+  ## Download Overlay- and Basemap
+  # transform data in CRS ETRS89
   m <- sp::spTransform(m, CRSobj = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
   
-  ## create temp dataframe for 3D coordinates calculation
+  # create temp dataframe for 3D coordinates calculation
   m.df.temp <-
     .m2df(m, path_colours = path_colours)
   .stats(n.frames = max(m.df.temp$frame))
   
-  ## download overlay map
+  # download overlay map
   out("Download Overlay Map for 3D Visualization", type = 1)
   r.overlay <- .getMap(map_service = map_service, map_type = map_type, map_dir = map_dir , gg.ext = st_bbox(m), map_res=1,
                        map_token = map_token,m.crs=crs(m))
@@ -280,39 +282,42 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   #r.overlay <- basemaps::basemap(map_service = map_service, map_type = map_type, map_dir = map.dir , ext = st_bbox(m), map_res=1,
   #                               map_token = map_token,m.crs=m.crs)
   
-  ## download terrain map
+  # download terrain map
   r.overlay <- RStoolbox::rescaleImage(r.overlay[[1]],  xmin = 0, xmax = 255, ymin = 0, ymax = 1)
   
-    out("Download Terrain Map for 3D Visualization", type = 1)
-    
-    
-    r.rgb.terrain <- .getMap(map_service = "mapbox", map_type = "terrain", map_dir = map_dir , gg.ext = st_bbox(m), map_res=1,
-                             map_token = map_token, m.crs=crs(m))
+  out("Download Terrain Map for 3D Visualization", type = 1)
+  r.rgb.terrain <- .getMap(map_service = "mapbox", map_type = "terrain", map_dir = map_dir , gg.ext = st_bbox(m), map_res=1,
+                          map_token = map_token, m.crs=crs(m))
+  
     #r.rgb.terrain <- basemaps::basemap(map_service = "mapbox", map_type = "terrain", map_dir = map.dir , ext = st_bbox(m), map_res=1,
     #                         map_token = map_token, m.crs=m.crs)
   
-  ## calculate elevation as matrix
+  # calculate elevation as matrix
   m.elev <- rayshader::raster_to_matrix(r.rgb.terrain[[1]])
   
-  ## create 3d basemap
+  # create 3d basemap
   
   scene.texture<- m.elev  %>%
     rayshader::sphere_shade(texture = "imhof4") %>%
     rayshader::add_overlay(raster::as.array(r.overlay), alphalayer = 0.99) %>%
     rayshader::add_shadow(rayshader::ray_shade( m.elev,sunangle = sunangle, maxsearch = 100), max_darken = 0.5) 
   
-  
+  # clean rgl window 
   rgl::clear3d()
   rgl::rgl.close()
+  
+  # save 3d map elements
   rgl_scene = scene.texture
   rgl_elev = m.elev 
   rgl_zscale=zscale
+  
+  # add additional elements
   #rgl_legend = function(){rgl::legend3d("topright", legend = unique(frames$move_data$name), pch = 20, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))}
 
-  ##plot background basemap
+  # save 3d map
   rgl_bg = function(){rayshader::plot_3d(frames$rgl_scene, frames$rgl_elevation,frames$rgl_zscale)}  
   
-  ## transform coordinates and add coordinates and altitude to dataframe
+  # transform coordinates and add coordinates and altitude to dataframe
   
   r.elev <-  r.rgb.terrain[[1]]
   e <- extent(r.elev)

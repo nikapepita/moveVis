@@ -77,8 +77,8 @@ animate_frames <- function(frames, fps = 25, width = 700, height = 700, res = 10
  if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
   
   if(!is.character(mainDir)) out("Argument 'mainDir' must be of type 'character'.", type = 3)
-  of_split <- strsplit(mainDIr, "/")[[1]]
-  if(length(of_split) > 1) if(isFALSE(dir.exists(paste0(utils::head(of_split, n = -1), collapse = "/")))) out("Target directory of 'mainDIr' does not exist.", type = 3)
+  of_split <- strsplit(mainDir, "/")[[1]]
+  if(length(of_split) > 1) if(isFALSE(dir.exists(paste0(utils::head(of_split, n = -1), collapse = "/")))) out("Target directory of 'mainDir' does not exist.", type = 3)
   #if(all(file.exists(out_file), !isTRUE(overwrite))) out("Defined output file already exists and overwriting is disabled.", type = 3)
   num.args <- c(fps = fps, width = width, height = height, res = res)
   catch <- sapply(1:length(num.args), function(i) if(!is.numeric(num.args[[i]])) out(paste0("Argument '", names(num.args)[[i]], "' must be of type 'numeric'."), type = 3))

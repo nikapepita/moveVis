@@ -316,6 +316,8 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
 
   # save 3d map
   rgl_bg = function(){rayshader::plot_3d(frames$rgl_scene, frames$rgl_elevation,frames$rgl_zscale)}  
+  rgl_legend = function(){rgl::legend3d("topright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))}  
+  rgl_titel = function(){rayshader::plot_3d(frames$rgl_scene, frames$rgl_elevation,frames$rgl_zscale)}  
   
   # transform coordinates and add coordinates and altitude to dataframe
   
@@ -341,6 +343,7 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
     rgl_scene=rgl_scene,
     rgl_elevation=rgl_elev,
     rgl_zscale =rgl_zscale,
+    rgl_legend = rgl_legend,
     aesthetics = c(list(
       equidistant = equidistant,
       path_size = path_size,

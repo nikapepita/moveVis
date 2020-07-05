@@ -124,7 +124,7 @@ animate_frames <- function(frames, fps = 25, width = 700, height = 700, res = 10
     frames$rgl_background()
     
     # plot legend
-    frames$rg_legend()
+    frames$rgl_legend()
     
     # add movement data, as points or lines
     if(point==FALSE){

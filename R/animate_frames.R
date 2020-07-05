@@ -123,6 +123,9 @@ animate_frames <- function(frames, fps = 25, width = 700, height = 700, res = 10
     # plot 3d map
     frames$rgl_background()
     
+    # plot legend
+    frames$rg_legend()
+    
     # add movement data, as points or lines
     if(point==FALSE){
       ##create frames

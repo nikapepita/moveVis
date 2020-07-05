@@ -139,6 +139,9 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     # plot 3d map
     frames$rgl_background()
     
+    # plot legend
+    frames$rg_legend()
+    
     # add movement data, as points or lines
     if(point==FALSE){
         

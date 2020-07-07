@@ -179,7 +179,7 @@ animate_frames <- function(frames, fps = 25, width = 700, height = 700, res = 10
       }else if(i>=10 & i<100){paste0("frame_0",i,".png")
           }else{paste0("frame_",i,".png")}
         
-        rayshader::render_snapshot(filename=file.path(mainDir, name), title_text = glue::glue(frames$rgl_title),title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
+        rayshader::render_snapshot(filename=file.path(frames_dir, name), title_text = glue::glue(frames$rgl_title),title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
       
         rgl_id <- rgl.ids()
         rgl_id <- rgl_id[rgl_id$type=="linestrip" | rgl_id$type=="point",]
@@ -212,7 +212,7 @@ animate_frames <- function(frames, fps = 25, width = 700, height = 700, res = 10
         }else{paste0("frame_",i,".png")}
         
 
-        rayshader::render_snapshot(filename=file.path(mainDir, name), title_text = glue::glue(frames$rgl_title),title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
+        rayshader::render_snapshot(filename=file.path(frames_dir, name), title_text = glue::glue(frames$rgl_title),title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
 
         rgl::rgl.pop(type = "shapes")
         gc()

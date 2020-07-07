@@ -204,7 +204,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
 
     }
     
-    rayshader::render_snapshot(title_text = glue::glue(frames$rgl_title),ntitle_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
+    rayshader::render_snapshot(title_text = glue::glue(frames$rgl_title),title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
     
     rgl::rgl.close()
     

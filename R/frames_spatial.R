@@ -157,7 +157,7 @@
 frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient", fade_raster = FALSE, crop_raster = TRUE, map_service = "osm", map_type = "streets", map_res = 1, map_token = NULL, map_dir = NULL,
                            margin_factor = 1.1, equidistant = NULL, ext = NULL, path_size = 3, path_end = "round", path_join = "round", path_mitre = 10, path_arrow = NULL, path_colours = NA, path_alpha = 1, path_fade = FALSE,
                            path_legend = TRUE, path_legend_title = "Names", tail_length = 19, tail_size = 1, tail_colour = "white", trace_show = FALSE, trace_colour = "white", cross_dateline = FALSE, sunangle = 45, 
-                           zscale = 10, ..., verbose = TRUE){
+                           zscale = 10, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0, rgl_zoom = 1, rgl_colour_background = "black",rgl_tile=NULL,..., verbose = TRUE){
   
   ## check input arguments
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
@@ -310,15 +310,20 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   rgl_scene = scene.texture
   rgl_elev = m.elev 
   rgl_zscale=zscale
+  rgl_theta = rgl_theta
+  rgl_phi = rgl_phi
+  rgl_fov = rgl_fov
+  rgl_zoom = rgl_zoom
+  rgl_colour_background = rgl_colour_background
   
   # add additional elements
   #rgl_legend = function(){rgl::legend3d("topright", legend = unique(frames$move_data$name), pch = 20, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))}
 
   # save 3d map
-  rgl_bg = function(){rayshader::plot_3d(frames$rgl_scene, frames$rgl_elevation,frames$rgl_zscale)}  
+  rgl_bg = function(){rayshader::plot_3d(frames$rgl_scene, frames$rgl_elevation, zscale= frames$rgl_zscale, theta=frames$rgl_theta,
+                                         phi=frames$rgl_phi, fov= frames$rgl_fov,zoom=frames$rgl_zoom, background=frames$rgl_colour_background)}  
   rgl_legend = function(){rgl::legend3d("topright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))}  
-  rgl_titel = function(){rayshader::plot_3d(frames$rgl_scene, frames$rgl_elevation,frames$rgl_zscale)}  
-  
+
   # transform coordinates and add coordinates and altitude to dataframe
   
   r.elev <-  r.rgb.terrain[[1]]
@@ -344,6 +349,12 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
     rgl_elevation=rgl_elev,
     rgl_zscale =rgl_zscale,
     rgl_legend = rgl_legend,
+    rgl_theta = rgl_theta,
+    rgl_phi = rgl_phi,
+    rgl_fov = rgl_fov,
+    rgl_zoom = rgl_zoom,
+    rgl_colour_background = rgl_colour_background,
+    rgl_title=rgl_tile,
     aesthetics = c(list(
       equidistant = equidistant,
       path_size = path_size,

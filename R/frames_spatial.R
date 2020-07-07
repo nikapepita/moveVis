@@ -322,7 +322,7 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   # save 3d map
   rgl_bg = function(){rayshader::plot_3d(frames$rgl_scene, frames$rgl_elevation, zscale= frames$rgl_zscale, theta=frames$rgl_theta,
                                          phi=frames$rgl_phi, fov= frames$rgl_fov,zoom=frames$rgl_zoom, background=frames$rgl_colour_background)}  
-  rgl_legend = function(){rgl::legend3d("topright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))}  
+  rgl_legend = function(){rgl::legend3d("bottomright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))}  
 
   # transform coordinates and add coordinates and altitude to dataframe
   

@@ -74,11 +74,8 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
                            overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, 
                             engine = "rgl", out_ext = "gif", verbose = TRUE, ...){
   
- 
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
-  if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
-  if(!all(sapply(frames, function(x) inherits(x, "ggplot")))) out("At least one element of argument 'frames' is not a ggplot object.", type = 3)
-  
+
   if(!is.character(out_file)) out("Argument 'out_file' must be of type 'character'.", type = 3)
   of_split <- strsplit(out_file, "/")[[1]]
   if(length(of_split) > 1) if(isFALSE(dir.exists(paste0(utils::head(of_split, n = -1), collapse = "/")))) out("Target directory of 'out_file' does not exist.", type = 3)

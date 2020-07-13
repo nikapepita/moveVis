@@ -4,14 +4,27 @@
 \alias{render_frame}
 \title{Render an individual frame}
 \usage{
-render_frame(frames, i = length(frames), engine = "ggplot2")
+render_frame(
+  frames,
+  i = length(frames),
+  engine = "ggplot2",
+  pointsize = 2,
+  point = TRUE,
+  rgl.height = 5
+)
 }
 \arguments{
 \item{frames}{an object of class \code{moveVis} created with \code{\link{frames_spatial}}.}
 
 \item{i}{numeric, index number of the frame to be rendered. Per default, the last frame is rendered.}
 
-\item{engine}{character, the default engine to render and animate frames with. Either \code{"ggplot2"} for 2D or \code{"rgl"} for 3D renders and animations.}
+\item{engine}{character, wether ggplot or rgl as output format}
+
+\item{pointsize}{size of each point, default 1}
+
+\item{point}{TRUE: only points are plotted, FALSE: segments are plotted, Default TRUE}
+
+\item{rgl.height}{define the height of the points, e.g zero: points have same height as basemap}
 }
 \description{
 This function renders an individual frame. It yields the same result as if an individual frame is extracted using default subsetting \code{[[]]} with the difference that the rendering engine can be defined as an argument. Currently, \code{moveVis} supports \code{ggplot2} for 2D and \code{rgl} for 3D renders and animations.

@@ -35,7 +35,7 @@
 #' If you use moveVis often for the same area it is recommended to set this argument to a directory persistent throughout sessions (e.g. in your user folder), 
 #' so that baesmap tiles that had been already downloaded by moveVis do not have to be requested again.
 #' @param sunangle sunangle for 3D Background Image, default 45
-#' @param zscale The ratio between the x and y spacing (which are assumed to be equal) and the z axis. For example, if the elevation levels are in units of 1 meter and the grid values are separated by 10 meters, 'zscale' would be 10. Adjust the zscale down to exaggerate elevation features.Default '10'.
+#' @param rgl_zscale The ratio between the x and y spacing (which are assumed to be equal) and the z axis. For example, if the elevation levels are in units of 1 meter and the grid values are separated by 10 meters, 'zscale' would be 10. Adjust the zscale down to exaggerate elevation features.Default '10'.
 #' @param rgl_theta Rotation around z-axis. Default: 45
 #' @param rgl_phi Azimuth angle. Default: 45
 #' @param rgl_fov Field-of-view angle. Default '0'–isometric. 
@@ -163,7 +163,7 @@
 frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient", fade_raster = FALSE, crop_raster = TRUE, map_service = "osm", map_type = "streets", map_res = 1, map_token = NULL, map_dir = NULL,
                            margin_factor = 1.1, equidistant = NULL, ext = NULL, path_size = 3, path_end = "round", path_join = "round", path_mitre = 10, path_arrow = NULL, path_colours = NA, path_alpha = 1, path_fade = FALSE,
                            path_legend = TRUE, path_legend_title = "Names", tail_length = 19, tail_size = 1, tail_colour = "white", trace_show = FALSE, trace_colour = "white", cross_dateline = FALSE, sunangle = 45, 
-                           zscale = 10, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0, rgl_zoom = 1, rgl_colour_background = "white", rgl_title=NA,..., verbose = TRUE){
+                           rgl_zscale = 10, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0, rgl_zoom = 1, rgl_colour_background = "white", rgl_title = NA,..., verbose = TRUE){
   
   ## check input arguments
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
@@ -299,37 +299,19 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
     #                         map_token = map_token, m.crs=m.crs)
   
   # calculate elevation as matrix
-  m.elev <- rayshader::raster_to_matrix(r.rgb.terrain[[1]])
+  matrix_elevation <- rayshader::raster_to_matrix(r.rgb.terrain[[1]])
   
   # create 3d basemap
   
-  scene.texture<- m.elev  %>%
+  rgl_scene<- matrix_elevation  %>%
     rayshader::sphere_shade(texture = "imhof4") %>%
     rayshader::add_overlay(raster::as.array(r.overlay), alphalayer = 0.99) %>%
-    rayshader::add_shadow(rayshader::ray_shade( m.elev,sunangle = sunangle, maxsearch = 100), max_darken = 0.5) 
+    rayshader::add_shadow(rayshader::ray_shade( matrix_elevation,sunangle = sunangle, maxsearch = 100), max_darken = 0.5) 
   
   # clean rgl window 
   rgl::clear3d()
   rgl::rgl.close()
   
-  # save 3d map elements
-  rgl_scene = scene.texture
-  rgl_elev = m.elev 
-  rgl_zscale=zscale
-  rgl_theta = rgl_theta
-  rgl_phi = rgl_phi
-  rgl_fov = rgl_fov
-  rgl_zoom = rgl_zoom
-  rgl_colour_background = rgl_colour_background
-  
-  # add additional elements
-  #rgl_legend = function(){rgl::legend3d("topright", legend = unique(frames$move_data$name), pch = 20, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))}
-
-  # save 3d map
-  rgl_bg = function(){rayshader::plot_3d(frames$rgl_scene, frames$rgl_elevation, zscale= frames$rgl_zscale, theta=frames$rgl_theta,
-                                         phi=frames$rgl_phi, fov= frames$rgl_fov,zoom=frames$rgl_zoom, background=frames$rgl_colour_background)}  
-  rgl_legend = function(){rgl::legend3d("bottomright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))}  
-
   # transform coordinates and add coordinates and altitude to dataframe
   
   r.elev <-  r.rgb.terrain[[1]]
@@ -345,22 +327,12 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   
   m.df$altitude <- raster::extract(r.elev, m.df.temp[, 1:2])
   
-  
   # create frames object
   frames <- list(
     move_data = m.df,
     raster_data = r_list,
-    rgl_background=rgl_bg,
-    rgl_scene=rgl_scene,
-    rgl_elevation=rgl_elev,
-    rgl_zscale =rgl_zscale,
-    rgl_legend = rgl_legend,
-    rgl_theta = rgl_theta,
-    rgl_phi = rgl_phi,
-    rgl_fov = rgl_fov,
-    rgl_zoom = rgl_zoom,
-    rgl_colour_background = rgl_colour_background,
-    rgl_title=rgl_title,
+    rgl_scene = rgl_scene,
+    matrix_elevation = matrix_elevation,
     aesthetics = c(list(
       equidistant = equidistant,
       path_size = path_size,
@@ -380,7 +352,15 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
       gg.ext = gg.ext,
       map_service = map_service,
       map_type = map_type,
-      r_type = r_type),
+      r_type = r_type,
+      rgl_zscale =rgl_zscale,
+      rgl_legend = rgl_legend,
+      rgl_theta = rgl_theta,
+      rgl_phi = rgl_phi,
+      rgl_fov = rgl_fov,
+      rgl_zoom = rgl_zoom,
+      rgl_colour_background = rgl_colour_background,
+      rgl_title=rgl_title),
       maxpixels = if(!is.null(extras$maxpixels)) extras$maxpixels else 500000,
       alpha = if(!is.null(extras$alpha)) extras$alpha else 1,
       maxColorValue = if(!is.null(extras$maxColorValue)) extras$maxColorValue else NA),

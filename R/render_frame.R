@@ -12,8 +12,9 @@
 #' 
 #' @export
 #' 
-#' @importFrom rgl points3d rgl.close lines3d legend3d scene3d clear3d text3d
-#' @importFrom glue glue
+#' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d
+#' @importFrom rayshader render_snapshot plot_3d
+#' @importFrom dplyr count filter
 #' 
 #' @examples
 #' 
@@ -135,7 +136,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     categories.df$V2 <- as.numeric(as.character(categories.df$V2))
     
     # clean rgl window
-    rgl::clear3d()
+    clear3d()
     
     # plot 3d map
     plot_3d(frames$rgl_scene, frames$matrix_elevation, zscale= frames$aesthetics$rgl_zscale, theta=frames$aesthetics$rgl_theta,
@@ -153,10 +154,10 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
         categories <- as.character(unique(m.df.temp$colour))
         nr.Categories <- length(categories)
         
-        nr <- dplyr::count(m.df.temp, vars = colour)
+        nr <- count(m.df.temp, vars = colour)
         
-        nr_seg <- nr %>% dplyr::filter(nr$n>=2)
-        nr_point <- nr %>% dplyr::filter(n==1)
+        nr_seg <- nr %>% filter(nr$n>=2)
+        nr_point <- nr %>% filter(n==1)
         
         m.df.seg <- m.df.temp[which(m.df.temp$colour %in% nr_seg$vars),]
         m.df.point <- m.df.temp[which(m.df.temp$colour==nr_point$vars),]
@@ -176,13 +177,13 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
             m.df.seg <- split(m.df.seg,m.df.seg$colour)
             
             for (i in 1:length(m.df.seg)){
-              rgl::lines3d(m.df.seg[[i]][,10],
+              lines3d(m.df.seg[[i]][,10],
                       (m.df.seg[[i]][,12]/frames$rgl_zscale)+rgl.height,  
                       -m.df.seg[[i]][,11],
                       lwd=pointsize, col = m.df.seg[[i]][,8])
             }
           }else{
-            rgl::lines3d(m.df.seg[,10],
+            lines3d(m.df.seg[,10],
                     (m.df.seg[,12]/frames$rgl_zscale)+rgl.height,  
                     -m.df.seg[,11],
                     lwd=pointsize, col = m.df.seg[,8])
@@ -198,7 +199,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
         categories <- as.character(unique(m.df.temp$colour))
         nr.Categories <- length(categories)
         
-        rgl::points3d(
+        points3d(
           m.df.temp[,10],
           (m.df.temp[,12] / frames$rgl_zscale)+rgl.height,
           -m.df.temp[,11],
@@ -206,9 +207,9 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
 
     }
     
-    rayshader::render_snapshot(title_text = glue::glue(frames$rgl_title),title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
+    render_snapshot(title_text = frames$aesthetics$rgl_title, title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
     
-    rgl::rgl.close()
+    rgl.close()
     
     return(NULL)
   }

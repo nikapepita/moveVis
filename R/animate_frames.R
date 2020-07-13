@@ -28,8 +28,9 @@
 #' @importFrom gifski gifski
 #' @importFrom ggplot2 quo
 #' @importFrom lubridate dseconds
-#' @import rgl
-#' @importFrom glue glue
+#' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d
+#' @importFrom rayshader render_snapshot plot_3d
+#' @importFrom dplyr count filter
 #' 
 #' @author Jakob Schwalb-Willmann
 #' 
@@ -111,7 +112,7 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
     pb <- txtProgressBar(min = 1, max = n_frames, style=3)
     
     #clean rgl window
-    rgl::clear3d()
+    clear3d()
     
     # plot 3d map
     plot_3d(frames$rgl_scene, frames$matrix_elevation, zscale= frames$aesthetics$rgl_zscale, theta=frames$aesthetics$rgl_theta,
@@ -133,16 +134,16 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
         categories <- as.character(unique(m.df.temp$colour))
         nr.Categories <- length(categories)
         
-        nr <- dplyr::count(m.df.temp, vars = colour)
+        nr <- count(m.df.temp, vars = colour)
         
-        nr_seg <- nr %>% dplyr::filter(nr$n>=2)
-        nr_point <- nr %>% dplyr::filter(n==1)
+        nr_seg <- nr %>% filter(nr$n>=2)
+        nr_point <- nr %>% filter(n==1)
         
         m.df.seg <- m.df.temp[which(m.df.temp$colour %in% nr_seg$vars),]
         m.df.point <- m.df.temp[which(m.df.temp$colour==nr_point$vars),]
         
         if(!(nrow(m.df.point)==0)) 
-        {rgl::points3d(
+        {points3d(
           m.df.point[,9],
           (m.df.point[,11] / frames$rgl_zscale)+rgl.height,  
           -m.df.point[,10],
@@ -156,13 +157,13 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
             m.df.seg <- split(m.df.seg,m.df.seg$colour)
             
             for (j in 1:length(m.df.seg)){
-              rgl::lines3d(m.df.seg[[j]][,9],
+              lines3d(m.df.seg[[j]][,9],
                       (m.df.seg[[j]][,11]/ frames$rgl_zscale)+rgl.height,  
                       -m.df.seg[[j]][,10],
                       lwd=pointsize, col = m.df.seg[[j]][,8])
             }
           }else{
-            rgl::lines3d(m.df.seg[,9],
+            lines3d(m.df.seg[,9],
                     (m.df.seg[,11]/ frames$rgl_zscale)+rgl.height, 
                     -m.df.seg[,10],
                     lwd=pointsize, col = m.df.seg[,8])
@@ -173,11 +174,11 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
       }else if(i>=10 & i<100){paste0("frame_0",i,".png")
           }else{paste0("frame_",i,".png")}
         
-        rayshader::render_snapshot(filename=file.path(frames_dir, name), title_text = glue::glue(frames$rgl_title),title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
+        render_snapshot(filename=file.path(frames_dir, name), title_text = frames$aesthetics$rgl_title, title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
       
         rgl_id <- rgl.ids()
         rgl_id <- rgl_id[rgl_id$type=="linestrip" | rgl_id$type=="point",]
-        rgl::rgl.pop(type = "shapes",id = rgl_id$id)
+        rgl.pop(type = "shapes",id = rgl_id$id)
         gc()
         
       })
@@ -195,7 +196,7 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
         categories <- as.character(unique(m.df.temp$colour))
         nr.Categories <- length(categories)
         
-        rgl::points3d(
+        points3d(
           m.df.temp$lon,
           (m.df.temp$altitude/frames$rgl_zscale)+rgl.height,
           -m.df.temp$lat,
@@ -206,14 +207,14 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
         }else{paste0("frame_",i,".png")}
         
 
-        rayshader::render_snapshot(filename=file.path(frames_dir, name), title_text = frames$rgl_title,title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
+        render_snapshot(filename=file.path(frames_dir, name), title_text = frames$aesthetics$rgl_title, title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
 
-        rgl::rgl.pop(type = "shapes")
+        rgl.pop(type = "shapes")
         gc()
         
       })
     }
-    rgl::rgl.close()
+    rgl.close()
   }
   
   #create animation

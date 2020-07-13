@@ -27,7 +27,9 @@ Imports:
   pbapply,
   magrittr,
   methods,
-  stats
+  stats,
+  rayshader,
+  rgl
 BugReports: http://www.github.com/16eagle/moveVis/issues
 SystemRequirements: ImageMagick, FFmpeg, libav
 URL: http://movevis.org
@@ -36,7 +38,6 @@ Suggests:
   mapview,
   leaflet,
   testthat,
-  rayshader,
-  rgl,
+  dplyr,
   sp,
   RStoolbox

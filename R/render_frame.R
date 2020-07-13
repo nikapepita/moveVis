@@ -176,11 +176,11 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
             
             m.df.seg <- split(m.df.seg,m.df.seg$colour)
             
-            for (i in 1:length(m.df.seg)){
-              lines3d(m.df.seg[[i]][,10],
-                      (m.df.seg[[i]][,12]/frames$rgl_zscale)+rgl.height,  
-                      -m.df.seg[[i]][,11],
-                      lwd=pointsize, col = m.df.seg[[i]][,8])
+            for (j in 1:length(m.df.seg)){
+              lines3d(m.df.seg[[j]][,10],
+                      (m.df.seg[[j]][,12]/frames$rgl_zscale)+rgl.height,  
+                      -m.df.seg[[j]][,11],
+                      lwd=pointsize, col = m.df.seg[[j]][,8])
             }
           }else{
             lines3d(m.df.seg[,10],

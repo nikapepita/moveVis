@@ -137,10 +137,11 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     rgl::clear3d()
     
     # plot 3d map
-    frames$rgl_background()
+    plot_3d(frames$rgl_scene, frames$matrix_elevation, zscale= frames$aesthetics$rgl_zscale, theta=frames$aesthetics$rgl_theta,
+            phi=frames$aesthetics$rgl_phi, fov= frames$aesthetics$rgl_fov,zoom=frames$aesthetics$rgl_zoom, background=frames$aesthetics$rgl_colour_background)
     
     # plot legend
-    frames$rgl_legend()
+    legend3d("bottomright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))
     
     # add movement data, as points or lines
     if(point==FALSE){

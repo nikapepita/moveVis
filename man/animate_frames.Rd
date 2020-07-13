@@ -14,6 +14,11 @@ animate_frames(
   end_pause = 0,
   display = TRUE,
   overwrite = FALSE,
+  pointsize = 2,
+  point = TRUE,
+  rgl.height = 5,
+  engine = "rgl",
+  out_ext = "gif",
   verbose = TRUE,
   ...
 )
@@ -37,9 +42,21 @@ animate_frames(
 
 \item{overwrite}{logical, wether to overwrite an existing file, if \code{out_file} is already present.}
 
+\item{pointsize}{size of each point, default 1}
+
+\item{point}{TRUE: only points are plotted, FALSE: segments are plotted, Default TRUE}
+
+\item{rgl.height}{define the height of the points, e.g zero: points have same height as basemap}
+
+\item{engine}{character, wether ggplot or rgl as output format}
+
+\item{out_ext}{character, wether mov or gif as output format. Default is gif.}
+
 \item{verbose}{logical, if \code{TRUE}, messages and progress information are displayed on the console (default).}
 
 \item{...}{additional arguments to be passed to the render function.}
+
+\item{mainDir}{character, directory where rendered frames are stored in the folder called: Output_Frames}
 }
 \value{
 None or the default image/video viewer displaying the animation
@@ -79,10 +96,10 @@ frames <- add_timestamps(frames, m, type = "label")
 suggest_formats()
 
 # animate frames as GIF
-animate_frames(frames, out_file = tempfile(fileext = ".gif"))
+animate_frames(frames, mainDir = directory, out_ext = "gif")
 
 # animate frames as mov
-animate_frames(frames, out_file = tempfile(fileext = ".gif"))
+animate_frames(frames, mainDir = directory, out_ext = "mov")
 }
 }
 \seealso{

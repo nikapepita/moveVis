@@ -127,7 +127,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     cat.length <- c()
     
     cat.length <- lapply(1:nr.Categories, function(i){
-      length <- c(length(which(frames$move_datacolour == categories[i])))
+      length <- c(length(which(frames$move_data$colour == categories[i])))
       cat.length <- c(cat.length,length)
     })
     
@@ -201,7 +201,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
         
         points3d(
           m.df.temp[,10],
-          (m.df.temp[,12] / frames$rgl_zscale)+rgl.height,
+          (m.df.temp[,12] / frames$aesthetics$rgl_zscale)+rgl.height,
           -m.df.temp[,11],
           size = pointsize, col = m.df.temp[,8])
 

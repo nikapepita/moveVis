@@ -6,6 +6,7 @@
 \usage{
 frames_spatial(
   m,
+  prepared_engine = "all",
   r_list = NULL,
   r_times = NULL,
   r_type = "gradient",
@@ -49,6 +50,8 @@ frames_spatial(
 }
 \arguments{
 \item{m}{\code{move} or \code{moveStack} of uniform time scale and time lag, e.g. prepared with \code{\link{align_move}} (recommended). May contain a column named \code{colour} to control path colours (see \code{details}).}
+
+\item{prepared_engine}{character, wether ggplot or rgl, indicating the engine which will later be used for rendering. Default: all}
 
 \item{r_list}{list of \code{raster} or \code{rasterStack}. Each list element refers to the times given in \code{r_times}. Use single-layer \code{raster} objects for gradient or discrete data (see \code{r_type}). Use a  \code{rasterStack} containing three bands for RGB imagery (in the order red, green, blue).}
 

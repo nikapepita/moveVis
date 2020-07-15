@@ -3,6 +3,7 @@
 #' \code{frames_spatial} creates frames from movement and map/raster data. Frames are returned as an object of class \code{moveVis} and can be subsetted, viewed (see \code{\link{render_frame}}), modified (see \code{\link{add_gg}} and associated functions ) and animated (see \code{\link{animate_frames}}).
 #'
 #' @param m \code{move} or \code{moveStack} of uniform time scale and time lag, e.g. prepared with \code{\link{align_move}} (recommended). May contain a column named \code{colour} to control path colours (see \code{details}).
+#' @param prepared_engine character, wether ggplot or rgl, indicating the engine which will later be used for rendering. Default: all
 #' @param r_list list of \code{raster} or \code{rasterStack}. Each list element refers to the times given in \code{r_times}. Use single-layer \code{raster} objects for gradient or discrete data (see \code{r_type}). Use a  \code{rasterStack} containing three bands for RGB imagery (in the order red, green, blue).
 #' @param r_times list of \code{POSIXct} times. Each list element represents the time of the corresponding element in \code{r_list}. Must be of same length as \code{r_list}.
 #' @param r_type character, either \code{"gradient"} or \code{"discrete"}. Ignored, if \code{r_list} contains \code{rasterStacks} of three bands, which are treated as RGB.
@@ -160,7 +161,7 @@
 #' @seealso \code{\link{frames_graph}} \code{\link{join_frames}} \code{\link{animate_frames}}
 #' @export
 
-frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient", fade_raster = FALSE, crop_raster = TRUE, map_service = "osm", map_type = "streets", map_res = 1, map_token = NULL, map_dir = NULL,
+frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = NULL, r_type = "gradient", fade_raster = FALSE, crop_raster = TRUE, map_service = "osm", map_type = "streets", map_res = 1, map_token = NULL, map_dir = NULL,
                            margin_factor = 1.1, equidistant = NULL, ext = NULL, path_size = 3, path_end = "round", path_join = "round", path_mitre = 10, path_arrow = NULL, path_colours = NA, path_alpha = 1, path_fade = FALSE,
                            path_legend = TRUE, path_legend_title = "Names", tail_length = 19, tail_size = 1, tail_colour = "white", trace_show = FALSE, trace_colour = "white", cross_dateline = FALSE, sunangle = 45, 
                            rgl_zscale = 10, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0, rgl_zoom = 1, rgl_colour_background = "white", rgl_title = NA,..., verbose = TRUE){
@@ -226,6 +227,8 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   
   gg.ext <- .ext(m.df, m.crs, ext, margin_factor, equidistant, cross_dateline) # calcualte extent
   
+  if(prepared_engine == "all" | prepared_engine == "ggplot2"){
+    print("ggplot")
   ## shift coordinates crossing dateline
   if(isTRUE(cross_dateline)){
     rg <- c("pos" = diff(range(m.df$x[m.df$x >= 0])), "neg" = diff(range(m.df$x[m.df$x < 0])))
@@ -268,8 +271,10 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
   
   out("Assigning raster maps to frames...")
   r_list <- .rFrames(r_list, r_times, m.df, gg.ext, fade_raster, crop_raster = crop_raster)
+  }
   
-  
+  if(prepared_engine == "all" | prepared_engine == "rgl"){
+  print("rgl")
   ##add 3D elements
   ## Download Overlay- and Basemap
   # transform data in CRS ETRS89
@@ -325,6 +330,7 @@ frames_spatial <- function(m, r_list = NULL, r_times = NULL, r_type = "gradient"
     raster::res(r.elev)[2] - (e@ymax - e@ymin) / 2 / raster::res(r.elev)[2]
   
   m.df$altitude <- raster::extract(r.elev, m.df.temp[, 1:2])
+  }
   
   # create frames object
   frames <- list(

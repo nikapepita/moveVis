@@ -39,5 +39,4 @@ Suggests:
   leaflet,
   testthat,
   dplyr,
-  sp,
-  RStoolbox
+  sp

@@ -64,10 +64,11 @@
 #' 
 #' @importFrom raster compareCRS nlayers pointDistance res
 #' @importFrom sf st_crs
-#' @importFrom raster crs
+#' @importFrom raster crs pointDistance res extract as.array
 #' @importFrom move n.indiv moveStack
-#' @import rayshader
-#' @import rgl 
+#' @importFrom rayshader sphere_shade add_overlay add_shadow ray_shade raster_to_matrix
+#' @importFrom rgl clear3d rgl.close
+#' @importFrom sp spTransform
 #' 
 #' @examples 
 #' library(moveVis)
@@ -279,7 +280,7 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
   ##add 3D elements
   ## Download Overlay- and Basemap
   # transform data in CRS ETRS89
-  m <- sp::spTransform(m, CRSobj = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+  m <- spTransform(m, CRSobj = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
   
   # create temp dataframe for 3D coordinates calculation
   m.df.temp <- .m2df(m, path_colours = path_colours)
@@ -293,8 +294,11 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
   #r.overlay <- basemaps::basemap(map_service = map_service, map_type = map_type, map_dir = map.dir , ext = st_bbox(m), map_res=1,
   #                               map_token = map_token,m.crs=m.crs)
   
-  # download terrain map
-  r.overlay <- RStoolbox::rescaleImage(r.overlay[[1]],  xmin = 0, xmax = 255, ymin = 0, ymax = 1)
+  # rescale image
+  li <- list(xmin = 0, xmax = 255, ymin = 0, ymax = 1)
+  scal <- (li$ymax - li$ymin)/(li$xmax - li$xmin)
+  
+  r.overlay<- r.overlay[[1]]*scal
   
   out("Download Terrain Map for 3D Visualization", type = 1)
   r.rgb.terrain <- .getMap(map_service = "mapbox", map_type = "terrain", map_dir = map_dir , gg.ext = st_bbox(m), map_res=1,
@@ -304,33 +308,33 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
     #                         map_token = map_token, m.crs=m.crs)
   
   # calculate elevation as matrix
-  matrix_elevation <- rayshader::raster_to_matrix(r.rgb.terrain[[1]])
+  matrix_elevation <- raster_to_matrix(r.rgb.terrain[[1]])
   
   # create 3d basemap
   
   rgl_scene<- matrix_elevation  %>%
-    rayshader::sphere_shade(texture = "imhof4") %>%
-    rayshader::add_overlay(raster::as.array(r.overlay), alphalayer = 0.99) %>%
-    rayshader::add_shadow(rayshader::ray_shade( matrix_elevation,sunangle = sunangle, maxsearch = 100), max_darken = 0.5) 
+    sphere_shade(texture = "imhof4") %>%
+    add_overlay(as.array(r.overlay), alphalayer = 0.99) %>%
+   add_shadow(ray_shade( matrix_elevation,sunangle = sunangle, maxsearch = 100), max_darken = 0.5) 
   
   # clean rgl window 
-  rgl::clear3d()
-  rgl::rgl.close()
+  clear3d()
+  rgl.close()
   
   # transform coordinates and add coordinates and altitude to dataframe
   
   r.elev <-  r.rgb.terrain[[1]]
   e <- extent(r.elev)
   
-  m.df$lon <- raster::pointDistance(c(e@xmin, e@ymin),
+  m.df$lon <- pointDistance(c(e@xmin, e@ymin),
                             cbind(m.df.temp$x, rep(e@ymin, length(m.df.temp$x))), lonlat = FALSE) /
-    raster::res(r.elev)[1] - (e@xmax - e@xmin) / 2 / raster::res(r.elev)[1]
+    res(r.elev)[1] - (e@xmax - e@xmin) / 2 / res(r.elev)[1]
   
-  m.df$lat <- raster::pointDistance(c(e@xmin, e@ymin),
+  m.df$lat <- pointDistance(c(e@xmin, e@ymin),
                             cbind(rep(e@xmin, length(m.df.temp$y)), m.df.temp$y), lonlat = FALSE) /
-    raster::res(r.elev)[2] - (e@ymax - e@ymin) / 2 / raster::res(r.elev)[2]
+    res(r.elev)[2] - (e@ymax - e@ymin) / 2 / res(r.elev)[2]
   
-  m.df$altitude <- raster::extract(r.elev, m.df.temp[, 1:2])
+  m.df$altitude <- extract(r.elev, m.df.temp[, 1:2])
   }
   
   # set variables to NA, if not used for the chosen engine

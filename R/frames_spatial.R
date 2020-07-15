@@ -347,8 +347,8 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
     raster_data = r_list,
     rgl_scene = rgl_scene,
     matrix_elevation = matrix_elevation,
+    prepared_engine = prepared_engine,
     aesthetics = c(list(
-      prepared_engine = prepared_engine,
       equidistant = equidistant,
       path_size = path_size,
       path_end = path_end,

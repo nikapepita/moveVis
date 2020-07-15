@@ -76,6 +76,9 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
                            overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, 
                             engine = "rgl", out_ext = "gif", verbose = TRUE, ...){
   
+  if(frames$prepared_engine == "ggplot" & engine == "rgl") out("The frames Object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'", type = 3)
+  if(frames$prepared_engine == "rgl" & engine == "ggplot") out("The frames Object is not including the ggplot variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'ggplot'", type = 3)
+  
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
 
   if(!is.character(out_file)) out("Argument 'out_file' must be of type 'character'.", type = 3)
@@ -145,7 +148,7 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
         if(!(nrow(m.df.point)==0)) 
         {points3d(
           m.df.point[,9],
-          (m.df.point[,11] / frames$rgl_zscale)+rgl.height,  
+          (m.df.point[,11] / frames$aesthetics$rgl_zscale)+rgl.height,  
           -m.df.point[,10],
           size = pointsize, col = m.df.point[,8])}
         
@@ -158,13 +161,13 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
             
             for (j in 1:length(m.df.seg)){
               lines3d(m.df.seg[[j]][,9],
-                      (m.df.seg[[j]][,11]/ frames$rgl_zscale)+rgl.height,  
+                      (m.df.seg[[j]][,11]/ frames$aesthetics$rgl_zscale)+rgl.height,  
                       -m.df.seg[[j]][,10],
                       lwd=pointsize, col = m.df.seg[[j]][,8])
             }
           }else{
             lines3d(m.df.seg[,9],
-                    (m.df.seg[,11]/ frames$rgl_zscale)+rgl.height, 
+                    (m.df.seg[,11]/ frames$aesthetics$rgl_zscale)+rgl.height, 
                     -m.df.seg[,10],
                     lwd=pointsize, col = m.df.seg[,8])
           }
@@ -198,7 +201,7 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
         
         points3d(
           m.df.temp$lon,
-          (m.df.temp$altitude/frames$rgl_zscale)+rgl.height,
+          (m.df.temp$altitude/frames$aesthetics$rgl_zscale)+rgl.height,
           -m.df.temp$lat,
           size = pointsize, col = m.df.temp[,8])
         

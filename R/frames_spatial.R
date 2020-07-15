@@ -227,7 +227,8 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
   
   gg.ext <- .ext(m.df, m.crs, ext, margin_factor, equidistant, cross_dateline) # calcualte extent
   
-  if(prepared_engine == "all" | prepared_engine == "ggplot2"){
+ 
+  if(prepared_engine == "all" | prepared_engine == "ggplot"){
     print("ggplot")
   ## shift coordinates crossing dateline
   if(isTRUE(cross_dateline)){
@@ -332,6 +333,14 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
   m.df$altitude <- raster::extract(r.elev, m.df.temp[, 1:2])
   }
   
+  # set variables to NA, if not used for the chosen engine
+  if(prepared_engine == "ggplot"){
+  rgl_scene = NA
+  matrix_elevation = NA}
+  
+  if(prepared_engine == "rgl"){r_list = NA}
+  
+  
   # create frames object
   frames <- list(
     move_data = m.df,
@@ -339,6 +348,7 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
     rgl_scene = rgl_scene,
     matrix_elevation = matrix_elevation,
     aesthetics = c(list(
+      prepared_engine = prepared_engine,
       equidistant = equidistant,
       path_size = path_size,
       path_end = path_end,

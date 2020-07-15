@@ -48,6 +48,9 @@
 #' }
 render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsize=2,point=TRUE,rgl.height=5){
   
+  if(frames$prepared_engine == "ggplot" & engine == "rgl") out("The frames Object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'", type = 3)
+  if(frames$prepared_engine == "rgl" & engine == "ggplot") out("The frames Object is not including the ggplot variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'ggplot'", type = 3)
+  
   # checking subscript
   if(length(i) > 1) out("Subscript must be of length 1.", type = 3)
   if(i > max(frames$move_data$frame)) out(paste0("Subscript out of bounds. Length of frames is ", max(frames$move_data$frame), "."), type = 3)

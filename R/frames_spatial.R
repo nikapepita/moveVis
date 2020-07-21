@@ -280,11 +280,11 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
   ##add 3D elements
   ## Download Overlay- and Basemap
   # transform data in CRS ETRS89
-  m <- spTransform(m, CRSobj = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
+  #m <- spTransform(m, CRSobj = "+proj=laea +lat_0=52 +lon_0=10 +x_0=4321000 +y_0=3210000 +ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs")
   
   # create temp dataframe for 3D coordinates calculation
-  m.df.temp <- .m2df(m, path_colours = path_colours)
-  .stats(n.frames = max(m.df.temp$frame))
+  #m.df.temp <- .m2df(m, path_colours = path_colours)
+  #.stats(n.frames = max(m.df.temp$frame))
   
   # download overlay map
   out("Download Overlay Map for 3D Visualization", type = 1)
@@ -326,15 +326,23 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
   r.elev <-  r.rgb.terrain[[1]]
   e <- extent(r.elev)
   
-  m.df$lon <- pointDistance(c(e@xmin, e@ymin),
-                            cbind(m.df.temp$x, rep(e@ymin, length(m.df.temp$x))), lonlat = FALSE) /
-    res(r.elev)[1] - (e@xmax - e@xmin) / 2 / res(r.elev)[1]
+  #m.df$lon <- pointDistance(c(e@xmin, e@ymin),
+  #                          cbind(m.df.temp$x, rep(e@ymin, length(m.df.temp$x))), lonlat = FALSE) /
+  #  res(r.elev)[1] - (e@xmax - e@xmin) / 2 / res(r.elev)[1]
   
-  m.df$lat <- pointDistance(c(e@xmin, e@ymin),
-                            cbind(rep(e@xmin, length(m.df.temp$y)), m.df.temp$y), lonlat = FALSE) /
-    res(r.elev)[2] - (e@ymax - e@ymin) / 2 / res(r.elev)[2]
+  #m.df$lat <- pointDistance(c(e@xmin, e@ymin),
+  #                          cbind(rep(e@xmin, length(m.df.temp$y)), m.df.temp$y), lonlat = FALSE) /
+  #  res(r.elev)[2] - (e@ymax - e@ymin) / 2 / res(r.elev)[2]
   
-  m.df$altitude <- extract(r.elev, m.df.temp[, 1:2])
+  #m.df$altitude <- extract(r.elev, m.df.temp[, 1:2])
+  
+  #Vers1
+  ncol_map <- ncol(r.elev)
+  nrow_map <- nrow(r.elev)
+  
+  m.df$lon <-((frames$move_data$x-e@xmin)/(e@xmax - e@xmin) * nrow_map)-nrow_map/2
+  m.df$lat <- (ncol_map - (frames$move_data$y-e@ymin)/(e@ymax - e@ymin) * ncol_map)-ncol_map/2
+  
   }
   
   # set variables to NA, if not used for the chosen engine

@@ -334,7 +334,7 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
   #                          cbind(rep(e@xmin, length(m.df.temp$y)), m.df.temp$y), lonlat = FALSE) /
   #  res(r.elev)[2] - (e@ymax - e@ymin) / 2 / res(r.elev)[2]
   
-  #m.df$altitude <- extract(r.elev, m.df.temp[, 1:2])
+  m.df$altitude <- extract(r.elev, m.df.temp[, 1:2])
   
   #Vers1
   ncol_map <- ncol(r.elev)
@@ -342,7 +342,9 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
   
   m.df$lon <-((m.df$x-e@xmin)/(e@xmax - e@xmin) * nrow_map)-nrow_map/2
   m.df$lat <- (ncol_map - (m.df$y-e@ymin)/(e@ymax - e@ymin) * ncol_map)-ncol_map/2
+  m.df$altitude <- extract(r.elev, m.df[, 1:2])
   
+
   }
   
   # set variables to NA, if not used for the chosen engine

@@ -314,7 +314,7 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
   
   rgl_scene<- matrix_elevation  %>%
     sphere_shade(texture = "imhof4") %>%
-    add_overlay(as.array(r.overlay), alphalayer = 0.99) %>%
+    add_overlay(overlay=as.array(r.overlay), alphalayer = 1) %>%
    add_shadow(ray_shade( matrix_elevation,sunangle = sunangle, maxsearch = 100), max_darken = 0.5) 
   
   # clean rgl window 

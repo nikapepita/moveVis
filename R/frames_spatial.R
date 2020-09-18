@@ -37,9 +37,6 @@
 #' so that baesmap tiles that had been already downloaded by moveVis do not have to be requested again.
 #' @param sunangle sunangle for 3D Background Image, default 45
 #' @param rgl_zscale The ratio between the x and y spacing (which are assumed to be equal) and the z axis. For example, if the elevation levels are in units of 1 meter and the grid values are separated by 10 meters, 'zscale' would be 10. Adjust the zscale down to exaggerate elevation features.Default '10'.
-#' @param rgl_theta Rotation around z-axis. Default: 45
-#' @param rgl_phi Azimuth angle. Default: 45
-#' @param rgl_fov Field-of-view angle. Default '0'–isometric. 
 #' @param rgl_zoom Zoom factor. Default: 1
 #' @param rgl_colour_background character, background colour, Default is "white"
 #' @param rgl_title character, title of plot
@@ -165,7 +162,7 @@
 frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = NULL, r_type = "gradient", fade_raster = FALSE, crop_raster = TRUE, map_service = "osm", map_type = "streets", map_res = 1, map_token = NULL, map_dir = NULL,
                            margin_factor = 1.1, equidistant = NULL, ext = NULL, path_size = 3, path_end = "round", path_join = "round", path_mitre = 10, path_arrow = NULL, path_colours = NA, path_alpha = 1, path_fade = FALSE,
                            path_legend = TRUE, path_legend_title = "Names", tail_length = 19, tail_size = 1, tail_colour = "white", trace_show = FALSE, trace_colour = "white", cross_dateline = FALSE, sunangle = 45, 
-                           rgl_zscale = 10, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0, rgl_zoom = 1, rgl_colour_background = "white", rgl_title = NA,..., verbose = TRUE){
+                           rgl_zscale = 10, rgl_zoom = 1, rgl_colour_background = "white", rgl_title = NA,..., verbose = TRUE){
   
   ## check input arguments
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
@@ -329,8 +326,8 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
   col_num <- ncol(r.elev)
   row_num <- nrow(r.elev)
   
-  m.df$lon <-((m.df$x-e@xmin)/(e@xmax - e@xmin) * row_num)-row_num/2
-  m.df$lat <- (col_num - (m.df$y-e@ymin)/(e@ymax - e@ymin) * col_num)-col_num/2
+  m.df$lon <-((m.df$x-e@xmin)/(e@xmax - e@xmin) * col_num)-col_num/2
+  m.df$lat <- -((row_num - (m.df$y-e@ymin)/(e@ymax - e@ymin) * row_num)-row_num/2)
   m.df$altitude <- extract(r.elev, m.df[, 1:2])
   
 
@@ -372,9 +369,6 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
       map_type = map_type,
       r_type = r_type,
       rgl_zscale =rgl_zscale,
-      rgl_theta = rgl_theta,
-      rgl_phi = rgl_phi,
-      rgl_fov = rgl_fov,
       rgl_zoom = rgl_zoom,
       rgl_colour_background = rgl_colour_background,
       rgl_title=rgl_title),

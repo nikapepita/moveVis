@@ -340,8 +340,8 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
   ncol_map <- ncol(r.elev)
   nrow_map <- nrow(r.elev)
   
-  m.df$lon <-((frames$move_data$x-e@xmin)/(e@xmax - e@xmin) * nrow_map)-nrow_map/2
-  m.df$lat <- (ncol_map - (frames$move_data$y-e@ymin)/(e@ymax - e@ymin) * ncol_map)-ncol_map/2
+  m.df$lon <-((m.df$x-e@xmin)/(e@xmax - e@xmin) * nrow_map)-nrow_map/2
+  m.df$lat <- (ncol_map - (m.df$y-e@ymin)/(e@ymax - e@ymin) * ncol_map)-ncol_map/2
   
   }
   

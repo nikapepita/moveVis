@@ -325,23 +325,12 @@ frames_spatial <- function(m, prepared_engine = "all", r_list = NULL, r_times = 
   
   r.elev <-  r.rgb.terrain[[1]]
   e <- extent(r.elev)
+
+  col_num <- ncol(r.elev)
+  row_num <- nrow(r.elev)
   
-  #m.df$lon <- pointDistance(c(e@xmin, e@ymin),
-  #                          cbind(m.df.temp$x, rep(e@ymin, length(m.df.temp$x))), lonlat = FALSE) /
-  #  res(r.elev)[1] - (e@xmax - e@xmin) / 2 / res(r.elev)[1]
-  
-  #m.df$lat <- pointDistance(c(e@xmin, e@ymin),
-  #                          cbind(rep(e@xmin, length(m.df.temp$y)), m.df.temp$y), lonlat = FALSE) /
-  #  res(r.elev)[2] - (e@ymax - e@ymin) / 2 / res(r.elev)[2]
-  
-  m.df$altitude <- extract(r.elev, m.df.temp[, 1:2])
-  
-  #Vers1
-  ncol_map <- ncol(r.elev)
-  nrow_map <- nrow(r.elev)
-  
-  m.df$lon <-((m.df$x-e@xmin)/(e@xmax - e@xmin) * nrow_map)-nrow_map/2
-  m.df$lat <- (ncol_map - (m.df$y-e@ymin)/(e@ymax - e@ymin) * ncol_map)-ncol_map/2
+  m.df$lon <-((m.df$x-e@xmin)/(e@xmax - e@xmin) * row_num)-row_num/2
+  m.df$lat <- (col_num - (m.df$y-e@ymin)/(e@ymax - e@ymin) * col_num)-col_num/2
   m.df$altitude <- extract(r.elev, m.df[, 1:2])
   
 

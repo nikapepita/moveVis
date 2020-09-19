@@ -219,6 +219,6 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     #rgl.close()
     
     
-    return(frames_rgl)
+    return(NULL)
   }
 }

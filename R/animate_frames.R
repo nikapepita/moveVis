@@ -74,13 +74,13 @@
 
 animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700, res = 100, end_pause = 0, display = TRUE, 
                            overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, 
-                            engine = "rgl", out_ext = "gif", verbose = TRUE, ...){
+                           engine = "rgl", out_ext = "gif", verbose = TRUE, ...){
   
   if(frames$prepared_engine == "ggplot" & engine == "rgl") out("The frames Object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'", type = 3)
   if(frames$prepared_engine == "rgl" & engine == "ggplot") out("The frames Object is not including the ggplot variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'ggplot'", type = 3)
   
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)
-
+  
   if(!is.character(out_file)) out("Argument 'out_file' must be of type 'character'.", type = 3)
   of_split <- strsplit(out_file, "/")[[1]]
   if(length(of_split) > 1) if(isFALSE(dir.exists(paste0(utils::head(of_split, n = -1), collapse = "/")))) out("Target directory of 'out_file' does not exist.", type = 3)
@@ -114,111 +114,39 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
     # progress bar
     pb <- txtProgressBar(min = 1, max = n_frames, style=3)
     
-    #clean rgl window
-    clear3d()
-    
-    # plot 3d map
-    plot_3d(frames$rgl_scene, frames$matrix_elevation, zscale= frames$aesthetics$rgl_zscale, theta=frames$aesthetics$rgl_theta,
-            phi=frames$aesthetics$rgl_phi, fov= frames$aesthetics$rgl_fov,zoom=frames$aesthetics$rgl_zoom, background=frames$aesthetics$rgl_colour_background)
-    
-    # plot legend
-    legend3d("bottomright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))
-    
-    # add movement data, as points or lines
-    if(point==FALSE){
-      ##create frames
-      out("Create Frames", type = 1)
-      frames_rgl <- lapply(1:n_frames, function(i){
-        setTxtProgressBar(pb, i)
-        
-        m.df.temp <- frames$move_data[which(frames$move_data$frame<=i+1),]
-        m.df.temp <- m.df.temp[order(m.df.temp$colour),]
-        
-        categories <- as.character(unique(m.df.temp$colour))
-        nr.Categories <- length(categories)
-        
-        nr <- count(m.df.temp, vars = colour)
-        
-        nr_seg <- nr %>% filter(nr$n>=2)
-        nr_point <- nr %>% filter(n==1)
-        
-        m.df.seg <- m.df.temp[which(m.df.temp$colour %in% nr_seg$vars),]
-        m.df.point <- m.df.temp[which(m.df.temp$colour==nr_point$vars),]
-        
-        if(!(nrow(m.df.point)==0)) 
-        {points3d(
-          m.df.point[,9],
-          (m.df.point[,11] / frames$aesthetics$rgl_zscale)+rgl.height,  
-          -m.df.point[,10],
-          size = pointsize, col = m.df.point[,8])}
-        
-        if(!(nrow(m.df.seg)==0)) 
-        {
-          
-          if(length(unique(m.df.seg$colour))>1){
-            
-            m.df.seg <- split(m.df.seg,m.df.seg$colour)
-            
-            for (j in 1:length(m.df.seg)){
-              lines3d(m.df.seg[[j]][,9],
-                      (m.df.seg[[j]][,11]/ frames$aesthetics$rgl_zscale)+rgl.height,  
-                      -m.df.seg[[j]][,10],
-                      lwd=pointsize, col = m.df.seg[[j]][,8])
-            }
-          }else{
-            lines3d(m.df.seg[,9],
-                    (m.df.seg[,11]/ frames$aesthetics$rgl_zscale)+rgl.height, 
-                    -m.df.seg[,10],
-                    lwd=pointsize, col = m.df.seg[,8])
-          }
-        }
-        
-      name <- if(i<10){paste0("frame_00",i,".png")
-      }else if(i>=10 & i<100){paste0("frame_0",i,".png")
-          }else{paste0("frame_",i,".png")}
-        
-        render_snapshot(filename=file.path(frames_dir, name), title_text = frames$aesthetics$rgl_title, title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
+    for ( i in 1:n_frames){
       
-        rgl_id <- rgl.ids()
-        rgl_id <- rgl_id[rgl_id$type=="linestrip" | rgl_id$type=="point",]
-        rgl.pop(type = "shapes",id = rgl_id$id)
-        gc()
-        
-      })
-    }else{
-      ##create frames
-      out("Create Frames", type = 1)
-      frames_rgl <- lapply(1:n_frames, function(i){
-        
-        setTxtProgressBar(pb, i)
-        
-        m.df.temp <- frames$move_data[which(frames$move_data$frame<=i),]
-        
-        m.df.temp <- m.df.temp[order(m.df.temp$colour),]
-        
-        categories <- as.character(unique(m.df.temp$colour))
-        nr.Categories <- length(categories)
-        
-        points3d(
-          m.df.temp$lon,
-          (m.df.temp$altitude/frames$aesthetics$rgl_zscale)+rgl.height,
-          -m.df.temp$lat,
-          size = pointsize, col = m.df.temp[,8])
+      render_frame(frames, i, engine= "rgl", pointsize =  pointsize, point = point,rgl.height =  rgl.height)
+      
+      if(point==FALSE){
         
         name <- if(i<10){paste0("frame_00",i,".png")
         }else if(i>=10 & i<100){paste0("frame_0",i,".png")
         }else{paste0("frame_",i,".png")}
         
-
         render_snapshot(filename=file.path(frames_dir, name), title_text = frames$aesthetics$rgl_title, title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
-
+        
+        rgl_id <- rgl.ids()
+        rgl_id <- rgl_id[rgl_id$type=="linestrip" | rgl_id$type=="point",]
+        rgl.pop(type = "shapes",id = rgl_id$id)
+        gc()
+        
+      }
+      else{
+        
+        name <- if(i<10){paste0("frame_00",i,".png")
+        }else if(i>=10 & i<100){paste0("frame_0",i,".png")
+        }else{paste0("frame_",i,".png")}
+        
+        
+        render_snapshot(filename=file.path(frames_dir, name), title_text = frames$aesthetics$rgl_title, title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
+        
         rgl.pop(type = "shapes")
         gc()
         
-      })
-    }
-    rgl.close()
-  }
+      }
+    }}
+  rgl.close()
   
   #create animation
   tryCatch({

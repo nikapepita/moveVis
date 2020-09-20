@@ -14,6 +14,9 @@
 #' @param pointsize size of each point, default 1
 #' @param point  TRUE: only points are plotted, FALSE: segments are plotted, Default TRUE
 #' @param rgl.height define the height of the points, e.g zero: points have same height as basemap
+#' @param rgl_theta Rotation around z-axis. Default: 45
+#' @param rgl_phi Azimuth angle. Default: 45
+#' @param rgl_fov Field-of-view angle. Default '0'–isometric.
 #' @param mainDir character, directory where rendered frames are stored in the folder called: Output_Frames
 #' @param engine character, wether ggplot or rgl as output format
 #' @param out_ext character, wether mov or gif as output format. Default is gif.
@@ -73,7 +76,7 @@
 #' @export
 
 animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700, res = 100, end_pause = 0, display = TRUE, 
-                           overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, 
+                           overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0,
                            engine = "rgl", out_ext = "gif", verbose = TRUE, ...){
   
   if(frames$prepared_engine == "ggplot" & engine == "rgl") out("The frames Object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'", type = 3)
@@ -114,9 +117,10 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
     # progress bar
     pb <- txtProgressBar(min = 1, max = n_frames, style=3)
     
-    for ( i in 1:n_frames){
-      
-      render_frame(frames, i, engine= "rgl", pointsize =  pointsize, point = point,rgl.height =  rgl.height)
+      render_frame_extended <- function(i){
+        
+      render_frame(frames, i, engine= "rgl", pointsize =  pointsize, point = point,rgl.height = rgl.height,
+                   rgl_theta=theta,rgl_phi=rgl_phi, rgl_fov=rgl_fov)
       
       if(point==FALSE){
         
@@ -144,10 +148,10 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
         rgl.pop(type = "shapes")
         gc()
         
-      }
-    }}
-  rgl.close()
-  
+      }}
+
+      lapply(as.list(seq(1,n_frames,1)), render_frame_extended)
+      
   #create animation
   tryCatch({
     file <- file.path(frames_dir, "frame_%05d.png")
@@ -168,4 +172,6 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
   }, finally = unlink(frames_dir, recursive = TRUE))
   
   if(isTRUE(display)) utils::browseURL(out_file)
+  }
+  remove(hasTrue)
 }

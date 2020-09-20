@@ -9,7 +9,9 @@
 #' @param pointsize size of each point, default 1
 #' @param point TRUE: only points are plotted, FALSE: segments are plotted, Default TRUE
 #' @param rgl.height define the height of the points, e.g zero: points have same height as basemap
-#' 
+#' @param rgl_theta Rotation around z-axis. Default: 45
+#' @param rgl_phi Azimuth angle. Default: 45
+#' @param rgl_fov Field-of-view angle. Default '0'–isometric.
 #' @export
 #' 
 #' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d
@@ -46,7 +48,7 @@
 #' set_engine(engine = "rgl")
 #' frames[[100]] # displays frame 100 in 3D using rgl
 #' }
-render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsize=2,point=TRUE,rgl.height=5){
+render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsize=2,point=TRUE, rgl.height=5, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0){
    
   if(frames$prepared_engine == "ggplot" & engine == "rgl") out("The frames Object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'", type = 3)
   if(frames$prepared_engine == "rgl" & engine == "ggplot") out("The frames Object is not including the ggplot variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'ggplot'", type = 3)
@@ -139,14 +141,37 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     categories.df <- categories.df[order(categories.df$V2, decreasing = TRUE),]
     categories.df$V2 <- as.numeric(as.character(categories.df$V2))
     
-    # clean rgl window
-    clear3d()
+    if(is.list(rgl_theta))  theta<-as.numeric(rgl_theta[i]) else theta = as.numeric(rgl_theta)
+    if(is.list(rgl_phi))  phi<-as.numeric(rgl_phi[i]) else phi = as.numeric(rgl_phi)
+    if(is.list(rgl_fov))  fov<-as.numeric(rgl_fov[i]) else fov = as.numeric(rgl_fov)
     
-    # plot 3d map
-    plot_3d(frames$rgl_scene, frames$matrix_elevation, zscale= frames$aesthetics$rgl_zscale,zoom=frames$aesthetics$rgl_zoom, background=frames$aesthetics$rgl_colour_background)
-    
-    # plot legend
-    legend3d("bottomright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))
+    if(is.list(rgl_theta)|is.list(rgl_phi)|is.list(rgl_fov)){
+      # clean rgl window
+      clear3d()
+      
+      # plot 3d map
+      plot_3d(frames$rgl_scene, frames$matrix_elevation, zscale= frames$aesthetics$rgl_zscale,zoom=frames$aesthetics$rgl_zoom, background=frames$aesthetics$rgl_colour_background,
+              theta = rgl_theta, phi = rgl_phi, fov = rgl_fov, zoom=8)
+      
+      # plot legend
+      legend3d("bottomright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))
+      
+    }else{
+      if(exists("hasRun") == FALSE){
+        
+        # clean rgl window
+        clear3d()
+        
+        # plot 3d map
+        plot_3d(frames$rgl_scene, frames$matrix_elevation, zscale= frames$aesthetics$rgl_zscale,zoom=frames$aesthetics$rgl_zoom, background=frames$aesthetics$rgl_colour_background,
+                theta = rgl_theta, phi = rgl_phi, fov = rgl_fov)
+        
+        # plot legend
+        legend3d("bottomright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))
+        
+        hasRun <- TRUE 
+      }
+    }
     
     # add movement data, as points or lines
     if(point==FALSE){
@@ -219,6 +244,6 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     #rgl.close()
     
     
-    return(NULL)
+    if(exists("hasRun") == TRUE)return(hasRun)
   }
 }

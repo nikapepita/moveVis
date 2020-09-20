@@ -146,7 +146,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     if(is.list(rgl_phi)&&length(rgl_phi)==length(frames))  phi<-as.numeric(rgl_phi[i]) else phi = as.numeric(rgl_phi)
     if(is.list(rgl_fov)&&length(rgl_fov)==length(frames))  fov<-as.numeric(rgl_fov[i]) else fov = as.numeric(rgl_fov)
     
-    if(is.list(rgl_theta)|is.list(rgl_phi)|is.list(rgl_fov)){
+    if(is.list(rgl_theta) ||is.list(rgl_phi) || is.list(rgl_fov)){
       # clean rgl window
       clear3d()
       

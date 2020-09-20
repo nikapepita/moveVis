@@ -12,6 +12,7 @@
 #' @param rgl_theta Rotation around z-axis. Default: 45
 #' @param rgl_phi Azimuth angle. Default: 45
 #' @param rgl_fov Field-of-view angle. Default '0'–isometric.
+#' @param rgl_zoom Zoom factor. Default: 1
 #' @export
 #' 
 #' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d
@@ -48,7 +49,7 @@
 #' set_engine(engine = "rgl")
 #' frames[[100]] # displays frame 100 in 3D using rgl
 #' }
-render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsize=2,point=TRUE, rgl.height=5, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0){
+render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsize=2,point=TRUE, rgl.height=5, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0,rgl_zoom=1){
    
   if(frames$prepared_engine == "ggplot" & engine == "rgl") out("The frames Object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'", type = 3)
   if(frames$prepared_engine == "rgl" & engine == "ggplot") out("The frames Object is not including the ggplot variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'ggplot'", type = 3)
@@ -150,8 +151,8 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
       clear3d()
       
       # plot 3d map
-      plot_3d(frames$rgl_scene, frames$matrix_elevation, zscale= frames$aesthetics$rgl_zscale,zoom=frames$aesthetics$rgl_zoom, background=frames$aesthetics$rgl_colour_background,
-              theta = rgl_theta, phi = rgl_phi, fov = rgl_fov, zoom=8)
+      plot_3d(frames$rgl_scene, frames$matrix_elevation, zscale= frames$aesthetics$rgl_zscale,zoom=rgl_zoom, background=frames$aesthetics$rgl_colour_background,
+              theta = theta, phi = phi, fov = fov)
       
       # plot legend
       legend3d("bottomright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))

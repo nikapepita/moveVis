@@ -120,7 +120,7 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
       render_frame_extended <- function(i){
         
       render_frame(frames, i, engine= "rgl", pointsize =  pointsize, point = point,rgl.height = rgl.height,
-                   rgl_theta=theta,rgl_phi=rgl_phi, rgl_fov=rgl_fov)
+                   rgl_theta=rgl_theta,rgl_phi=rgl_phi, rgl_fov=rgl_fov)
       
       if(point==FALSE){
         

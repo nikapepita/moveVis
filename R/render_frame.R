@@ -142,9 +142,9 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     categories.df <- categories.df[order(categories.df$V2, decreasing = TRUE),]
     categories.df$V2 <- as.numeric(as.character(categories.df$V2))
     
-    if(is.list(rgl_theta))  theta<-as.numeric(rgl_theta[i]) else theta = as.numeric(rgl_theta)
-    if(is.list(rgl_phi))  phi<-as.numeric(rgl_phi[i]) else phi = as.numeric(rgl_phi)
-    if(is.list(rgl_fov))  fov<-as.numeric(rgl_fov[i]) else fov = as.numeric(rgl_fov)
+    if(is.list(rgl_theta)&&length(rgl_theta)==length(frames))  theta<-as.numeric(rgl_theta[i]) else theta = as.numeric(rgl_theta)
+    if(is.list(rgl_phi)&&length(rgl_phi)==length(frames))  phi<-as.numeric(rgl_phi[i]) else phi = as.numeric(rgl_phi)
+    if(is.list(rgl_fov)&&length(rgl_fov)==length(frames))  fov<-as.numeric(rgl_fov[i]) else fov = as.numeric(rgl_fov)
     
     if(is.list(rgl_theta)|is.list(rgl_phi)|is.list(rgl_fov)){
       # clean rgl window
@@ -245,6 +245,6 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     #rgl.close()
     
     
-    if(exists("hasRun") == TRUE)return(hasRun)
+    if(exists("hasRun") == TRUE) return(hasRun)
   }
 }

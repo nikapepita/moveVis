@@ -176,5 +176,4 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
   
   if(isTRUE(display)) utils::browseURL(out_file)
   }
-  remove(hasTrue)
 }

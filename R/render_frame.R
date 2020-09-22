@@ -15,7 +15,7 @@
 #' @param rgl_zoom Zoom factor. Default: 1
 #' @export
 #' 
-#' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d
+#' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d rgl.viewpoint
 #' @importFrom rayshader render_snapshot plot_3d
 #' @importFrom dplyr count filter
 #' 
@@ -146,7 +146,8 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     if(is.list(rgl_phi)&&length(rgl_phi)==length(frames))  phi<-as.numeric(rgl_phi[i]) else phi = as.numeric(rgl_phi)
     if(is.list(rgl_fov)&&length(rgl_fov)==length(frames))  fov<-as.numeric(rgl_fov[i]) else fov = as.numeric(rgl_fov)
     
-    if(is.list(rgl_theta) ||is.list(rgl_phi) || is.list(rgl_fov)){
+    
+    if(i==1){
       # clean rgl window
       clear3d()
       
@@ -157,22 +158,9 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
       # plot legend
       legend3d("bottomright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))
       
-    }else{
-      if(exists("hasRun") == FALSE){
-        
-        # clean rgl window
-        clear3d()
-        
-        # plot 3d map 
-        plot_3d(frames$rgl_scene, frames$matrix_elevation, zscale= frames$aesthetics$rgl_zscale,zoom=frames$aesthetics$rgl_zoom, background=frames$aesthetics$rgl_colour_background,
-                theta = rgl_theta, phi = rgl_phi, fov = rgl_fov)
-        
-        # plot legend
-        legend3d("bottomright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))
-        
-        hasRun <- TRUE 
+    }else if(is.list(rgl_theta) ||is.list(rgl_phi) || is.list(rgl_fov)){
+      rgl.viewpoint( theta = theta, phi = phi, fov = fov, zoom = 1)
       }
-    }
     
     # add movement data, as points or lines
     if(point==FALSE){
@@ -237,14 +225,5 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     }
     
     render_snapshot(title_text = frames$aesthetics$rgl_title, title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
-    
-    #s <- scene3d()
-    #frames_rgl[[i]] = s
-    
-    #clear3d()
-    #rgl.close()
-    
-    
-    if(exists("hasRun") == TRUE) return(hasRun)
   }
-}
+  

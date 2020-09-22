@@ -150,10 +150,13 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
       
         
       }
-        if(exists("hasRun") == TRUE) return(hasRun)
         }
 
-      lapply(as.list(seq(1,n_frames,1)), render_frame_extended)
+      render_frame_extended(1)
+      
+      background_plotted=FALSE
+      
+      lapply(as.list(seq(2,n_frames,1)), render_frame_extended)
       
   #create animation
   tryCatch({

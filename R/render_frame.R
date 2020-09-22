@@ -13,6 +13,7 @@
 #' @param rgl_phi Azimuth angle. Default: 45
 #' @param rgl_fov Field-of-view angle. Default '0'–isometric.
 #' @param rgl_zoom Zoom factor. Default: 1
+#' @param background_plotted Default: FALSE
 #' @export
 #' 
 #' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d rgl.viewpoint
@@ -49,7 +50,7 @@
 #' set_engine(engine = "rgl")
 #' frames[[100]] # displays frame 100 in 3D using rgl
 #' }
-render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsize=2,point=TRUE, rgl.height=5, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0,rgl_zoom=1){
+render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsize=2,point=TRUE, rgl.height=5, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0,rgl_zoom=1,background_plotted=FALSE){
    
   if(frames$prepared_engine == "ggplot" & engine == "rgl") out("The frames Object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'", type = 3)
   if(frames$prepared_engine == "rgl" & engine == "ggplot") out("The frames Object is not including the ggplot variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'ggplot'", type = 3)
@@ -147,7 +148,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     if(is.list(rgl_fov)&&length(rgl_fov)==length(frames))  fov<-as.numeric(rgl_fov[i]) else fov = as.numeric(rgl_fov)
     
     
-    if(i==1){
+    if(background_plotted=FALSE){
       # clean rgl window
       clear3d()
       
@@ -226,4 +227,5 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     
     render_snapshot(title_text = frames$aesthetics$rgl_title, title_bar_color = "#022533", title_color = "white", title_bar_alpha = 1)
   }
-  
+}
+

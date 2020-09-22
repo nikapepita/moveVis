@@ -163,7 +163,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
         # clean rgl window
         clear3d()
         
-        # plot 3d map
+        # plot 3d map 
         plot_3d(frames$rgl_scene, frames$matrix_elevation, zscale= frames$aesthetics$rgl_zscale,zoom=frames$aesthetics$rgl_zoom, background=frames$aesthetics$rgl_colour_background,
                 theta = rgl_theta, phi = rgl_phi, fov = rgl_fov)
         

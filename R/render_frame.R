@@ -50,7 +50,7 @@
 #' set_engine(engine = "rgl")
 #' frames[[100]] # displays frame 100 in 3D using rgl
 #' }
-render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsize=2,point=TRUE, rgl.height=5, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0,rgl_zoom=1,background_plotted=FALSE){
+render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsize=2,point=TRUE, rgl.height=5, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0,rgl_zoom=1,background_plotted=FALSE,...){
    
   if(frames$prepared_engine == "ggplot" & engine == "rgl") out("The frames Object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'", type = 3)
   if(frames$prepared_engine == "rgl" & engine == "ggplot") out("The frames Object is not including the ggplot variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'ggplot'", type = 3)

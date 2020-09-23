@@ -194,17 +194,17 @@ render_frame <-
           length(rgl_theta) == length(frames))
         theta <- as.numeric(rgl_theta[[i]])
       else
-        theta = as.numeric(rgl_theta)
+        theta = as.numeric(rgl_theta[[1]])
       if (is.list(rgl_phi) &&
           length(rgl_phi) == length(frames))
         phi <- as.numeric(rgl_phi[[i]])
       else
-        phi = as.numeric(rgl_phi)
+        phi = as.numeric(rgl_phi[[1]])
       if (is.list(rgl_fov) &&
           length(rgl_fov) == length(frames))
         fov <- as.numeric(rgl_fov[[i]])
       else
-        fov = as.numeric(rgl_fov)
+        fov = s.numeric(rgl_fov[[1]])
       
       
       if (bg_plot == FALSE) {

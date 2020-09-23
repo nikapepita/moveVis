@@ -117,7 +117,7 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
     # progress bar
     pb <- txtProgressBar(min = 1, max = n_frames, style=3)
     
-      render_frame_extended <- function(i){
+      render_frame_extended <- function(i,bg_plot){
         
       render_frame(frames, i, engine= "rgl", pointsize =  pointsize, point = point,rgl.height = rgl.height,
                    rgl_theta=rgl_theta,rgl_phi=rgl_phi, rgl_fov=rgl_fov)
@@ -152,11 +152,10 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
       }
         }
 
-      render_frame_extended(1)
+      render_frame_extended(1,bg_plot=FALSE)
       
-      background_plotted=TRUE
+      lapply(as.list(seq(2,n_frames,1)), render_frame_extended, bg_plot=TRUE)
       
-      lapply(as.list(seq(2,n_frames,1)), render_frame_extended)
       
   #create animation
   tryCatch({

@@ -68,8 +68,8 @@ frames_spatial(
 
 \item{map_token}{character, mapbox authentification token for mapbox basemaps. Register at \url{https://www.mapbox.com/} to get a mapbox token. Mapbox is free of charge after registration for up to 50.000 map requests per month. Ignored, if \code{map_service = "osm"}.}
 
-\item{map_dir}{character, directory where downloaded basemap tiles can be stored. By default, a temporary directory is used. 
-If you use moveVis often for the same area it is recommended to set this argument to a directory persistent throughout sessions (e.g. in your user folder), 
+\item{map_dir}{character, directory where downloaded basemap tiles can be stored. By default, a temporary directory is used.
+If you use moveVis often for the same area it is recommended to set this argument to a directory persistent throughout sessions (e.g. in your user folder),
 so that baesmap tiles that had been already downloaded by moveVis do not have to be requested again.}
 
 \item{margin_factor}{numeric, factor relative to the extent of \code{m} by which the frame extent should be increased around the movement area. Ignored, if \code{ext} is set.}
@@ -176,7 +176,7 @@ frames <- frames_spatial(m, map_service = "osm", map_type = "watercolor", alpha 
 # alter path appearance (make it longer and bigger)
 frames <- frames_spatial(m, map_service = "osm", map_type = "watercolor", alpha = 0.5,
                          path_size = 4, tail_length = 29)
-                         
+
 # adjust path colours manually
 frames <- frames_spatial(m, map_service = "osm", map_type = "watercolor", alpha = 0.5,
                          path_colours = c("black", "blue", "purple"))
@@ -205,7 +205,7 @@ get_maptypes()
 # frames <- frames_spatial(m, map_service = "mapbox",
 #                          map_token = "your_token_from_your_mapbox_account",
 #                          map_type = "satellite",
-#                          map_dir = "your/map_directory/")                         
+#                          map_dir = "your/map_directory/")
 
 # use your own custom base maps
 data("basemap_data")

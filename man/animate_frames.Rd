@@ -23,6 +23,7 @@ animate_frames(
   engine = "rgl",
   out_ext = "gif",
   verbose = TRUE,
+  bg_plot = FALSE,
   ...
 )
 }
@@ -62,6 +63,8 @@ animate_frames(
 \item{out_ext}{character, wether mov or gif as output format. Default is gif.}
 
 \item{verbose}{logical, if \code{TRUE}, messages and progress information are displayed on the console (default).}
+
+\item{bg_plot}{Default: FALSE}
 
 \item{...}{additional arguments to be passed to the render function.}
 

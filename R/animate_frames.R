@@ -20,9 +20,10 @@
 #' @param mainDir character, directory where rendered frames are stored in the folder called: Output_Frames
 #' @param engine character, wether ggplot or rgl as output format
 #' @param out_ext character, wether mov or gif as output format. Default is gif.
-#' @param ... additional arguments to be passed to the render function.
 #' @param verbose logical, if \code{TRUE}, messages and progress information are displayed on the console (default).
-#'
+#' @param bg_plot Default: FALSE
+#' @param ... additional arguments to be passed to the render function.
+#' 
 #' @details An appropriate render function is selected depending on the file extension in \code{out_file}: For \code{.gif} files, \code{gifski::save_gif} is used, for any other (video) format, \code{av::av_capture_graphics} is used.
 #'
 #' @return None or the default image/video viewer displaying the animation
@@ -77,7 +78,7 @@
 
 animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700, res = 100, end_pause = 0, display = TRUE, 
                            overwrite = FALSE, pointsize=2, point=TRUE, rgl.height=5, rgl_theta = 45, rgl_phi = 45, rgl_fov = 0,
-                           engine = "rgl", out_ext = "gif", verbose = TRUE, ...){
+                           engine = "rgl", out_ext = "gif", verbose = TRUE, bg_plot=FALSE, ...){
   
   if(frames$prepared_engine == "ggplot" & engine == "rgl") out("The frames Object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'", type = 3)
   if(frames$prepared_engine == "rgl" & engine == "ggplot") out("The frames Object is not including the ggplot variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'ggplot'", type = 3)

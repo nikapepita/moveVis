@@ -120,8 +120,10 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
     
       render_frame_extended <- function(i,bg_plot){
         
+        if(i==1){bg_plot=FALSE} else{bg_plot=TRUE}
+        
       render_frame(frames, i, engine= "rgl", pointsize =  pointsize, point = point,rgl.height = rgl.height,
-                   rgl_theta=rgl_theta,rgl_phi=rgl_phi, rgl_fov=rgl_fov)
+                   rgl_theta=rgl_theta,rgl_phi=rgl_phi, rgl_fov=rgl_fov, bg_plot=bg_plot)
       
       if(point==FALSE){
         
@@ -153,9 +155,7 @@ animate_frames <- function(frames,out_file, fps = 25, width = 700, height = 700,
       }
         }
 
-      render_frame_extended(1,bg_plot=FALSE)
-      
-      lapply(as.list(seq(2,n_frames,1)), render_frame_extended, bg_plot=TRUE)
+      lapply(as.list(seq(1,n_frames,1)), render_frame_extended, bg_plot=TRUE)
       
       
   #create animation

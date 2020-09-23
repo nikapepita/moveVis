@@ -38,9 +38,6 @@ frames_spatial(
   cross_dateline = FALSE,
   sunangle = 45,
   rgl_zscale = 10,
-  rgl_theta = 45,
-  rgl_phi = 45,
-  rgl_fov = 0,
   rgl_zoom = 1,
   rgl_colour_background = "white",
   rgl_title = NA,
@@ -116,12 +113,6 @@ so that baesmap tiles that had been already downloaded by moveVis do not have to
 \item{sunangle}{sunangle for 3D Background Image, default 45}
 
 \item{rgl_zscale}{The ratio between the x and y spacing (which are assumed to be equal) and the z axis. For example, if the elevation levels are in units of 1 meter and the grid values are separated by 10 meters, 'zscale' would be 10. Adjust the zscale down to exaggerate elevation features.Default '10'.}
-
-\item{rgl_theta}{Rotation around z-axis. Default: 45}
-
-\item{rgl_phi}{Azimuth angle. Default: 45}
-
-\item{rgl_fov}{Field-of-view angle. Default '0'–isometric.}
 
 \item{rgl_zoom}{Zoom factor. Default: 1}
 

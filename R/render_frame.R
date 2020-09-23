@@ -148,7 +148,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
     if(is.list(rgl_fov)&&length(rgl_fov)==length(frames))  fov<-as.numeric(rgl_fov[i]) else fov = as.numeric(rgl_fov)
     
     
-    if(bg_plot=FALSE){
+    if(bg_plot==FALSE){
       # clean rgl window
       clear3d()
       

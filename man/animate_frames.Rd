@@ -17,6 +17,9 @@ animate_frames(
   pointsize = 2,
   point = TRUE,
   rgl.height = 5,
+  rgl_theta = 45,
+  rgl_phi = 45,
+  rgl_fov = 0,
   engine = "rgl",
   out_ext = "gif",
   verbose = TRUE,
@@ -47,6 +50,12 @@ animate_frames(
 \item{point}{TRUE: only points are plotted, FALSE: segments are plotted, Default TRUE}
 
 \item{rgl.height}{define the height of the points, e.g zero: points have same height as basemap}
+
+\item{rgl_theta}{Rotation around z-axis. Default: 45}
+
+\item{rgl_phi}{Azimuth angle. Default: 45}
+
+\item{rgl_fov}{Field-of-view angle. Default '0'–isometric.}
 
 \item{engine}{character, wether ggplot or rgl as output format}
 

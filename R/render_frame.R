@@ -159,7 +159,7 @@ render_frame <- function(frames, i = length(frames), engine = "ggplot2", pointsi
       # plot legend
       legend3d("bottomright", legend = paste('Name',unique(frames$move_data$name)), pch = 16, col = unique(frames$move_data$colour), cex=1, inset=c(0.02))
       
-    }else if(is.list(rgl_theta) ||is.list(rgl_phi) || is.list(rgl_fov)){
+    }else if(is.list(rgl_theta) & length(rgl_theta)==length(frames)||is.list(rgl_phi) &length(rgl_phi)==length(frames) || is.list(rgl_fov)&length(rgl_fov)==length(frames)){
       rgl.viewpoint( theta = theta, phi = phi, fov = fov, zoom = 1)
       }
     

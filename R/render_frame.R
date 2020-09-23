@@ -204,7 +204,7 @@ render_frame <-
           length(rgl_fov) == length(frames))
         fov <- as.numeric(rgl_fov[[i]])
       else
-        fov = s.numeric(rgl_fov[[1]])
+        fov = as.numeric(rgl_fov[[1]])
       
       
       if (bg_plot == FALSE) {

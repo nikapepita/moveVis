@@ -97,16 +97,17 @@ animate_frames <-
            verbose = TRUE,
            bg_plot = FALSE,
            ...) {
+    
     if (frames$prepared_engine == "ggplot" &
         engine == "rgl")
       out(
-        "The frames Object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'",
+        "The frames object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'",
         type = 3
       )
     if (frames$prepared_engine == "rgl" &
         engine == "ggplot")
       out(
-        "The frames Object is not including the ggplot variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'ggplot'",
+        "The frames object is not including the ggplot variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'ggplot'",
         type = 3
       )
     
@@ -164,17 +165,45 @@ animate_frames <-
     frames_dir <- paste0(tempdir(), "/moveVis/frames/")
     dir.create(frames_dir, recursive = T)
     
-    #if(engine == "ggplot")...
+    n_frames <- max(frames$move_data$frame)
+    
+    if(engine == "ggplot"){
+      #if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
+      if(!all(sapply(frames, function(x) inherits(x, "ggplot")))) out("At least one element of argument 'frames' is not a ggplot object.", type = 3)
+      
+      # create PNGs
+      frames_dir <- paste0(tempdir(), "/moveVis/frames/")
+      dir.create(frames_dir, recursive = T)
+      
+      tryCatch({
+        
+        file <- file.path(frames_dir, "frame_%05d.png")
+        grDevices::png(file, width = width, height = height, res = res)
+        graphics::par(ask = FALSE)
+        .lapply(as.list(seq(1, n_frames, 1)), function(x) quiet(print(frames[[x]])), moveVis.n_cores = 1)
+        grDevices::dev.off()
+        frames_files <- list.files(frames_dir, full.names = TRUE)
+        
+        
+        # animate PNGs
+        if(out_ext == "gif"){
+          if(length(frames) > 800) out("The number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)
+          gifski(frames_files, gif_file = out_file, width = width, height = height, delay = (1/fps), progress = verbose)
+          #save_gif(.lapply(frames, function(x) quiet(print(x)), moveVis.n_cores = 1), gif_file = out_file, width = width, height = height, delay = (1/fps), progress = verbose, res = res, ...)
+        }else{
+          av_encode_video(frames_files, output = out_file, framerate = fps, verbose = verbose, ...)
+          #av_capture_graphics(.lapply(frames, function(x) quiet(print(x)), moveVis.n_cores = 1), output = out_file, width = width, height = height, res = res, framerate = fps, verbose = verbose, ...) #, vfilter =' framerate=fps=10') 
+        }
+      }, error = function(e){
+        unlink(frames_dir, recursive = TRUE)
+        out(paste0("Error creating animation: ", as.character(e)), type = 3)
+      }, finally = unlink(frames_dir, recursive = TRUE))
+      
+      if(isTRUE(display)) utils::browseURL(out_file)
+    }
     
     
     if (engine == "rgl") {
-      # number of frame = Number of points
-      n_frames <- max(frames$move_data$frame)
-      
-      # progress bar
-      pb <- txtProgressBar(min = 1,
-                           max = n_frames,
-                           style = 3)
       
       render_frame_extended <- function(i, bg_plot) {
         
@@ -200,16 +229,9 @@ animate_frames <-
         )
         
         if (point == FALSE) {
-          name <- if (i < 10) {
-            paste0("frame_00", i, ".png")
-          } else if (i >= 10 & i < 100) {
-            paste0("frame_0", i, ".png")
-          } else{
-            paste0("frame_", i, ".png")
-          }
           
           render_snapshot(
-            filename = file.path(frames_dir, name),
+            filename = file.path(frames_dir,paste("frame", formatC(i, width=5, flag="0"), sep="_")),
             title_text = frames$aesthetics$rgl_title,
             title_bar_color = "#022533",
             title_color = "white",
@@ -224,17 +246,9 @@ animate_frames <-
           
         }
         else{
-          name <- if (i < 10) {
-            paste0("frame_00", i, ".png")
-          } else if (i >= 10 & i < 100) {
-            paste0("frame_0", i, ".png")
-          } else{
-            paste0("frame_", i, ".png")
-          }
-          
           
           render_snapshot(
-            filename = file.path(frames_dir, name),
+            filename = file.path(frames_dir,paste("frame", formatC(i, width=5, flag="0"), sep="_")),
             title_text = frames$aesthetics$rgl_title,
             title_bar_color = "#022533",
             title_color = "white",
@@ -244,17 +258,13 @@ animate_frames <-
           rgl.pop(type = "shapes")
           gc()
           
-          
         }
       }
       
-      lapply(as.list(seq(1, n_frames, 1)), render_frame_extended, bg_plot =
-               TRUE)
-      
+      .lapply(as.list(seq(1, n_frames, 1)), function(x) quiet(render_frame_rgl(x, bg_plot =TRUE)), moveVis.n_cores = 1)
       
       #create animation
       tryCatch({
-        file <- file.path(frames_dir, "frame_%05d.png")
         frames_files <- list.files(frames_dir, full.names = TRUE)
         
         # animate PNGs

@@ -7,7 +7,7 @@
 render_frame(
   frames,
   i = length(frames),
-  engine = "ggplot2",
+  engine = "ggplot",
   pointsize = 2,
   point = TRUE,
   rgl.height = 5,

@@ -53,7 +53,7 @@
 render_frame <-
   function(frames,
            i = length(frames),
-           engine = "ggplot2",
+           engine = "ggplot",
            pointsize = 2,
            point = TRUE,
            rgl.height = 5,
@@ -89,13 +89,13 @@ render_frame <-
     
     # make sure there always is a correct engine selected
     if (is.null(engine)) {
-      engine <- "ggplot2"
+      engine <- "ggplot"
     } else{
-      if (all(engine != "ggplot2", engine != "rgl"))
-        engine <- "ggplot2"
+      if (all(engine != "ggplot", engine != "rgl"))
+        engine <- "ggplot"
     }
     
-    if (engine == "ggplot2") {
+    if (engine == "ggplot") {
       if (inherits(frames, "frames_spatial")) {
         gg <- gg.spatial(
           x = .df4gg(

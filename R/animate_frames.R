@@ -205,9 +205,8 @@ animate_frames <-
     
     if (engine == "rgl") {
       
-      render_frame_extended <- function(i, bg_plot) {
+      render_frame_rgl <- function(i, bg_plot) {
         
-        setTxtProgressBar(pb, i)
         
         if (i == 1) {
           bg_plot = FALSE
@@ -215,6 +214,7 @@ animate_frames <-
           bg_plot = TRUE
         }
         
+
         render_frame(
           frames,
           i,
@@ -261,7 +261,7 @@ animate_frames <-
         }
       }
       
-      .lapply(as.list(seq(1, n_frames, 1)), function(x) quiet(render_frame_rgl(x, bg_plot =TRUE)), moveVis.n_cores = 1)
+      .lapply(frames$move_data$frame, function(i) quiet(render_frame_rgl(i, bg_plot =TRUE)), moveVis.n_cores = 1)
       
       #create animation
       tryCatch({

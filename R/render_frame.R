@@ -223,6 +223,9 @@ render_frame <-
           fov = fov
         )
         
+        if(length(frames$additions)>0) lapply(1:length(frames$additions), 
+                                              function (k){frames$additions[[k]]$rgl(i)})
+        
         # plot legend
         legend3d(
           "bottomright",
@@ -246,9 +249,6 @@ render_frame <-
         )
       }
       
-      if(length(frames$additions)>0) lapply(1:length(frames$additions), function (k){add=k
-        lapply(1:length(frames), function (i){frames$additions[[add]]$rgl(i)})})
-        
       # add movement data, as points or lines
       if (point == FALSE) {
         m.df.temp <- frames$move_data[which(frames$move_data$frame <= i + 1), ]

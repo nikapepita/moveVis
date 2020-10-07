@@ -53,6 +53,26 @@ add_progress <- function(frames, colour = "grey", size = 1.8, verbose = TRUE){
     cbind.data.frame(x = c(x.min, x), y = c(y, y))
   })
   
-  add_gg(frames, gg = expr(geom_line(aes_string(x = "x", y = "y"), data = data, colour = colour, size = size)),
+  add_gg(frames, rgl=  function(i){
+    r.elev <-  frames$raster_elevation
+    e <- extent(r.elev)
+    
+    data_rgl <- lapply(seq(min(e@xmin), max(e@xmax), length.out = length(frames)), function(x, x.min = min(e@xmin), y = max(e@ymax)){
+      cbind.data.frame(x = c(x.min, x), y = c(y, y))
+    })
+    
+    col_num <- ncol(r.elev)
+    row_num <- nrow(r.elev)
+    
+    x <-frames$additions[[1]]$data[i][[1]][1]
+    y <-frames$additions[[1]]$data[i][[1]][2]
+    
+    x1 <- ((x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2
+    y1 <- -((row_num - (y - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)
+    
+    
+    lines3d(x=x1[[1]],z=y1[[1]],y=frames$aesthetics$rgl_zscale+50,col=colour,size=size)} ,gg = expr(geom_line(aes_string(x = "x", y = "y"), data = data, colour = colour, size = size)),
          data = data, colour = colour, size = size)
-}
+  }
+  
+

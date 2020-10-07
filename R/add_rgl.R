@@ -3,8 +3,7 @@
 #' This function adds \code{ggplot2} functions (e.g. to add layers, change scales etc.) to the animation frames created with \code{\link{frames_spatial}}.
 #'
 #' @inheritParams add_labels
-#' @param rgl
-#' @param gg \code{ggplot2} expressions (see details), either as
+#' @param rgl \code{ggplot2} expressions (see details), either as
 #' \itemize{
 #'   \item an expression of one or a list of \code{ggplot2} functions to be added to every frame,
 #'   \item a list of such of the same length as \code{frames} to add different \code{ggplot2} expressions per frame
@@ -106,7 +105,7 @@
 #' @seealso \code{\link{frames_spatial}} \code{\link{frames_graph}} \code{\link{animate_frames}}
 #' @export
 
-add_gg <- function(frames, gg, rgl,  data = NULL, ..., verbose = T){
+add_rgl <- function(frames, rgl, data = NULL, ..., verbose = T){
   
   ## check data and replicate if necessary
   if(inherits(data, "list")){
@@ -116,15 +115,17 @@ add_gg <- function(frames, gg, rgl,  data = NULL, ..., verbose = T){
   }
   
   ## gg is not a list, make it one
-  if(inherits(gg, "list")){
-    if(length(gg) != length(frames)) out("Argument 'gg' is a list und thus must be of same length as 'frames'.", type = 3)
-  } else{
-    if(length(gg) != length(frames)) gg <- rep(list(gg), length(frames))
-  }
-  if(!is.call(gg[[1]])) out("Argument 'gg' must be an expression or a list of expressions (see ?moveVis::add_gg and ?ggplot2::expr).", type = 3)
+ # if(inherits(gg, "list")){
+  #  if(length(gg) != length(frames)) out("Argument 'gg' is a list und thus must be of same length as 'frames'.", type = 3)
+ # } else{
+ #   if(length(gg) != length(frames)) rgl <- rep(list(rgl), length(frames))
+ # }
+ # if(!is.call(gg[[1]])) out("Argument 'gg' must be an expression or a list of expressions (see ?moveVis::add_gg and ?ggplot2::expr).", type = 3)
   
-  if(is.null(frames$additions)) frames$additions <- list(list(expr = gg, rgl=rgl, data = data, arg = list(...))) else{
-    frames$additions <- c(frames$additions, list(list(expr = gg, rgl=rgl, data = data, arg = list(...))))
+  if(is.null(frames$additions)) frames$additions <- list(list(expr = rgl, data = data, arg = list(...))) else{
+    frames$additions <- c(frames$additions, list(list(expr_rgl = rgl, data = data, arg = list(...))))
   }
   return(frames)
 }
+
+

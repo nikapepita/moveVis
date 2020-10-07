@@ -55,5 +55,5 @@ add_timestamps <- function(frames, m = NULL, x = NULL, y = NULL, ..., verbose = 
     y <- frames$aesthetics$gg.ext[4]-((frames$aesthetics$gg.ext[4]-frames$aesthetics$gg.ext[2])*0.05)
   }
   
-  add_text(frames, ts, x, y, ...)
+  add_text_rgl(frames, ts, x, y, ...)
 }

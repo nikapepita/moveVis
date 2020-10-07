@@ -57,15 +57,15 @@ add_progress <- function(frames, colour = "grey", size = 1.8, verbose = TRUE){
     r.elev <-  frames$raster_elevation
     e <- extent(r.elev)
     
-    data_rgl <- lapply(seq(min(e@xmin), max(e@xmax), length.out = length(frames)), function(x, x.min = min(e@xmin), y = max(e@ymax)){
+    data <- lapply(seq(min(e@xmin), max(e@xmax), length.out = length(frames)), function(x, x.min = min(e@xmin), y = max(e@ymax)){
       cbind.data.frame(x = c(x.min, x), y = c(y, y))
     })
     
     col_num <- ncol(r.elev)
     row_num <- nrow(r.elev)
     
-    x <-frames$additions[[1]]$data[i][[1]][1]
-    y <-frames$additions[[1]]$data[i][[1]][2]
+    x <-data[i][[1]][1]
+    y <-data[i][[1]][2]
     
     x1 <- ((x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2
     y1 <- -((row_num - (y - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)

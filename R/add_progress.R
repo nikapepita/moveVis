@@ -68,8 +68,7 @@ add_progress <- function(frames, colour = "grey", size = 1.8, verbose = TRUE){
     y <-data[i][[1]][2]
     
     x1 <- ((x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2
-    y1 <- -((row_num - (y - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)
-    
+    y1 <- -((row_num - (y - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)+10
     
     lines3d(x=x1[[1]],z=y1[[1]],y=frames$aesthetics$rgl_zscale+50,col=colour,size=size)} ,gg = expr(geom_line(aes_string(x = "x", y = "y"), data = data, colour = colour, size = size)),
          data = data, colour = colour, size = size)

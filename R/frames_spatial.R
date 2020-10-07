@@ -509,11 +509,8 @@ frames_spatial <-
       col_num <- ncol(r.elev)
       row_num <- nrow(r.elev)
       
-      m.df$lon <- ((m.df$x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /
-        2
-      m.df$lat <-
-        -((row_num - (m.df$y - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /
-            2)
+      m.df$lon <- ((m.df$x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2
+      m.df$lat <- -((row_num - (m.df$y - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)
       m.df$altitude <- extract(r.elev, m.df[, 1:2])
       
       
@@ -536,6 +533,7 @@ frames_spatial <-
       raster_data = r_list,
       rgl_scene = rgl_scene,
       matrix_elevation = matrix_elevation,
+      raster_elevation = r.elev,
       prepared_engine = prepared_engine,
       aesthetics = c(
         list(

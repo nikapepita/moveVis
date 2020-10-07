@@ -15,6 +15,8 @@ add_gg(frames, gg, rgl, data = NULL, ..., verbose = T)
   \item a list of such of the same length as \code{frames} to add different \code{ggplot2} expressions per frame
 }}
 
+\item{rgl}{functions to added to every frame during \code{render_frame}}
+
 \item{data}{optional data used by \code{gg} (see details), either
  \itemize{
   \item an object of any class, e.g. a \code{data.frame}, used by \code{gg} that will be added to all frames,

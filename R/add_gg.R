@@ -3,7 +3,7 @@
 #' This function adds \code{ggplot2} functions (e.g. to add layers, change scales etc.) to the animation frames created with \code{\link{frames_spatial}}.
 #'
 #' @inheritParams add_labels
-#' @param rgl
+#' @param rgl functions to added to every frame during \code{render_frame}
 #' @param gg \code{ggplot2} expressions (see details), either as
 #' \itemize{
 #'   \item an expression of one or a list of \code{ggplot2} functions to be added to every frame,

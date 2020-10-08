@@ -396,7 +396,7 @@ frames_spatial <-
             crs = m.crs
           )
         
-        # use coord_equal for dateline crossingngs in EPSG:4326 only
+        # use coord_equal for dateline crossings in EPSG:4326 only
         m.df$coord <-
           list(ggplot2::coord_sf(
             xlim = c(gg.ext$xmin, gg.ext$xmax),
@@ -440,6 +440,17 @@ frames_spatial <-
       #m.df.temp <- .m2df(m, path_colours = path_colours)
       #.stats(n.frames = max(m.df.temp$frame))
       
+      m_ext <- st_bbox(m)
+      xrange <- m_ext$xmax - m_ext$xmin # range of x values
+      yrange <- m_ext$ymax - m_ext$ymin # range of y values
+      
+      
+      m_ext[1] <- m_ext[1] + (0.2 * xrange) # xmin - left
+      m_ext[3] <- m_ext[3] + (0.2 * xrange) # xmax - right
+      m_ext[2] <- m_ext[2] + (0.2 * yrange) # ymin - bottom
+      m_ext[4] <- m_ext[4] + (0.2 * yrange) # ymax - top
+      
+    
       # download overlay map
       out("Download Overlay Map for 3D Visualization", type = 1)
       r.overlay <-
@@ -447,7 +458,7 @@ frames_spatial <-
           map_service = map_service,
           map_type = map_type,
           map_dir = map_dir ,
-          gg.ext = st_bbox(m),
+          gg.ext = m_ext,
           map_res = 1,
           map_token = map_token,
           m.crs = crs(m)
@@ -473,7 +484,7 @@ frames_spatial <-
           map_service = "mapbox",
           map_type = "terrain",
           map_dir = map_dir ,
-          gg.ext = st_bbox(m),
+          gg.ext = m_ext,
           map_res = 1,
           map_token = map_token,
           m.crs = crs(m)

@@ -128,6 +128,7 @@ add_scalebar <- function(frames, distance = NULL, height = 0.015, position = "bo
   
   add_gg(frames,rgl=  function(i){r.elev <-  frames$raster_elevation
   e <- extent(r.elev)
+  max<-maxValue(r.elev)/frames$aesthetics$rgl_zscale
   
   data <- lapply(seq(min(e@xmin), max(e@xmax), length.out = length(frames)), function(x, x.min = min(e@xmin), y = max(e@ymax)){
     cbind.data.frame(x = c(x.min, x), y = c(y, y))
@@ -136,26 +137,17 @@ add_scalebar <- function(frames, distance = NULL, height = 0.015, position = "bo
   col_num <- ncol(r.elev)
   row_num <- nrow(r.elev)
   
-  x_inner<-scale.inner$x
-  y_inner<-scale.inner$y
-  
-  x_outer<-scale.outer$x
-  y_outer<-scale.outer$y
-  
-  
   x_text <- (((text.data$x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2)
   y_text <- -((row_num - (text.data$y - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)-80
   
   
+  x_inner <- (((scale.inner$x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2)
+  x_outer <- (((scale.outer$x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2)
+
+  y1 <- -((row_num - (e@ymax[1] - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)
   
-  x_inner <- (((x_inner - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2)
-  y_inner <- -((row_num - (y_inner - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)-20
-  
-  x_outer <- (((x_outer - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2)
-  y_outer <- -((row_num - (y_outer - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)-20
-  
-  lines3d(x=x_inner,z=y_inner,y=frames$aesthetics$rgl_zscale+40,col="black",lwd=6)
-  lines3d(x=x_outer,z=y_outer,y=frames$aesthetics$rgl_zscale+40,col="grey",lwd=6)
+  lines3d(x=x_inner,z=-y1[[1]],y=max,col="black",lwd=6)
+  lines3d(x=x_outer,z=-y1[[1]],y=max,col="grey",lwd=6)
   
   text3d(x = x_text,z=y_text, y=frames$aesthetics$rgl_zscale+40, text=text.data$label,col="black" )
   },gg = expr(list(geom_polygon(aes_string(x = "x", y = "y"), data = scale.outer, fill = "white", colour = "black"), 

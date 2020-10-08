@@ -10,7 +10,8 @@
 #' @author Jakob Schwalb-Willmann
 #'
 #' @importFrom ggplot2 geom_line aes_string ggplot_build expr
-#'
+#' @importFrom raster extend
+#' 
 #' @examples 
 #' library(moveVis)
 #' library(move)

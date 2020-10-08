@@ -3,7 +3,8 @@
 #' This function adds \code{ggplot2} functions (e.g. to add layers, change scales etc.) to the animation frames created with \code{\link{frames_spatial}}.
 #'
 #' @inheritParams add_labels
-#' @param rgl functions to added to every frame during \code{render_frame}
+#' @param rgl functions to be added to every frame during \code{render_frame}
+#' @param rgl_compass compass_function to be added to every frame during \code{render_frame}
 #' @param gg \code{ggplot2} expressions (see details), either as
 #' \itemize{
 #'   \item an expression of one or a list of \code{ggplot2} functions to be added to every frame,
@@ -106,7 +107,7 @@
 #' @seealso \code{\link{frames_spatial}} \code{\link{frames_graph}} \code{\link{animate_frames}}
 #' @export
 
-add_gg <- function(frames, gg, rgl,  data = NULL, ..., verbose = T){
+add_gg <- function(frames, gg, rgl, rgl_compass=NULL,  data = NULL, ..., verbose = T){
   
   ## check data and replicate if necessary
   if(inherits(data, "list")){
@@ -124,7 +125,7 @@ add_gg <- function(frames, gg, rgl,  data = NULL, ..., verbose = T){
   if(!is.call(gg[[1]])) out("Argument 'gg' must be an expression or a list of expressions (see ?moveVis::add_gg and ?ggplot2::expr).", type = 3)
   
   if(is.null(frames$additions)) frames$additions <- list(list(expr = gg, rgl=rgl, data = data, arg = list(...))) else{
-    frames$additions <- c(frames$additions, list(list(expr = gg, rgl=rgl, data = data, arg = list(...))))
+    frames$additions <- c(frames$additions, list(list(expr = gg, rgl=rgl, rgl_compass=rgl_compass, data = data, arg = list(...))))
   }
   return(frames)
 }

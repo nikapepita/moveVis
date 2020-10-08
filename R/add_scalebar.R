@@ -15,8 +15,9 @@
 #' @return List of frames.
 #' @author Jakob Schwalb-Willmann
 #'
-#' @importFrom ggplot2 geom_polygon geom_text aes_string expr
+#' @importFrom ggplot2 geom_polygon geom_text aes_string expr ggplot_build"
 #' @importFrom sf st_distance st_sfc st_point st_crs
+#' @importFrom raster extend
 #'
 #' @examples 
 #' library(moveVis)

@@ -225,7 +225,10 @@ render_frame <-
         )
         
         if(length(frames$additions)>0) lapply(1:length(frames$additions), 
-                                              function (k){frames$additions[[k]]$rgl(i)})
+                                              function (k){if(!is.null(frames$additions[[k]]$rgl_compass)) frames$additions[[k]]$rgl_compass(i)})
+        
+        if(length(frames$additions)>0) lapply(1:length(frames$additions), 
+                                              function (k){if(!is.null(frames$additions[[k]]$rgl))frames$additions[[k]]$rgl(i)})
         
         # plot legend
         legend3d(
@@ -329,3 +332,4 @@ render_frame <-
       )
     }
   }
+

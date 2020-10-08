@@ -124,7 +124,7 @@ add_gg <- function(frames, gg, rgl, rgl_compass=NULL,  data = NULL, ..., verbose
   }
   if(!is.call(gg[[1]])) out("Argument 'gg' must be an expression or a list of expressions (see ?moveVis::add_gg and ?ggplot2::expr).", type = 3)
   
-  if(is.null(frames$additions)) frames$additions <- list(list(expr = gg, rgl=rgl, data = data, arg = list(...))) else{
+  if(is.null(frames$additions)) frames$additions <- list(list(expr = gg, rgl=rgl, rgl_compass=rgl_compass,data = data, arg = list(...))) else{
     frames$additions <- c(frames$additions, list(list(expr = gg, rgl=rgl, rgl_compass=rgl_compass, data = data, arg = list(...))))
   }
   return(frames)

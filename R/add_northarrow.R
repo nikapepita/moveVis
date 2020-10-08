@@ -16,7 +16,7 @@
 #' @return List of frames.
 #' @author Jakob Schwalb-Willmann
 #'
-#' @importFrom ggplot2 geom_line geom_text aes_string expr
+#' @importFrom ggplot2 geom_line geom_text aes_string expr ggplot_build
 #' @importFrom rayshader render_compass
 #'
 #' @examples 
@@ -80,9 +80,8 @@ add_northarrow <- function(frames, height = 0.05, position = "bottomright", x = 
   text.margin <- (max(arrow.data$y) - min(arrow.data$y))*label_margin
   text.data <- data.frame(x = arrow.data$x[1], y = min(arrow.data$y)-text.margin, label = label_text)
   
-  add_gg(frames, rgl_compass=function(i){render_compass(position = "SW", color_n = "black", color_arrow = "grey70",
-                                                color_background = "grey100", color_bevel = "grey20", position_circular = TRUE, scale_distance = 1.1, compass_radius=30)
-  }, gg = expr(list(geom_line(aes_string(x = "x", y = "y"), data = arrow.data, arrow=grid::arrow(length = grid::unit(3.7, "mm")), size = size, colour = colour),
+  add_gg(frames,rgl=NULL, rgl_compass= function(i){render_compass(position = "SW", color_n = "black", color_arrow = "grey70",
+                                                color_background = "grey100", color_bevel = "grey20", position_circular = TRUE, scale_distance = 1.1, compass_radius=40)}, gg = expr(list(geom_line(aes_string(x = "x", y = "y"), data = arrow.data, arrow=grid::arrow(length = grid::unit(3.7, "mm")), size = size, colour = colour),
                                 geom_text(aes_string(x = "x", y = "y", label = "label"), text.data, colour = colour, size = label_size))),
          arrow.data = arrow.data, size = size, colour = colour, text.data = text.data, label_size = label_size)
 }

@@ -16,9 +16,10 @@
 #' @param bg_plot Default: FALSE
 #' @export
 #'
-#' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d rgl.viewpoint
+#' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d rgl.viewpoint text3d
 #' @importFrom rayshader render_snapshot plot_3d
 #' @importFrom dplyr count filter
+#' @importFrom raster extend
 #'
 #' @examples
 #'

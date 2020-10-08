@@ -445,9 +445,9 @@ frames_spatial <-
       yrange <- m_ext$ymax - m_ext$ymin # range of y values
       
       
-      m_ext[1] <- m_ext[1] + (0.5 * xrange) # xmin + left
+      m_ext[1] <- m_ext[1] - (0.5 * xrange) # xmin - left
       m_ext[3] <- m_ext[3] + (0.5 * xrange) # xmax + right
-      m_ext[2] <- m_ext[2] + (0.5 * yrange) # ymin + bottom
+      m_ext[2] <- m_ext[2] - (0.5 * yrange) # ymin - bottom
       m_ext[4] <- m_ext[4] + (0.5 * yrange) # ymax + top
       
     

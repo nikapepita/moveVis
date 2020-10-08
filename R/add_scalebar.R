@@ -153,8 +153,8 @@ add_scalebar <- function(frames, distance = NULL, height = 0.015, position = "bo
   x_outer <- (((x_outer - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2)
   y_outer <- -((row_num - (y_outer - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)-20
   
-  lines3d(x=x_inner,z=y_inner,y=frames$aesthetics$rgl_zscale+40,col="black",lwd=10)
-  lines3d(x=x_outer,z=y_outer,y=frames$aesthetics$rgl_zscale+40,col="grey",lwd=10)
+  lines3d(x=x_inner,z=y_inner,y=frames$aesthetics$rgl_zscale+40,col="black",lwd=6)
+  lines3d(x=x_outer,z=y_outer,y=frames$aesthetics$rgl_zscale+40,col="grey",lwd=6)
   
   text3d(x = x_text,z=y_text, y=frames$aesthetics$rgl_zscale+40, text=text.data$label,col="black" )
   },gg = expr(list(geom_polygon(aes_string(x = "x", y = "y"), data = scale.outer, fill = "white", colour = "black"), 

@@ -207,7 +207,6 @@ render_frame <-
       else
         fov = as.numeric(rgl_fov[[1]])
       
-      
       if (bg_plot == FALSE) {
         # clean rgl window
         clear3d()

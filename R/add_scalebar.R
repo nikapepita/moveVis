@@ -126,7 +126,8 @@ add_scalebar <- function(frames, distance = NULL, height = 0.015, position = "bo
                                 label = paste0(c(0, scale.dist/2, scale.dist), " ", units),
                                 col = colour, stringsAsFactors = F)
   
-  add_gg(frames,rgl=  function(i){r.elev <-  frames$raster_elevation
+  add_gg(frames,rgl=  function(i){
+    r.elev <-  frames$raster_elevation
   e <- extent(r.elev)
   max<-maxValue(r.elev)/frames$aesthetics$rgl_zscale
   

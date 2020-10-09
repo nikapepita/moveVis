@@ -259,6 +259,10 @@ animate_frames <-
           gc()
           
         }
+        rgl_id <- rgl.ids()
+        rgl_id <-rgl_id[rgl_id$type == "text", ]
+        rgl_id <- rgl_id[length(rgl_id),]
+        rgl.pop(type = "shapes", id = rgl_id$id)
       }
       
       .lapply(frames$move_data$frame, function(i) quiet(render_frame_rgl(i, bg_plot =TRUE)), moveVis.n_cores = 1)

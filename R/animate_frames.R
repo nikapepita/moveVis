@@ -261,7 +261,7 @@ animate_frames <-
         }
         rgl_id <- rgl.ids()
         rgl_id <-rgl_id[rgl_id$type == "text", ]
-        rgl_id <- rgl_id[length(rgl_id),]
+        rgl_id <- rgl_id[nrow(rgl_id),]
         rgl.pop(type = "shapes", id = rgl_id$id)
       }
       

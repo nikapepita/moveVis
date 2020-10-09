@@ -32,7 +32,7 @@
 #' @importFrom gifski gifski
 #' @importFrom ggplot2 quo
 #' @importFrom lubridate dseconds
-#' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d rgl.clear
+#' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d rgl.clear rgl.ids
 #' @importFrom rayshader render_snapshot plot_3d
 #' @importFrom dplyr count filter
 #'
@@ -235,7 +235,7 @@ animate_frames <-
             title_bar_alpha = 1
           )
       
-        rgl_id <- rgl.ids()
+        rgl_id <- rgl::rgl.ids()
         rgl_id <-
           rgl_id[rgl_id$type == "linestrip" |rgl_id$type == "points"| rgl_id$type == "text", ]
         rgl.pop(type = "shapes", id = rgl_id$id)

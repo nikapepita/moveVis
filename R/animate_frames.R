@@ -32,7 +32,7 @@
 #' @importFrom gifski gifski
 #' @importFrom ggplot2 quo
 #' @importFrom lubridate dseconds
-#' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d
+#' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d rgl.ids
 #' @importFrom rayshader render_snapshot plot_3d
 #' @importFrom dplyr count filter
 #'
@@ -256,13 +256,10 @@ animate_frames <-
           )
           
           rgl.pop(type = "shapes")
+          
           gc()
           
         }
-        rgl_id <- rgl.ids()
-        rgl_id <-rgl_id[rgl_id$type == "text", ]
-        rgl_id <- rgl_id[nrow(rgl_id),]
-        rgl.pop(type = "shapes", id = rgl_id$id)
       }
       
       .lapply(frames$move_data$frame, function(i) quiet(render_frame_rgl(i, bg_plot =TRUE)), moveVis.n_cores = 1)

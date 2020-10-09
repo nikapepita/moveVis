@@ -244,12 +244,17 @@ render_frame <-
                  is.list(rgl_phi) &
                  length(rgl_phi) == length(frames) ||
                  is.list(rgl_fov) & length(rgl_fov) == length(frames)) {
+      
         rgl.viewpoint(
           theta = theta,
           phi = phi,
           fov = fov,
           zoom = 1
         )
+        
+        if(length(frames$additions)>0) lapply(1:length(frames$additions), 
+                                              function (k){if(!is.null(frames$additions[[k]]$rgl))frames$additions[[k]]$rgl(i)})
+        
       }
       
       # add movement data, as points or lines

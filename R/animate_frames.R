@@ -32,7 +32,7 @@
 #' @importFrom gifski gifski
 #' @importFrom ggplot2 quo
 #' @importFrom lubridate dseconds
-#' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d rgl.ids
+#' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d rgl.clear
 #' @importFrom rayshader render_snapshot plot_3d
 #' @importFrom dplyr count filter
 #'
@@ -206,9 +206,8 @@ animate_frames <-
     if (engine == "rgl") {
       
       render_frame_rgl <- function(i, bg_plot) {
-        
-        
-        if (i == 1) {
+      
+        if (i == frames$move_data$frame[1]) {
           bg_plot = FALSE
         } else{
           bg_plot = TRUE

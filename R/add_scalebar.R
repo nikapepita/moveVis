@@ -142,8 +142,6 @@ add_scalebar <- function(frames, distance = NULL, height = 0.015, position = "bo
   
   text.data$x <- text.data$x -dis[1]
   
-  text.data$x <- text.data$x -((text.data$x - e@xmin))
-  
   x_text <- ((((text.data$x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2))
   y_text <- -((row_num - (text.data$y - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)-80
   

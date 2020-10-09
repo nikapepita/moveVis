@@ -104,7 +104,7 @@ add_scalebar <- function(frames, distance = NULL, height = 0.015, position = "bo
 
   scale.diff <- gg.diff$x*((scale.dist)/gg.dist$x)
   
-  ## calculate scale postiotn
+  ## calculate scale position
   gg.margin <- list(bottomleft = unlist(gg.diff)*0.1,
                     upperleft = c(x = gg.diff$x*0.1, y = gg.diff$y*-(0.1+height)),
                     upperright = c(x = (gg.diff$x*-0.1)-scale.diff, y = gg.diff$y*-(0.1+height)),
@@ -150,7 +150,7 @@ add_scalebar <- function(frames, distance = NULL, height = 0.015, position = "bo
   lines3d(x=x_inner,z=-y1[[1]],y=max,col="black",lwd=6)
   lines3d(x=x_outer,z=-y1[[1]],y=max,col="grey",lwd=6)
   
-  text3d(x = x_text,z=y_text, y=frames$aesthetics$rgl_zscale+40, text=text.data$label,col="black" )
+  text3d(x = x_text,z=y_text, y=max, text=text.data$label,col="black" )
   },gg = expr(list(geom_polygon(aes_string(x = "x", y = "y"), data = scale.outer, fill = "white", colour = "black"), 
                                 geom_polygon(aes_string(x = "x", y = "y"), data = scale.inner, fill = "black", colour = "black"),
                                 geom_text(aes_string(x = "x", y = "y", label = "label", color = "col"), data = text.data, size = 3, colour = text.data$col))),

@@ -138,13 +138,17 @@ add_scalebar <- function(frames, distance = NULL, height = 0.015, position = "bo
   col_num <- ncol(r.elev)
   row_num <- nrow(r.elev)
   
+  dis <- text.data$x - e@xmin
+  
+  text.data$x <- text.data$x -dis[1]
+  
   text.data$x <- text.data$x -((text.data$x - e@xmin))
   
   x_text <- ((((text.data$x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2))
   y_text <- -((row_num - (text.data$y - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)-80
   
-  scale.inner$x <- scale.inner$x -((scale.inner$x - e@xmin))
-  scale.outer$x <- scale.outer$x -((scale.outer$x - e@xmin))
+  scale.inner$x <- scale.inner$x - dis[1]
+  scale.outer$x <- scale.outer$x - dis[1]
   
   x_inner <- (((scale.inner$x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2)
   x_outer <- (((scale.outer$x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2)

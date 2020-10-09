@@ -228,8 +228,6 @@ animate_frames <-
           bg_plot = bg_plot
         )
         
-        if (point == FALSE) {
-          
           render_snapshot(
             filename = file.path(frames_dir,paste("frame", formatC(i, width=5, flag="0"), sep="_")),
             title_text = frames$aesthetics$rgl_title,
@@ -237,29 +235,12 @@ animate_frames <-
             title_color = "white",
             title_bar_alpha = 1
           )
-          
-          rgl_id <- rgl.ids()
-          rgl_id <-
-            rgl_id[rgl_id$type == "linestrip" | rgl_id$type == "point", ]
-          rgl.pop(type = "shapes", id = rgl_id$id)
-          gc()
-          
-        }
-        else{
-          
-          render_snapshot(
-            filename = file.path(frames_dir,paste("frame", formatC(i, width=5, flag="0"), sep="_")),
-            title_text = frames$aesthetics$rgl_title,
-            title_bar_color = "#022533",
-            title_color = "white",
-            title_bar_alpha = 1
-          )
-          
-          rgl.pop(type = "shapes")
-          
-          gc()
-          
-        }
+      
+        rgl_id <- rgl.ids()
+        rgl_id <-
+          rgl_id[rgl_id$type == "linestrip" |rgl_id$type == "points"| rgl_id$type == "text", ]
+        rgl.pop(type = "shapes", id = rgl_id$id)
+        gc()
       }
       
       .lapply(frames$move_data$frame, function(i) quiet(render_frame_rgl(i, bg_plot =TRUE)), moveVis.n_cores = 1)

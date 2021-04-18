@@ -172,6 +172,7 @@ render_frame <-
       return(gg)
     }
     if (engine == "rgl") {
+      
       # calculte number of individuals
       categories <- as.character(unique(frames$move_data$colour))
       nr.Categories <- length(categories)
@@ -274,6 +275,7 @@ render_frame <-
         
         if (!(nrow(m.df.point) == 0))
         {
+          
           points3d(
             m.df.point[, 10],
             (m.df.point[, 12] / frames$aesthetics$rgl_zscale) + rgl.height,-m.df.point[, 11],
@@ -287,21 +289,23 @@ render_frame <-
           if (length(unique(m.df.seg$colour)) > 1) {
             m.df.seg <- split(m.df.seg, m.df.seg$colour)
             
+            
             for (j in 1:length(m.df.seg)) {
               lines3d(
                 m.df.seg[[j]][, 10],
                 (m.df.seg[[j]][, 12] / frames$aesthetics$rgl_zscale) +
                   rgl.height,-m.df.seg[[j]][, 11],
                 lwd = pointsize,
-                col = m.df.seg[[j]][, 8],brewer.pal(n=3, name="Dark2")
+                col = m.df.seg[[j]][, 8]
               )
             }
           } else{
+            
             lines3d(
               m.df.seg[, 10],
               (m.df.seg[, 12] / frames$aesthetics$rgl_zscale) + rgl.height,-m.df.seg[, 11],
               lwd = pointsize,
-              col = m.df.seg[, 8],brewer.pal(n=3, name="Dark2")
+              col = m.df.seg[[j]][, 8]
             )
           }
         }
@@ -320,7 +324,7 @@ render_frame <-
           m.df.temp[, 10],
           (m.df.temp[, 12] / frames$aesthetics$rgl_zscale) + rgl.height,-m.df.temp[, 11],
           size = pointsize,
-          col = m.df.temp[, 8], brewer.pal(n=3, name="Dark2")
+          color = m.df.temp[, 8], brewer.pal(n=3, name="Dark2")
         )
       }
       

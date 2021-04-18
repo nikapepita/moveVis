@@ -305,7 +305,7 @@ render_frame <-
               m.df.seg[, 10],
               (m.df.seg[, 12] / frames$aesthetics$rgl_zscale) + rgl.height,-m.df.seg[, 11],
               lwd = pointsize,
-              col = m.df.seg[[j]][, 8]
+              col = m.df.seg[, 8]
             )
           }
         }

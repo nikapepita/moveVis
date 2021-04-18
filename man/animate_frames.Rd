@@ -20,7 +20,7 @@ animate_frames(
   rgl_theta = 45,
   rgl_phi = 45,
   rgl_fov = 0,
-  rgl_zoom = 1,
+  rgl_zoom = 0.1,
   engine = "rgl",
   out_ext = "gif",
   verbose = TRUE,

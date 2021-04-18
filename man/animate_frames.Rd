@@ -20,6 +20,7 @@ animate_frames(
   rgl_theta = 45,
   rgl_phi = 45,
   rgl_fov = 0,
+  rgl_zoom = 1,
   engine = "rgl",
   out_ext = "gif",
   verbose = TRUE,
@@ -57,6 +58,8 @@ animate_frames(
 \item{rgl_phi}{Azimuth angle. Default: 45}
 
 \item{rgl_fov}{Field-of-view angle. Default '0'–isometric.}
+
+\item{rgl_zoom}{Zoom factor. Default: 1}
 
 \item{engine}{character, wether ggplot or rgl as output format}
 

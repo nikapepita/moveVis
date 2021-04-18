@@ -227,7 +227,6 @@ animate_frames <-
           rgl_phi = rgl_phi,
           rgl_fov = rgl_fov,
           rgl_zoom = rgl_zoom,
-          all_tracks = FALSE,
           bg_plot = bg_plot
           
         )

@@ -14,7 +14,6 @@
 #' @param rgl_fov Field-of-view angle. Default '0'–isometric.
 #' @param rgl_zoom Zoom factor. Default: 1
 #' @param bg_plot Default: FALSE
-#' @param Windowsize Set Size RGL Plot, Default: `c(600,800)`
 #' @export
 #'
 #' @importFrom rgl rgl.close clear3d lines3d points3d rgl.pop legend3d rgl.viewpoint text3d
@@ -64,7 +63,6 @@ render_frame <-
            rgl_fov = 0,
            rgl_zoom = 1,
            bg_plot = FALSE,
-           windowsize = `c(600,800)`,
            ...) {
     if (frames$prepared_engine == "ggplot" &
         engine == "rgl")
@@ -223,8 +221,7 @@ render_frame <-
           background = frames$aesthetics$rgl_colour_background,
           theta = theta,
           phi = phi,
-          fov = fov,
-          windowsize = windowsize
+          fov = fov
         )
         
         if(length(frames$additions)>0) lapply(1:length(frames$additions), 
@@ -246,12 +243,14 @@ render_frame <-
                  length(rgl_phi) == length(frames) ||
                  is.list(rgl_fov) & length(rgl_fov) == length(frames)) {
       
+        
         rgl.viewpoint(
           theta = theta,
           phi = phi,
           fov = fov,
           zoom = rgl_zoom
         )
+        
         
         if(length(frames$additions)>0) lapply(1:length(frames$additions), 
                                               function (k){if(!is.null(frames$additions[[k]]$rgl))frames$additions[[k]]$rgl(i)})

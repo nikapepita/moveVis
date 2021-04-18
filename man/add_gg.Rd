@@ -4,7 +4,7 @@
 \alias{add_gg}
 \title{Add \code{ggplot2} function to frames}
 \usage{
-add_gg(frames, gg, rgl, data = NULL, ..., verbose = T)
+add_gg(frames, gg, rgl, rgl_compass = NULL, data = NULL, ..., verbose = T)
 }
 \arguments{
 \item{frames}{an object of class \code{moveVis} created with \code{\link{frames_spatial}}.}
@@ -15,7 +15,9 @@ add_gg(frames, gg, rgl, data = NULL, ..., verbose = T)
   \item a list of such of the same length as \code{frames} to add different \code{ggplot2} expressions per frame
 }}
 
-\item{rgl}{functions to added to every frame during \code{render_frame}}
+\item{rgl}{functions to be added to every frame during \code{render_frame}}
+
+\item{rgl_compass}{compass_function to be added to every frame during \code{render_frame}}
 
 \item{data}{optional data used by \code{gg} (see details), either
  \itemize{

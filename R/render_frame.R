@@ -229,15 +229,12 @@ render_frame <-
         if(length(frames$additions)>0) lapply(1:length(frames$additions), 
                                               function (k){if(!is.null(frames$additions[[k]]$rgl))frames$additions[[k]]$rgl(i)})
         
-        # plot legend
-        legend3d(
-          "bottomright",
-          legend = paste('Name', unique(frames$move_data$name)),
-          pch = 16,
-          col = unique(frames$move_data$colour),
-          cex = 1,
-          inset = c(0.02)
-        )
+        #plot legend
+        if(frames$aesthetics$path_legend==TRUE){
+          
+         legend3d("bottomright",legend = paste('Name', unique(frames$move_data$name)),
+                  pch = 16,col = unique(frames$move_data$colour),cex = 1,inset = c(0.02))
+        }
         
       } else if (is.list(rgl_theta) &
                  length(rgl_theta) == length(frames) ||
@@ -296,7 +293,7 @@ render_frame <-
                 (m.df.seg[[j]][, 12] / frames$aesthetics$rgl_zscale) +
                   rgl.height,-m.df.seg[[j]][, 11],
                 lwd = pointsize,
-                col = m.df.seg[[j]][, 8]
+                col = m.df.seg[[j]][, 8],brewer.pal(n=3, name="Dark2")
               )
             }
           } else{
@@ -304,7 +301,7 @@ render_frame <-
               m.df.seg[, 10],
               (m.df.seg[, 12] / frames$aesthetics$rgl_zscale) + rgl.height,-m.df.seg[, 11],
               lwd = pointsize,
-              col = m.df.seg[, 8]
+              col = m.df.seg[, 8],brewer.pal(n=3, name="Dark2")
             )
           }
         }
@@ -323,9 +320,8 @@ render_frame <-
           m.df.temp[, 10],
           (m.df.temp[, 12] / frames$aesthetics$rgl_zscale) + rgl.height,-m.df.temp[, 11],
           size = pointsize,
-          col = m.df.temp[, 8]
+          col = m.df.temp[, 8], brewer.pal(n=3, name="Dark2")
         )
-        
       }
       
       render_snapshot(

@@ -16,7 +16,7 @@ render_frame(
   rgl_fov = 0,
   rgl_zoom = 1,
   bg_plot = FALSE,
-  windowsize = `c(600,800)`,
+  all_tracks = FALSE,
   ...
 )
 }
@@ -43,9 +43,9 @@ render_frame(
 
 \item{bg_plot}{Default: FALSE}
 
-\item{...}{additional (non-iterated) objects that should be visible to \code{gg}.}
+\item{all_tracks}{TRUE: All Tracks are shown, zoom discard, Default: FALSE}
 
-\item{Windowsize}{Set Size RGL Plot, Default: `c(600,800)`}
+\item{...}{additional (non-iterated) objects that should be visible to \code{gg}.}
 }
 \description{
 This function renders an individual frame. It yields the same result as if an individual frame is extracted using default subsetting \code{[[]]} with the difference that the rendering engine can be defined as an argument. Currently, \code{moveVis} supports \code{ggplot2} for 2D and \code{rgl} for 3D renders and animations.

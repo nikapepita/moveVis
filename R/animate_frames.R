@@ -228,7 +228,7 @@ animate_frames <-
           rgl_fov = rgl_fov,
           rgl_fov = rgl_fov,
           bg_plot = bg_plot,
-          rgl_zoom = rgl_zoom
+          rgl_zoom = 0.3
         )
         
           render_snapshot(

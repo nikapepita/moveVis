@@ -250,7 +250,7 @@ render_frame <-
           theta = theta,
           phi = phi,
           fov = fov,
-          zoom = 1
+          zoom = rgl_zoom
         )
         
         if(length(frames$additions)>0) lapply(1:length(frames$additions), 

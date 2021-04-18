@@ -16,7 +16,6 @@ render_frame(
   rgl_fov = 0,
   rgl_zoom = 1,
   bg_plot = FALSE,
-  all_tracks = FALSE,
   ...
 )
 }
@@ -42,8 +41,6 @@ render_frame(
 \item{rgl_zoom}{Zoom factor. Default: 1}
 
 \item{bg_plot}{Default: FALSE}
-
-\item{all_tracks}{TRUE: All Tracks are shown, zoom discard, Default: FALSE}
 
 \item{...}{additional (non-iterated) objects that should be visible to \code{gg}.}
 }

@@ -22,7 +22,6 @@
 #' @param engine character, wether ggplot or rgl as output format
 #' @param out_ext character, wether mov or gif as output format. Default is gif.
 #' @param verbose logical, if \code{TRUE}, messages and progress information are displayed on the console (default).
-#' @param all_tracks TRUE: All Tracks are shown, zoom discard, Default: FALSE
 #' @param bg_plot Default: FALSE
 #' @param ... additional arguments to be passed to the render function.
 #'
@@ -98,7 +97,6 @@ animate_frames <-
            engine = "rgl",
            out_ext = "gif",
            verbose = TRUE,
-           all_tracks = FALSE,
            bg_plot = FALSE,
            ...) {
     
@@ -228,8 +226,7 @@ animate_frames <-
           rgl_theta = rgl_theta,
           rgl_phi = rgl_phi,
           rgl_fov = rgl_fov,
-          rgl_fov = rgl_fov,
-          rgl_zoom = 0.3,
+          rgl_zoom = rgl_zoom,
           all_tracks = FALSE,
           bg_plot = bg_plot
           

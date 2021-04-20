@@ -6,7 +6,6 @@
 \usage{
 frames_spatial(
   m,
-  elevation = FALSE,
   prepared_engine = "all",
   r_list = NULL,
   r_times = NULL,
@@ -48,8 +47,6 @@ frames_spatial(
 }
 \arguments{
 \item{m}{\code{move} or \code{moveStack} of uniform time scale and time lag, e.g. prepared with \code{\link{align_move}} (recommended). May contain a column named \code{colour} to control path colours (see \code{details}).}
-
-\item{elevation}{select column with elevation data e.g. , Default: Elevation Data is extracted from SRTM}
 
 \item{prepared_engine}{character, wether ggplot or rgl, indicating the engine which will later be used for rendering. Default: all}
 

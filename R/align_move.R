@@ -113,6 +113,6 @@ align_move <- function(m, res = "minimum", unit = NA, spaceMethod = "greatcircle
   m[,c("x", "y")] <- m@coords
   m[,"time"] <- timestamps(m)
   if(any(names(m) == 'elev')){
-    m[,"elev"] <- m$elv}
+    m[,"elev"] <- m$elev}
   return(m)
 }

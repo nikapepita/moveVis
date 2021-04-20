@@ -176,7 +176,7 @@ animate_frames <-
       # create PNGs
       frames_dir <- paste0(tempdir(), "/moveVis/frames/")
       dir.create(frames_dir, recursive = T)
-      
+      out("TESTE 1")
       tryCatch({
         
         file <- file.path(frames_dir, "frame_%05d.png")
@@ -186,7 +186,7 @@ animate_frames <-
         grDevices::dev.off()
         frames_files <- list.files(frames_dir, full.names = TRUE)
         
-        
+        out("TESTE 2")
         # animate PNGs
         if(out_ext == "gif"){
           if(length(frames) > 800) out("The number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)
@@ -203,7 +203,7 @@ animate_frames <-
       
       if(isTRUE(display)) utils::browseURL(out_file)
     }
-    
+    out("TESTE 3")
     
     if (engine == "rgl") {
       

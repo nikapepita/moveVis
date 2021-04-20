@@ -162,11 +162,11 @@ animate_frames <-
     .stats(n.frames = length(frames), fps)
     
     #frames_expr <- expression(moveVis:::.lapply(frames, function(x) quiet(print(x))))
-    
+    out("TESTE 11")
     # create PNGs
     frames_dir <- paste0(tempdir(), "/moveVis/frames/")
     dir.create(frames_dir, recursive = T)
-    
+    out("TESTE 12")
     n_frames <- max(frames$move_data$frame)
     
     if(engine == "ggplot"){

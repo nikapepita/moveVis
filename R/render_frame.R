@@ -64,13 +64,13 @@ render_frame <-
            rgl_zoom = 1,
            bg_plot = FALSE,
            ...) {
-    if (frames$prepared_engine == "ggplot" &
+    if (frames$prepared_engine == "ggplot"&
         engine == "rgl")
       out(
         "The frames Object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'",
         type = 3
       )
-    if (frames$prepared_engine == "rgl" &
+    if (frames$prepared_engine == "rgl"&
         engine == "ggplot")
       out(
         "The frames Object is not including the ggplot variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'ggplot'",

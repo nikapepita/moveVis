@@ -345,6 +345,8 @@ frames_spatial <-
     gg.ext <-
       .ext(m.df, m.crs, ext, margin_factor, equidistant, cross_dateline) # calcualte extent
     
+    #check map_dir file path and create folder if not existing 
+    dir.create(map_dir, recursive = T, showWarnings = TRUE)
     
     if (prepared_engine == "all" | prepared_engine == "ggplot") {
       print("ggplot")

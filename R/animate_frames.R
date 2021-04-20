@@ -166,10 +166,9 @@ animate_frames <-
     frames_dir <- paste0(tempdir(), "/moveVis/frames/")
     dir.create(frames_dir, recursive = T)
     n_frames <- max(frames$move_data$frame)
-    out("TESTE 13")
     if(engine == "ggplot"){
       #if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
-      #if(!all(sapply(frames, function(x) inherits(x, "ggplot")))) out("At least one element of argument 'frames' is not a ggplot object.", type = 3)
+      if(!all(sapply(frames, function(x) inherits(x, "ggplot")))) out("At least one element of argument 'frames' is not a ggplot object.", type = 3)
       # create PNGs
       frames_dir <- paste0(tempdir(), "/moveVis/frames/")
       dir.create(frames_dir, recursive = T)
@@ -178,7 +177,6 @@ animate_frames <-
         file <- file.path(frames_dir, "frame_%05d.png")
         grDevices::png(file, width = width, height = height, res = res)
         graphics::par(ask = FALSE)
-        out("TESTE 22")
         .lapply(as.list(seq(1, n_frames, 1)), function(x) quiet(print(frames[[x]])), moveVis.n_cores = 1)
         grDevices::dev.off()
         frames_files <- list.files(frames_dir, full.names = TRUE)
@@ -198,7 +196,7 @@ animate_frames <-
       
       if(isTRUE(display)) utils::browseURL(out_file)
     }
-    out("TESTE 3")
+    
     
     if (engine == "rgl") {
       

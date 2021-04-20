@@ -180,12 +180,14 @@ animate_frames <-
       tryCatch({
         
         file <- file.path(frames_dir, "frame_%05d.png")
+        out("TESTE 20")
         grDevices::png(file, width = width, height = height, res = res)
         graphics::par(ask = FALSE)
+        out("TESTE 21")
         .lapply(as.list(seq(1, n_frames, 1)), function(x) quiet(print(frames[[x]])), moveVis.n_cores = 1)
         grDevices::dev.off()
         frames_files <- list.files(frames_dir, full.names = TRUE)
-        
+       
         out("TESTE 2")
         # animate PNGs
         if(out_ext == "gif"){

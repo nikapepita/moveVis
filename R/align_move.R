@@ -112,5 +112,7 @@ align_move <- function(m, res = "minimum", unit = NA, spaceMethod = "greatcircle
   m <- moveStack(mapply(x = m.indi, y = ts.t, function(x, y) interpolateTime(x, y, spaceMethod)))
   m[,c("x", "y")] <- m@coords
   m[,"time"] <- timestamps(m)
+  if(any(names(m) == 'elev')){
+    m[,"elev"] <- m$elv}
   return(m)
 }

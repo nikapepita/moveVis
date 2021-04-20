@@ -168,11 +168,11 @@ animate_frames <-
     dir.create(frames_dir, recursive = T)
     out("TESTE 12")
     n_frames <- max(frames$move_data$frame)
-    
+    out("TESTE 13")
     if(engine == "ggplot"){
       #if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
       if(!all(sapply(frames, function(x) inherits(x, "ggplot")))) out("At least one element of argument 'frames' is not a ggplot object.", type = 3)
-      
+      out("TESTE 14")
       # create PNGs
       frames_dir <- paste0(tempdir(), "/moveVis/frames/")
       dir.create(frames_dir, recursive = T)

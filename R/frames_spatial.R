@@ -524,11 +524,11 @@ frames_spatial <-
       
       m.df$lon <- ((m.df$x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2
       m.df$lat <- -((row_num - (m.df$y - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)
-      if (elevation == FALSE){
-        m.df$altitude <- extract(r.elev, m.df[, 1:2])
-      }else{
-        m.df$altitude <- m.df$elv
-        }
+      #if (elevation == FALSE){
+      #  m.df$altitude <- extract(r.elev, m.df[, 1:2])
+      #}else{
+      m.df$altitude <- m.df$elv
+        #}
     
     # set variables to NA, if not used for the chosen engine
     if (prepared_engine == "ggplot") {

@@ -206,6 +206,7 @@ animate_frames <-
           bg_plot = FALSE
         } else{
           bg_plot = TRUE
+          point = point - (point /length(frames$move_data$frame))
         }
         
 

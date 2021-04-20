@@ -313,7 +313,7 @@ render_frame <-
         }
         
       } else{
-        ##create frames
+        # create frames
         
         m.df.temp <-
           frames$move_data[which(frames$move_data$frame <= i), ]

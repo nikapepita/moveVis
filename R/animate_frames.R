@@ -185,7 +185,9 @@ animate_frames <-
         graphics::par(ask = FALSE)
         out("TESTE 21")
         .lapply(as.list(seq(1, n_frames, 1)), function(x) quiet(print(frames[x])), moveVis.n_cores = 1)
+        out("TESTE 22")
         grDevices::dev.off()
+        out("TESTE 23")
         frames_files <- list.files(frames_dir, full.names = TRUE)
        
         out("TESTE 2")

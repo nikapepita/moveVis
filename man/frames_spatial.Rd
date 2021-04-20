@@ -6,7 +6,7 @@
 \usage{
 frames_spatial(
   m,
-  elevation = NULL,
+  elevation = FALSE,
   prepared_engine = "all",
   r_list = NULL,
   r_times = NULL,

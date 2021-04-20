@@ -171,7 +171,7 @@ animate_frames <-
     out("TESTE 13")
     if(engine == "ggplot"){
       #if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
-      #if(!all(sapply(frames, function(x) inherits(x, "ggplot")))) out("At least one element of argument 'frames' is not a ggplot object.", type = 3)
+      if(!all(sapply(frames, function(x) inherits(x, "ggplot")))) out("At least one element of argument 'frames' is not a ggplot object.", type = 3)
       out("TESTE 14")
       # create PNGs
       frames_dir <- paste0(tempdir(), "/moveVis/frames/")
@@ -183,7 +183,7 @@ animate_frames <-
         out("TESTE 20")
         grDevices::png(file, width = width, height = height, res = res)
         graphics::par(ask = FALSE)
-        out("TESTE 21")
+        
         .lapply(as.list(seq(1, n_frames, 1)), function(x) quiet(print(frames[[x]])), moveVis.n_cores = 1)
         out("TESTE 22")
         grDevices::dev.off()

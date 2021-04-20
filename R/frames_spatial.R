@@ -527,7 +527,7 @@ frames_spatial <-
       #if (elevation == FALSE){
       #  m.df$altitude <- extract(r.elev, m.df[, 1:2])
       #}else{
-      m.df$altitude <- m.df$elv
+      m.df$altitude <- 100
         #}
     
     # set variables to NA, if not used for the chosen engine

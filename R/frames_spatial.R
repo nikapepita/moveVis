@@ -162,7 +162,7 @@
 
 frames_spatial <-
   function(m,
-           elevation = NULL,
+           elevation = FALSE,
            prepared_engine = "all",
            r_list = NULL,
            r_times = NULL,
@@ -524,7 +524,7 @@ frames_spatial <-
       
       m.df$lon <- ((m.df$x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2
       m.df$lat <- -((row_num - (m.df$y - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)
-      if (is.null(elevation)){
+      if (elevation == FALSE){
         m.df$altitude <- extract(r.elev, m.df[, 1:2])
       }else{
         m.df$altitude <- m.df$elv

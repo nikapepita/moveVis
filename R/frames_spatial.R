@@ -245,6 +245,9 @@ frames_spatial <-
           "Argument 'map_token' must be defined to access a basemap, if 'r_list' is not defined and 'map_service' is 'mapbox'.",
           type = 3
         )
+      #check map_dir file path and create folder if not existing 
+      dir.create(map_dir, recursive = T, showWarnings = TRUE)
+      
       if (is.null(map_dir)) {
         map_dir <- paste0(tempdir(), "/moveVis/basemap/")
         if (!dir.exists(map_dir))
@@ -344,9 +347,6 @@ frames_spatial <-
     
     gg.ext <-
       .ext(m.df, m.crs, ext, margin_factor, equidistant, cross_dateline) # calcualte extent
-    
-    #check map_dir file path and create folder if not existing 
-    dir.create(map_dir, recursive = T, showWarnings = TRUE)
     
     if (prepared_engine == "all" | prepared_engine == "ggplot") {
       print("ggplot")

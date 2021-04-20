@@ -162,35 +162,26 @@ animate_frames <-
     .stats(n.frames = length(frames), fps)
     
     #frames_expr <- expression(moveVis:::.lapply(frames, function(x) quiet(print(x))))
-    out("TESTE 11")
     # create PNGs
     frames_dir <- paste0(tempdir(), "/moveVis/frames/")
     dir.create(frames_dir, recursive = T)
-    out("TESTE 12")
     n_frames <- max(frames$move_data$frame)
     out("TESTE 13")
     if(engine == "ggplot"){
       #if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
-      if(!all(sapply(frames[[x]], function(x) inherits(x, "ggplot")))) out("At least one element of argument 'frames' is not a ggplot object.", type = 3)
-      out("TESTE 14")
+      if(!all(sapply(frames, function(x) inherits(x, "ggplot")))) out("At least one element of argument 'frames' is not a ggplot object.", type = 3)
       # create PNGs
       frames_dir <- paste0(tempdir(), "/moveVis/frames/")
       dir.create(frames_dir, recursive = T)
-      out("TESTE 1")
       tryCatch({
         
         file <- file.path(frames_dir, "frame_%05d.png")
-        out("TESTE 20")
         grDevices::png(file, width = width, height = height, res = res)
         graphics::par(ask = FALSE)
-        
-        .lapply(as.list(seq(1, n_frames, 1)), function(x) quiet(print(frames[[x]])), moveVis.n_cores = 1)
         out("TESTE 22")
+        .lapply(as.list(seq(1, n_frames, 1)), function(x) quiet(print(frames[[x]])), moveVis.n_cores = 1)
         grDevices::dev.off()
-        out("TESTE 23")
         frames_files <- list.files(frames_dir, full.names = TRUE)
-       
-        out("TESTE 2")
         # animate PNGs
         if(out_ext == "gif"){
           if(length(frames) > 800) out("The number of frames exceeds 800 and the GIF format is used. This format may not be suitable for animations with a high number of frames, since it causes large file sizes. Consider using a video file format instead.", type = 2)

@@ -3,7 +3,7 @@
 #' \code{frames_spatial} creates frames from movement and map/raster data. Frames are returned as an object of class \code{moveVis} and can be subsetted, viewed (see \code{\link{render_frame}}), modified (see \code{\link{add_gg}} and associated functions ) and animated (see \code{\link{animate_frames}}).
 #'
 #' @param m \code{move} or \code{moveStack} of uniform time scale and time lag, e.g. prepared with \code{\link{align_move}} (recommended). May contain a column named \code{colour} to control path colours (see \code{details}).
-#' @param prepared_engine character, wether ggplot or rgl, indicating the engine which will later be used for rendering. Default: all
+#' @param prepared_engine character, wether 2D or 3D, indicating the engine which will later be used for rendering. Default: all
 #' @param r_list list of \code{raster} or \code{rasterStack}. Each list element refers to the times given in \code{r_times}. Use single-layer \code{raster} objects for gradient or discrete data (see \code{r_type}). Use a  \code{rasterStack} containing three bands for RGB imagery (in the order red, green, blue).
 #' @param r_times list of \code{POSIXct} times. Each list element represents the time of the corresponding element in \code{r_list}. Must be of same length as \code{r_list}.
 #' @param r_type character, either \code{"gradient"} or \code{"discrete"}. Ignored, if \code{r_list} contains \code{rasterStacks} of three bands, which are treated as RGB.
@@ -36,10 +36,10 @@
 #' If you use moveVis often for the same area it is recommended to set this argument to a directory persistent throughout sessions (e.g. in your user folder),
 #' so that baesmap tiles that had been already downloaded by moveVis do not have to be requested again.
 #' @param sunangle sunangle for 3D Background Image, default 45
-#' @param rgl_zscale The ratio between the x and y spacing (which are assumed to be equal) and the z axis. For example, if the elevation levels are in units of 1 meter and the grid values are separated by 10 meters, 'zscale' would be 10. Adjust the zscale down to exaggerate elevation features.Default '10'.
-#' @param rgl_zoom Zoom factor. Default: 1
-#' @param rgl_colour_background character, background colour, Default is "white"
-#' @param rgl_title character, title of plot
+#' @param zscale_3D The ratio between the x and y spacing (which are assumed to be equal) and the z axis. For example, if the elevation levels are in units of 1 meter and the grid values are separated by 10 meters, 'zscale' would be 10. Adjust the zscale down to exaggerate elevation features.Default '10'.
+#' @param zoom_3D Zoom factor. Default: 1
+#' @param colour_background_3D character, background colour, Default is "white"
+#' @param title_3D character, title of plot
 #' @param ... Additional arguments customizing the frame background:
 #'    \itemize{
 #'        \item \code{alpha}, numeric, background transparency (0-1).
@@ -192,10 +192,10 @@ frames_spatial <-
            trace_colour = "white",
            cross_dateline = FALSE,
            sunangle = 45,
-           rgl_zscale = 10,
-           rgl_zoom = 1,
-           rgl_colour_background = "white",
-           rgl_title = NA,
+           zscale_3D = 10,
+           zoom_3D = 1,
+           colour_background_3D = "white",
+           title_3D = NA,
            ...,
            verbose = TRUE) {
     ## check input arguments
@@ -343,8 +343,8 @@ frames_spatial <-
     gg.ext <-
       .ext(m.df, m.crs, ext, margin_factor, equidistant, cross_dateline) # calcualte extent
     
-    if (prepared_engine == "all" | prepared_engine == "ggplot") {
-      print("ggplot")
+    if (prepared_engine == "all" | prepared_engine == "2D") {
+      print("2D")
       ## shift coordinates crossing dateline
       if (isTRUE(cross_dateline)) {
         rg <-
@@ -428,8 +428,8 @@ frames_spatial <-
         .rFrames(r_list, r_times, m.df, gg.ext, fade_raster, crop_raster = crop_raster)
     }
     
-    if (prepared_engine == "all" | prepared_engine == "rgl") {
-      print("rgl")
+    if (prepared_engine == "all" | prepared_engine == "3D") {
+      print("3D")
       ##add 3D elements
       ## Download Overlay- and Basemap
       # transform data in CRS ETRS89
@@ -497,7 +497,7 @@ frames_spatial <-
       
       # create 3d basemap
       
-      rgl_scene <- matrix_elevation  %>%
+      scene_3D <- matrix_elevation  %>%
         sphere_shade(texture = "imhof4") %>%
         add_overlay(overlay = as.array(r.overlay), alphalayer = 1) %>%
         add_shadow(ray_shade(
@@ -524,12 +524,12 @@ frames_spatial <-
       m.df$altitude <- extract(r.elev, m.df[, 1:2])
     
     # set variables to NA, if not used for the chosen engine
-    if (prepared_engine == "ggplot") {
-      rgl_scene = NA
+    if (prepared_engine == "2D") {
+      scene_3D = NA
       matrix_elevation = NA
     }
     
-    if (prepared_engine == "rgl") {
+    if (prepared_engine == "3D") {
       r_list = NA
     }
     
@@ -538,7 +538,7 @@ frames_spatial <-
     frames <- list(
       move_data = m.df,
       raster_data = r_list,
-      rgl_scene = rgl_scene,
+      scene_3D = scene_3D,
       matrix_elevation = matrix_elevation,
       raster_elevation = r.elev,
       prepared_engine = prepared_engine,
@@ -563,10 +563,10 @@ frames_spatial <-
           map_service = map_service,
           map_type = map_type,
           r_type = r_type,
-          rgl_zscale = rgl_zscale,
-          rgl_zoom = rgl_zoom,
-          rgl_colour_background = rgl_colour_background,
-          rgl_title = rgl_title
+          zscale_3D = zscale_3D,
+          zoom_3D = zoom_3D,
+          colour_background_3D = colour_background_3D,
+          title_3D = title_3D
         ),
         maxpixels = if (!is.null(extras$maxpixels))
           extras$maxpixels

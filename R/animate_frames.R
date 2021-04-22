@@ -13,13 +13,13 @@
 #' @param overwrite logical, wether to overwrite an existing file, if \code{out_file} is already present.
 #' @param pointsize size of each point, default 1
 #' @param point  TRUE: only points are plotted, FALSE: segments are plotted, Default TRUE
-#' @param rgl.height define the height of the points, e.g zero: points have same height as basemap
-#' @param rgl_theta Rotation around z-axis. Default: 45
-#' @param rgl_phi Azimuth angle. Default: 45
-#' @param rgl_fov Field-of-view angle. Default '0'–isometric.
-#' @param rgl_zoom Zoom factor. Default: 1
+#' @param height_3d define the height of the points, e.g zero: points have same height as basemap
+#' @param theta_3d Rotation around z-axis. Default: 45
+#' @param phi_3d Azimuth angle. Default: 45
+#' @param fov_3d Field-of-view angle. Default '0'–isometric.
+#' @param zoom_3d Zoom factor. Default: 1
 #' @param mainDir character, directory where rendered frames are stored in the folder called: Output_Frames
-#' @param engine character, wether ggplot or rgl as output format
+#' @param engine character, wether 2D or 3D as output format
 #' @param out_ext character, wether mov or gif as output format. Default is gif.
 #' @param verbose logical, if \code{TRUE}, messages and progress information are displayed on the console (default).
 #' @param bg_plot Default: FALSE
@@ -89,25 +89,25 @@ animate_frames <-
            overwrite = FALSE,
            pointsize = 2,
            point = TRUE,
-           rgl.height = 5,
-           rgl_theta = 45,
-           rgl_phi = 45,
-           rgl_fov = 0,
-           rgl_zoom = 1,
-           engine = "rgl",
+           height_3d = 5,
+           theta_3d = 45,
+           phi_3d = 45,
+           fov_3d = 0,
+           zoom_3d = 1,
+           engine = "3D",
            out_ext = "gif",
            verbose = TRUE,
            bg_plot = FALSE,
            ...) {
     
-    if (frames$prepared_engine == "ggplot" &
-        engine == "rgl")
+    if (frames$prepared_engine == "2D" &
+        engine == "3D")
       out(
         "The frames object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'",
         type = 3
       )
-    if (frames$prepared_engine == "rgl" &
-        engine == "ggplot")
+    if (frames$prepared_engine == "3D" &
+        engine == "2D")
       out(
         "The frames object is not including the ggplot variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'ggplot'",
         type = 3
@@ -166,7 +166,7 @@ animate_frames <-
     frames_dir <- paste0(tempdir(), "/moveVis/frames/")
     dir.create(frames_dir, recursive = T)
     n_frames <- max(frames$move_data$frame)
-    if(engine == "ggplot"){
+    if(engine == "2D"){
       #if(!inherits(frames, "list")) out("Argument 'frames' needs to be a list of ggplot objects. See frames_spatial()).", type = 3)
       if(!all(sapply(frames, function(x) inherits(x, "ggplot")))) out("At least one element of argument 'frames' is not a ggplot object.", type = 3)
       # create PNGs
@@ -198,7 +198,7 @@ animate_frames <-
     }
     
     
-    if (engine == "rgl") {
+    if (engine == "3D") {
       
       render_frame_rgl <- function(i, bg_plot) {
       
@@ -213,21 +213,21 @@ animate_frames <-
         render_frame(
           frames,
           i,
-          engine = "rgl",
+          engine = "3D",
           pointsize =  pointsize,
           point = point,
-          rgl.height = rgl.height,
-          rgl_theta = rgl_theta,
-          rgl_phi = rgl_phi,
-          rgl_fov = rgl_fov,
-          rgl_zoom = rgl_zoom,
+          height_3D = height_3D ,
+          theta_3D  = theta_3D ,
+          phi_3D  = phi_3D ,
+          fov_3D  = fov_3D ,
+          zoom_3D  = zoom_3D ,
           bg_plot = bg_plot
           
         )
         
           render_snapshot(
             filename = file.path(frames_dir,paste("frame", formatC(i, width=5, flag="0"), sep="_")),
-            title_text = frames$aesthetics$rgl_title,
+            title_text = frames$aesthetics$title_3D ,
             title_bar_color = "#022533",
             title_color = "white",
             title_bar_alpha = 1

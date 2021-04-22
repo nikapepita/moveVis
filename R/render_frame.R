@@ -8,11 +8,11 @@
 #' @param engine character, wether ggplot or rgl as output format
 #' @param pointsize size of each point, default 1
 #' @param point TRUE: only points are plotted, FALSE: segments are plotted, Default TRUE
-#' @param rgl.height define the height of the points, e.g zero: points have same height as basemap
-#' @param rgl_theta Rotation around z-axis. Default: 45
-#' @param rgl_phi Azimuth angle. Default: 45
-#' @param rgl_fov Field-of-view angle. Default '0'–isometric.
-#' @param rgl_zoom Zoom factor. Default: 1
+#' @param height_3D  define the height of the points, e.g zero: points have same height as basemap
+#' @param theta_3D  Rotation around z-axis. Default: 45
+#' @param phi_3D  Azimuth angle. Default: 45
+#' @param fov_3D  Field-of-view angle. Default '0'–isometric.
+#' @param zoom_3D  Zoom factor. Default: 1
 #' @param bg_plot Default: FALSE
 #' @export
 #'
@@ -64,14 +64,14 @@ render_frame <-
            rgl_zoom = 1,
            bg_plot = FALSE,
            ...) {
-    if (frames$prepared_engine == "ggplot"&
-        engine == "rgl")
+    if (frames$prepared_engine == "2D"&
+        engine == "3D")
       out(
         "The frames Object is not including the rgl variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'rgl'",
         type = 3
       )
-    if (frames$prepared_engine == "rgl"&
-        engine == "ggplot")
+    if (frames$prepared_engine == "3D"&
+        engine == "2D")
       out(
         "The frames Object is not including the ggplot variables. Please redo frames_spatial() with prepared_engine = 'all' or prepared_engine = 'ggplot'",
         type = 3
@@ -90,13 +90,13 @@ render_frame <-
     
     # make sure there always is a correct engine selected
     if (is.null(engine)) {
-      engine <- "ggplot"
+      engine <- "2D"
     } else{
-      if (all(engine != "ggplot", engine != "rgl"))
-        engine <- "ggplot"
+      if (all(engine != "2D", engine != "3D"))
+        engine <- "2D"
     }
     
-    if (engine == "ggplot") {
+    if (engine == "2D") {
       if (inherits(frames, "frames_spatial")) {
         gg <- gg.spatial(
           x = .df4gg(
@@ -171,7 +171,7 @@ render_frame <-
       }
       return(gg)
     }
-    if (engine == "rgl") {
+    if (engine == "3D") {
       
       # calculte number of individuals
       categories <- as.character(unique(frames$move_data$colour))
@@ -192,21 +192,21 @@ render_frame <-
         categories.df[order(categories.df$V2, decreasing = TRUE), ]
       categories.df$V2 <- as.numeric(as.character(categories.df$V2))
       
-      if (is.list(rgl_theta) &&
-          length(rgl_theta) == length(frames))
-        theta <- as.numeric(rgl_theta[[i]])
+      if (is.list(theta_3D ) &&
+          length(theta_3D ) == length(frames))
+        theta <- as.numeric(theta_3D [[i]])
       else
-        theta = as.numeric(rgl_theta[[1]])
-      if (is.list(rgl_phi) &&
-          length(rgl_phi) == length(frames))
-        phi <- as.numeric(rgl_phi[[i]])
+        theta = as.numeric(theta_3D [[1]])
+      if (is.list(phi_3D ) &&
+          length(phi_3D ) == length(frames))
+        phi <- as.numeric(phi_3D [[i]])
       else
-        phi = as.numeric(rgl_phi[[1]])
-      if (is.list(rgl_fov) &&
-          length(rgl_fov) == length(frames))
-        fov <- as.numeric(rgl_fov[[i]])
+        phi = as.numeric(phi_3D [[1]])
+      if (is.list(fov_3D ) &&
+          length(fov_3D ) == length(frames))
+        fov <- as.numeric(fov_3D [[i]])
       else
-        fov = as.numeric(rgl_fov[[1]])
+        fov = as.numeric(fov_3D [[1]])
       
       if (bg_plot == FALSE) {
         # clean rgl window
@@ -217,7 +217,7 @@ render_frame <-
           frames$rgl_scene,
           frames$matrix_elevation,
           zscale = frames$aesthetics$rgl_zscale,
-          zoom = rgl_zoom,
+          zoom = zoom_3D ,
           background = frames$aesthetics$rgl_colour_background,
           theta = theta,
           phi = phi,
@@ -237,18 +237,18 @@ render_frame <-
                   pch = 16,col = unique(frames$move_data$colour),cex = 1,inset = c(0.02))
         }
         
-      } else if (is.list(rgl_theta) &
-                 length(rgl_theta) == length(frames) ||
-                 is.list(rgl_phi) &
-                 length(rgl_phi) == length(frames) ||
-                 is.list(rgl_fov) & length(rgl_fov) == length(frames)) {
+      } else if (is.list(theta_3D ) &
+                 length(theta_3D ) == length(frames) ||
+                 is.list(phi_3D ) &
+                 length(phi_3D ) == length(frames) ||
+                 is.list(fov_3D ) & length(fov_3D ) == length(frames)) {
       
         
         rgl.viewpoint(
           theta = theta,
           phi = phi,
           fov = fov,
-          zoom = rgl_zoom
+          zoom = zoom_3D 
         )
         
         
@@ -296,7 +296,7 @@ render_frame <-
               lines3d(
                 m.df.seg[[j]][, 10],
                 (m.df.seg[[j]][, 12] / frames$aesthetics$rgl_zscale) +
-                  rgl.height,-m.df.seg[[j]][, 11],
+                  height_3D ,-m.df.seg[[j]][, 11],
                 lwd = pointsize,
                 col = m.df.seg[[j]][, 8]
               )

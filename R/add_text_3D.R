@@ -44,7 +44,7 @@
 #' @seealso \code{\link{frames_spatial}} \code{\link{frames_graph}} \code{\link{animate_frames}}
 #' @export
 
-add_text_rgl <- function(frames, labels, x, y, colour = "black", size = 3, type = "text", verbose = TRUE){
+add_text_3D <- function(frames, labels, x, y, colour = "black", size = 3, type = "text", verbose = TRUE){
   
   ## checks
   if(inherits(verbose, "logical")) options(moveVis.verbose = verbose)

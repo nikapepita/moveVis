@@ -266,7 +266,7 @@ render_frame <-
         categories <- as.character(unique(m.df.temp$colour))
         nr.Categories <- length(categories)
         if("colour_add" %in% colnames(m.df.temp))
-          m.df.temp = m.df.temp[, c(1,2,3,4,5,6,7,12,9,10,11,8)]
+          m.df.temp = m.df.temp[, c(1,2,3,4,5,6,7,13,9,10,11,12,8)]
           
         nr <- count(m.df.temp, vars = colour)
         

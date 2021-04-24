@@ -218,7 +218,7 @@ render_frame <-
           frames$matrix_elevation,
           zscale = frames$aesthetics$zscale_3D,
           zoom = zoom_3D ,
-          background = frames$aesthetics$olour_background_3D,
+          background = frames$aesthetics$colour_background_3D,
           theta = theta,
           phi = phi,
           fov = fov

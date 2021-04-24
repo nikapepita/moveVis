@@ -6,6 +6,7 @@
 #' @param prepared_engine character, wether 2D or 3D, indicating the engine which will later be used for rendering. Default: all
 #' @param r_list list of \code{raster} or \code{rasterStack}. Each list element refers to the times given in \code{r_times}. Use single-layer \code{raster} objects for gradient or discrete data (see \code{r_type}). Use a  \code{rasterStack} containing three bands for RGB imagery (in the order red, green, blue).
 #' @param r_times list of \code{POSIXct} times. Each list element represents the time of the corresponding element in \code{r_list}. Must be of same length as \code{r_list}.
+#' @param raster_additional raster with further information for visualization, Default NULL
 #' @param r_type character, either \code{"gradient"} or \code{"discrete"}. Ignored, if \code{r_list} contains \code{rasterStacks} of three bands, which are treated as RGB.
 #' @param fade_raster logical, if \code{TRUE}, \code{r_list} is interpolated over time based on \code{r_times}. If \code{FALSE}, \code{r_list} elements are assigned to those frames closest to the equivalent times in \code{r_times}.
 #' @param crop_raster logical, whether to crop rasters in \code{r_list} to plot extent before plotting or not.
@@ -165,6 +166,7 @@ frames_spatial <-
            r_list = NULL,
            r_times = NULL,
            r_type = "gradient",
+           raster_additional = NULL,
            fade_raster = FALSE,
            crop_raster = TRUE,
            map_service = "osm",
@@ -523,6 +525,9 @@ frames_spatial <-
       m.df$lat <- -((row_num - (m.df$y - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)
       m.df$altitude <- extract(r.elev, m.df[, 1:2])
     
+    if (!is.null(raster_additional)){
+      m.df$colour <- extract(raster_additional, m.df[, 1:2])
+    }
     # set variables to NA, if not used for the chosen engine
     if (prepared_engine == "2D") {
       scene_3D = NA

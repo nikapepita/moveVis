@@ -262,9 +262,12 @@ render_frame <-
         m.df.temp <- frames$move_data[which(frames$move_data$frame <= i + 1), ]
         m.df.temp <- m.df.temp[order(m.df.temp$colour), ]
         
+          
         categories <- as.character(unique(m.df.temp$colour))
         nr.Categories <- length(categories)
-        
+        if("colour_add" %in% colnames(m.df.temp))
+          m.df.temp = m.df.temp[, c(1,2,3,4,5,6,7,12,9,10,11,8)]
+          
         nr <- count(m.df.temp, vars = colour)
         
         nr_seg <- nr %>% filter(nr$n >= 2)
@@ -282,7 +285,7 @@ render_frame <-
             m.df.point[, 10],
             (m.df.point[, 12] / frames$aesthetics$zscale_3D) + height_3D,-m.df.point[, 11],
             size = pointsize,
-            col = m.df.point[, 11] #8
+            col = m.df.point[, 8] #8
           )
         }
         
@@ -298,7 +301,7 @@ render_frame <-
                 (m.df.seg[[j]][, 12] / frames$aesthetics$zscale_3D) +
                   height_3D ,-m.df.seg[[j]][, 11],
                 lwd = pointsize,
-                col = m.df.seg[[j]][, 11]
+                col = m.df.seg[[j]][, 8]
               )
             }
           } else{
@@ -307,7 +310,7 @@ render_frame <-
               m.df.seg[, 10],
               (m.df.seg[, 12] / frames$aesthetics$zscale_3D) + height_3D,-m.df.seg[, 11],
               lwd = pointsize,
-              col = m.df.seg[, 11]
+              col = m.df.seg[, 8]
             )
           }
         }

@@ -326,7 +326,7 @@ render_frame <-
           m.df.temp[, 10],
           (m.df.temp[, 12] / frames$aesthetics$zscale_3D) + height_3D,-m.df.temp[, 11],
           size = pointsize,
-          color = m.df.temp[, 8], brewer.pal(n=3, name="Dark2")
+          color = m.df.temp[, 8]
         )
       }
       

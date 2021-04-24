@@ -526,7 +526,7 @@ frames_spatial <-
       m.df$altitude <- extract(r.elev, m.df[, 1:2])
     
     if (!is.null(raster_additional)){
-      m.df$colour <- extract(raster_additional, m.df[, 1:2])
+      m.df$colour_add <- extract(raster_additional, m.df[, 1:2])
     }
     # set variables to NA, if not used for the chosen engine
     if (prepared_engine == "2D") {

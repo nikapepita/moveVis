@@ -214,7 +214,7 @@ render_frame <-
         
         # plot 3d map
         plot_3d(
-          frames$rgl_scene,
+          frames$scene_3D,
           frames$matrix_elevation,
           zscale = frames$aesthetics$zscale_3D,
           zoom = zoom_3D ,
@@ -280,7 +280,7 @@ render_frame <-
           
           points3d(
             m.df.point[, 10],
-            (m.df.point[, 12] / frames$aesthetics$rgl_zscale) + height_3D,-m.df.point[, 11],
+            (m.df.point[, 12] / frames$aesthetics$zscale_3D) + height_3D,-m.df.point[, 11],
             size = pointsize,
             col = m.df.point[, 8]
           )
@@ -295,7 +295,7 @@ render_frame <-
             for (j in 1:length(m.df.seg)) {
               lines3d(
                 m.df.seg[[j]][, 10],
-                (m.df.seg[[j]][, 12] / frames$aesthetics$rgl_zscale) +
+                (m.df.seg[[j]][, 12] / frames$aesthetics$zscale_3D) +
                   height_3D ,-m.df.seg[[j]][, 11],
                 lwd = pointsize,
                 col = m.df.seg[[j]][, 8]
@@ -305,7 +305,7 @@ render_frame <-
             
             lines3d(
               m.df.seg[, 10],
-              (m.df.seg[, 12] / frames$aesthetics$rgl_zscale) + height_3D,-m.df.seg[, 11],
+              (m.df.seg[, 12] / frames$aesthetics$zscale_3D) + height_3D,-m.df.seg[, 11],
               lwd = pointsize,
               col = m.df.seg[, 8]
             )
@@ -324,14 +324,14 @@ render_frame <-
         
         points3d(
           m.df.temp[, 10],
-          (m.df.temp[, 12] / frames$aesthetics$rgl_zscale) + height_3D,-m.df.temp[, 11],
+          (m.df.temp[, 12] / frames$aesthetics$zscale_3D) + height_3D,-m.df.temp[, 11],
           size = pointsize,
           color = m.df.temp[, 8], brewer.pal(n=3, name="Dark2")
         )
       }
       
       render_snapshot(
-        title_text = frames$aesthetics$rgl_title,
+        title_text = frames$aesthetics$title_3D,
         title_bar_color = "#022533",
         title_color = "white",
         title_bar_alpha = 1

@@ -235,12 +235,12 @@ render_frame <-
           
          if("colour_add" %in% colnames(frames$move_data)){
            
-           legend3d("bottomright",legend = paste(unique(frames$move_data$colour_add)),
-                    pch = 16,col = unique(frames$move_data$colour_add),cex = 1,inset = c(0.02))
+           legend3d("bottomright",legend = paste(sort(unique(frames$move_data$colour_add))),
+                    pch = 10,col = unique(frames$move_data$colour_add),cex = 1,inset = c(0.02), title="New Legend Title")
            
          }else{
          legend3d("bottomright",legend = paste('Name', unique(frames$move_data$name)),
-                  pch = 16,col = unique(frames$move_data$colour),cex = 1,inset = c(0.02), title="New Legend Title")
+                  pch = 16,col = unique(frames$move_data$colour),cex = 1,inset = c(0.02))
          }}
         
       } else if (is.list(theta_3D ) &

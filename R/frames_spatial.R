@@ -299,12 +299,13 @@ frames_spatial <-
       if (!inherits(path_arrow, "arrow"))
         out("Argument 'path_arrow' must be of type 'arrrow' (see grid::arrow), if defined.",
             type = 3)
-    if (is.character(path_colours))
-      if (length(path_colours) != n.indiv(m))
-        out(
-          "Argument 'path_colours' must be of same length as the number of individual tracks of 'm', if defined. Alternatively, use a column 'colour' for individual colouring per coordinate within 'm' (see details of ?frames_spatial).",
-          type = 3
-        )
+    #if (is.character(path_colours))
+    #  if (length(path_colours) != n.indiv(m))
+    #    out(
+    #      "Argument 'path_colours' must be of same length as the number of individual tracks of 'm', if defined. Alternatively, use a column 'colour' for individual colouring per coordinate within 'm' (see details of ?frames_spatial).",
+    #      type = 3
+    #    )
+    
     if (!is.logical(path_legend))
       out("Argument 'path_legend' must be of type 'logical'.", type = 3)
     if (is.null(equidistant))

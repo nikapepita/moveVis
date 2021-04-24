@@ -236,7 +236,7 @@ render_frame <-
          if("colour_add" %in% colnames(frames$move_data)){
            
            legend3d("topright",legend = paste(sort(unique(frames$move_data$colour_add))),
-                    pch = 16, col = unique(frames$move_data$colour_add),cex = 1,inset = c(0.02), title=path_legend_title,
+                    pch = 16, col = unique(frames$move_data$colour_add),cex = 1,inset = c(0.02), title= frames$aesthetics$path_legend_title,
                     inset=c(-0.2,0))
            
          }else{

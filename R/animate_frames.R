@@ -13,11 +13,11 @@
 #' @param overwrite logical, wether to overwrite an existing file, if \code{out_file} is already present.
 #' @param pointsize size of each point, default 1
 #' @param point  TRUE: only points are plotted, FALSE: segments are plotted, Default TRUE
-#' @param height_3d define the height of the points, e.g zero: points have same height as basemap
-#' @param theta_3d Rotation around z-axis. Default: 45
-#' @param phi_3d Azimuth angle. Default: 45
-#' @param fov_3d Field-of-view angle. Default '0'–isometric.
-#' @param zoom_3d Zoom factor. Default: 1
+#' @param height_3D define the height of the points, e.g zero: points have same height as basemap
+#' @param theta_3D Rotation around z-axis. Default: 45
+#' @param phi_3D Azimuth angle. Default: 45
+#' @param fov_3D Field-of-view angle. Default '0'–isometric.
+#' @param zoom_3D Zoom factor. Default: 1
 #' @param mainDir character, directory where rendered frames are stored in the folder called: Output_Frames
 #' @param engine character, wether 2D or 3D as output format
 #' @param out_ext character, wether mov or gif as output format. Default is gif.
@@ -89,11 +89,11 @@ animate_frames <-
            overwrite = FALSE,
            pointsize = 2,
            point = TRUE,
-           height_3d = 5,
-           theta_3d = 45,
-           phi_3d = 45,
-           fov_3d = 0,
-           zoom_3d = 1,
+           height_3D = 5,
+           theta_3D = 45,
+           phi_3D = 45,
+           fov_3D = 0,
+           zoom_3D = 1,
            engine = "3D",
            out_ext = "gif",
            verbose = TRUE,

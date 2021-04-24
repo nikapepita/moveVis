@@ -216,9 +216,9 @@ render_frame <-
         plot_3d(
           frames$rgl_scene,
           frames$matrix_elevation,
-          zscale = frames$aesthetics$rgl_zscale,
+          zscale = frames$aesthetics$zscale_3D,
           zoom = zoom_3D ,
-          background = frames$aesthetics$rgl_colour_background,
+          background = frames$aesthetics$olour_background_3D,
           theta = theta,
           phi = phi,
           fov = fov

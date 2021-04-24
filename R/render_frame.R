@@ -57,11 +57,11 @@ render_frame <-
            engine = "ggplot",
            pointsize = 2,
            point = TRUE,
-           rgl.height = 5,
-           rgl_theta = 45,
-           rgl_phi = 45,
-           rgl_fov = 0,
-           rgl_zoom = 1,
+           height_3D = 5,
+           theta_3D = 45,
+           phi_3D = 45,
+           fov_3D = 0,
+           zoom_3D = 1,
            bg_plot = FALSE,
            ...) {
     if (frames$prepared_engine == "2D"&
@@ -280,7 +280,7 @@ render_frame <-
           
           points3d(
             m.df.point[, 10],
-            (m.df.point[, 12] / frames$aesthetics$rgl_zscale) + rgl.height,-m.df.point[, 11],
+            (m.df.point[, 12] / frames$aesthetics$rgl_zscale) + height_3D,-m.df.point[, 11],
             size = pointsize,
             col = m.df.point[, 8]
           )
@@ -305,7 +305,7 @@ render_frame <-
             
             lines3d(
               m.df.seg[, 10],
-              (m.df.seg[, 12] / frames$aesthetics$rgl_zscale) + rgl.height,-m.df.seg[, 11],
+              (m.df.seg[, 12] / frames$aesthetics$rgl_zscale) + height_3D,-m.df.seg[, 11],
               lwd = pointsize,
               col = m.df.seg[, 8]
             )
@@ -324,7 +324,7 @@ render_frame <-
         
         points3d(
           m.df.temp[, 10],
-          (m.df.temp[, 12] / frames$aesthetics$rgl_zscale) + rgl.height,-m.df.temp[, 11],
+          (m.df.temp[, 12] / frames$aesthetics$rgl_zscale) + height_3D,-m.df.temp[, 11],
           size = pointsize,
           color = m.df.temp[, 8], brewer.pal(n=3, name="Dark2")
         )

@@ -224,6 +224,12 @@ render_frame <-
           fov = fov
         )
         
+        if(length(frames$additions)>0) lapply(1:length(frames$additions), 
+                                              function (k){if(!is.null(frames$additions[[k]]$rgl_compass)) frames$additions[[k]]$rgl_compass(i)})
+        
+        if(length(frames$additions)>0) lapply(1:length(frames$additions), 
+                                              function (k){if(!is.null(frames$additions[[k]]$rgl))frames$additions[[k]]$rgl(i)})
+        
         #plot legend
         if(frames$aesthetics$path_legend==TRUE){
           

@@ -153,6 +153,7 @@ add_scalebar <- function(frames, distance = NULL, height = 0.015, position = "bo
 
   y1 <- -((row_num - (e@ymax[1] - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)
   
+  lines3d(x=x_inner,z=-y1[[1]]-2,y=max,col="black",lwd=6)
   lines3d(x=x_outer,z=-y1[[1]],y=max,col="grey",lwd=6)
   lines3d(x=x_inner,z=-y1[[1]]+2,y=max,col="black",lwd=6)
   

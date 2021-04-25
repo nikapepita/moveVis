@@ -3,7 +3,7 @@
 #' \code{frames_spatial} creates frames from movement and map/raster data. Frames are returned as an object of class \code{moveVis} and can be subsetted, viewed (see \code{\link{render_frame}}), modified (see \code{\link{add_gg}} and associated functions ) and animated (see \code{\link{animate_frames}}).
 #'
 #' @param m \code{move} or \code{moveStack} of uniform time scale and time lag, e.g. prepared with \code{\link{align_move}} (recommended). May contain a column named \code{colour} to control path colours (see \code{details}).
-#' @param prepared_engine character, wether 2D or 3D, indicating the engine which will later be used for rendering. Default: all
+#' @param prepared_engine character, whether 2D or 3D, indicating the engine which will later be used for rendering. Default: all
 #' @param r_list list of \code{raster} or \code{rasterStack}. Each list element refers to the times given in \code{r_times}. Use single-layer \code{raster} objects for gradient or discrete data (see \code{r_type}). Use a  \code{rasterStack} containing three bands for RGB imagery (in the order red, green, blue).
 #' @param r_times list of \code{POSIXct} times. Each list element represents the time of the corresponding element in \code{r_list}. Must be of same length as \code{r_list}.
 #' @param raster_additional raster with further information for visualization, Default NULL
@@ -498,7 +498,7 @@ frames_spatial <-
       # calculate elevation as matrix
       matrix_elevation <- raster_to_matrix(r.rgb.terrain[[1]])
       
-      # create 3d basemap
+      # create 3D basemap
       
       scene_3D <- matrix_elevation  %>%
         sphere_shade(texture = "imhof4") %>%
@@ -525,10 +525,12 @@ frames_spatial <-
       m.df$lon <- ((m.df$x - e@xmin) / (e@xmax - e@xmin) * col_num) - col_num /2
       m.df$lat <- -((row_num - (m.df$y - e@ymin) / (e@ymax - e@ymin) * row_num) - row_num /2)
       m.df$altitude <- extract(r.elev, m.df[, 1:2])
-    
+   
+    # add additional information from raster, if included 
     if (!is.null(raster_additional)){
       m.df$colour_add <- extract(raster_additional, m.df[, 1:2])
     }
+      
     # set variables to NA, if not used for the chosen engine
     if (prepared_engine == "2D") {
       scene_3D = NA

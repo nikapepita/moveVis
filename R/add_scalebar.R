@@ -157,7 +157,7 @@ add_scalebar <- function(frames, distance = NULL, height = 0.015, position = "bo
   lines3d(x=x_inner,z=-y1[[1]]+2,y=max,col="black",lwd=6)
   
   
-  text3d(x = x_text,z=y_text, y=max, text=text.data$label,col="black" )
+  text3d(x = x_text,z=y_text, y=max, text=text.data$label,col="black" , bg = "white")
   },gg = expr(list(geom_polygon(aes_string(x = "x", y = "y"), data = scale.outer, fill = "white", colour = "black"), 
                                 geom_polygon(aes_string(x = "x", y = "y"), data = scale.inner, fill = "black", colour = "black"),
                                 geom_text(aes_string(x = "x", y = "y", label = "label", color = "col"), data = text.data, size = 3, colour = text.data$col))),

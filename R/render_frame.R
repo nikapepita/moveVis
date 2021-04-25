@@ -289,7 +289,7 @@ render_frame <-
           
           points3d(
             m.df.point[, 10],
-            (m.df.point[, 12] / frames$aesthetics$zscale_3D) + height_3D,-m.df.point[, 11],
+            (m.df.point[, 12] / frames$aesthetics$zscale_3D) + height_3D+(j/2),-m.df.point[, 11],
             size = pointsize,
             col = m.df.point[, 8] #8
           )
@@ -305,7 +305,7 @@ render_frame <-
               lines3d(
                 m.df.seg[[j]][, 10],
                 (m.df.seg[[j]][, 12] / frames$aesthetics$zscale_3D) +
-                  height_3D ,-m.df.seg[[j]][, 11],
+                  height_3D +(j/2) ,-m.df.seg[[j]][, 11],
                 lwd = pointsize,
                 col = m.df.seg[[j]][, 8]
               )
@@ -314,7 +314,7 @@ render_frame <-
             
             lines3d(
               m.df.seg[, 10],
-              (m.df.seg[, 12] / frames$aesthetics$zscale_3D) + height_3D,-m.df.seg[, 11],
+              (m.df.seg[, 12] / frames$aesthetics$zscale_3D) + height_3D+(j/2),-m.df.seg[, 11],
               lwd = pointsize,
               col = m.df.seg[, 8]
             )
@@ -333,7 +333,7 @@ render_frame <-
         
         points3d(
           m.df.temp[, 10],
-          (m.df.temp[, 12] / frames$aesthetics$zscale_3D) + height_3D,-m.df.temp[, 11],
+          (m.df.temp[, 12] / frames$aesthetics$zscale_3D) + height_3D++(j/2),-m.df.temp[, 11],
           size = pointsize,
           color = m.df.temp[, 11]
         )

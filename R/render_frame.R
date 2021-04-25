@@ -237,11 +237,11 @@ render_frame <-
            r.value <- unique(frames$move_data$colour_add)
            
            legend3d("bottomright",lty = c(1,2), legend = paste(sort(unique(frames$move_data$colour_add))),
-                    pch = 16, col = palette(rainbow(r.value)) , cex = 1,inset = c(0.02), title= frames$aesthetics$path_legend_title)
+                    pch = 16, col = palette(rainbow(r.value)) , cex = 1,inset = c(0.02), title= frames$aesthetics$path_legend_title,  bty = "n")
            
          }else{
          legend3d("bottomright",legend = paste('Name', unique(frames$move_data$name)),
-                  pch = 16,col = unique(frames$move_data$colour),cex = 1)
+                  pch = 16,col = unique(frames$move_data$colour),cex = 1,  bty = "n")
          }}
         
       } else if (is.list(theta_3D ) &

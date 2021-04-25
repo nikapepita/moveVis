@@ -129,7 +129,7 @@ add_scalebar <- function(frames, distance = NULL, height = 0.015, position = "bo
   add_gg(frames,rgl=  function(i){
     r.elev <-  frames$raster_elevation
   e <- extent(r.elev)
-  max<-(maxValue(r.elev)/frames$aesthetics$rgl_zscale)+10
+  max<-(maxValue(r.elev)/frames$aesthetics$zscale_3D)+10
   
   data <- lapply(seq(min(e@xmin), max(e@xmax), length.out = length(frames)), function(x, x.min = min(e@xmin), y = max(e@ymax)){
     cbind.data.frame(x = c(x.min, x), y = c(y, y))

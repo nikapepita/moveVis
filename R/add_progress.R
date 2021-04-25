@@ -56,7 +56,7 @@ add_progress <- function(frames, colour = "grey", size = 1.8, verbose = TRUE){
   
   add_gg(frames, rgl=  function(i){
     r.elev <-  frames$raster_elevation
-    max<-maxValue(r.elev)/frames$aesthetics$rgl_zscale
+    max<-maxValue(r.elev)/frames$aesthetics$zscale_3D
     e <- extent(r.elev)
     
     data <- lapply(seq(min(e@xmin), max(e@xmax), length.out = length(frames)), function(x, x.min = min(e@xmin), y = max(e@ymax)){

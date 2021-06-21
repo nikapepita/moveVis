@@ -362,14 +362,19 @@ frames_spatial <-
       ## calculate tiles and get map imagery
       if (is.null(r_list)) {
         out("Retrieving and compositing basemap imagery...")
-        r_list <-
-          .getMap(gg.ext,
-                  map_service,
-                  map_type,
-                  map_token,
-                  map_dir,
-                  map_res,
-                  m.crs = crs(m))
+        r.overlay <- basemaps::basemap(map_service = map_service, map_type = map_type, map_dir = map_dir , ext = gg.ext, map_res=map_res,
+                                       map_token = map_token,m.crs=crs(m))
+        
+        
+       # r_list <-
+       #    .getMap(gg.ext,
+       #           map_service,
+       #           map_type,
+       #           map_token,
+       #           map_dir,
+       #           map_res,
+       #           m.crs = crs(m))
+        
         if (all(map_service == "mapbox", map_type == "terrain"))
           r_type = "gradient"
         else
@@ -466,8 +471,8 @@ frames_spatial <-
       #    m.crs = crs(m)
       #  )
       
-      r.overlay <- basemaps::basemap(map_service = map_service, map_type = map_type, map_dir = map.dir , ext = st_bbox(m), map_res=1,
-                                     map_token = map_token,m.crs=m.crs)
+      r.overlay <- basemaps::basemap(map_service = map_service, map_type = map_type, map_dir = map_dir , ext = st_bbox(m), map_res=1,
+                                     map_token = map_token,m.crs=crs(m))
       
       # rescale image
       li <- list(
@@ -492,7 +497,7 @@ frames_spatial <-
       #    m.crs = crs(m)
       #  )
       
-      r.rgb.terrain <- basemaps::basemap(map_service = "mapbox", map_type = "terrain", map_dir = map.dir , ext = st_bbox(m), map_res=1,
+      r.rgb.terrain <- basemaps::basemap(map_service = "mapbox", map_type = "terrain", map_dir = map_dir , ext = st_bbox(m), map_res=1,
                                map_token = map_token, m.crs=crs(m))
       
       # calculate elevation as matrix

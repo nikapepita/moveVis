@@ -455,19 +455,19 @@ frames_spatial <-
     
       # download overlay map
       out("Download Overlay Map for 3D Visualization", type = 1)
-      r.overlay <-
-        .getMap(
-          map_service = map_service,
-          map_type = map_type,
-          map_dir = map_dir ,
-          gg.ext = m_ext,
-          map_res = 1,
-          map_token = map_token,
-          m.crs = crs(m)
-        )
+      #r.overlay <-
+      #  .getMap(
+      #    map_service = map_service,
+      #    map_type = map_type,
+      #    map_dir = map_dir ,
+      #    gg.ext = m_ext,
+      #    map_res = 1,
+      #   map_token = map_token,
+      #    m.crs = crs(m)
+      #  )
       
-      #r.overlay <- basemaps::basemap(map_service = map_service, map_type = map_type, map_dir = map.dir , ext = st_bbox(m), map_res=1,
-      #                               map_token = map_token,m.crs=m.crs)
+      r.overlay <- basemaps::basemap(map_service = map_service, map_type = map_type, map_dir = map.dir , ext = st_bbox(m), map_res=1,
+                                     map_token = map_token,m.crs=m.crs)
       
       # rescale image
       li <- list(
@@ -481,19 +481,19 @@ frames_spatial <-
       r.overlay <- r.overlay[[1]] * scal
       
       out("Download Terrain Map for 3D Visualization", type = 1)
-      r.rgb.terrain <-
-        .getMap(
-          map_service = "mapbox",
-          map_type = "terrain",
-          map_dir = map_dir ,
-          gg.ext = m_ext,
-          map_res = 1,
-          map_token = map_token,
-          m.crs = crs(m)
-        )
+      #r.rgb.terrain <-
+      #  .getMap(
+      #    map_service = "mapbox",
+      #    map_type = "terrain",
+      #    map_dir = map_dir ,
+      #    gg.ext = m_ext,
+      #    map_res = 1,
+      #    map_token = map_token,
+      #    m.crs = crs(m)
+      #  )
       
-      #r.rgb.terrain <- basemaps::basemap(map_service = "mapbox", map_type = "terrain", map_dir = map.dir , ext = st_bbox(m), map_res=1,
-      #                         map_token = map_token, m.crs=m.crs)
+      r.rgb.terrain <- basemaps::basemap(map_service = "mapbox", map_type = "terrain", map_dir = map.dir , ext = st_bbox(m), map_res=1,
+                               map_token = map_token, m.crs=crs(m))
       
       # calculate elevation as matrix
       matrix_elevation <- raster_to_matrix(r.rgb.terrain[[1]])
